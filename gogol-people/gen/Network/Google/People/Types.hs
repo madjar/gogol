@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -20,14 +20,21 @@ module Network.Google.People.Types
       peopleService
 
     -- * OAuth Scopes
+    , contactsOtherReadOnlyScope
+    , directoryReadOnlyScope
     , userBirthdayReadScope
     , userInfoProFileScope
     , userPhoneNumbersReadScope
     , userInfoEmailScope
     , contactsReadOnlyScope
     , userAddressesReadScope
+    , userOrganizationReadScope
     , contactsScope
     , userEmailsReadScope
+    , userGenderReadScope
+
+    -- * PeopleUpdateContactSources
+    , PeopleUpdateContactSources (..)
 
     -- * SipAddress
     , SipAddress
@@ -75,6 +82,12 @@ module Network.Google.People.Types
     , cgrContactGroup
     , cgrRequestedResourceName
 
+    -- * FileAs
+    , FileAs
+    , fileAs
+    , faValue
+    , faMetadata
+
     -- * ContactGroup
     , ContactGroup
     , contactGroup
@@ -86,21 +99,33 @@ module Network.Google.People.Types
     , cgGroupType
     , cgMetadata
     , cgMemberCount
+    , cgClientData
 
     -- * ModifyContactGroupMembersResponse
     , ModifyContactGroupMembersResponse
     , modifyContactGroupMembersResponse
+    , mcgmrCanNotRemoveLastContactGroupResourceNames
     , mcgmrNotFoundResourceNames
 
     -- * UpdateContactGroupRequest
     , UpdateContactGroupRequest
     , updateContactGroupRequest
     , ucgrContactGroup
+    , ucgrReadGroupFields
+    , ucgrUpdateGroupFields
+
+    -- * SearchResult
+    , SearchResult
+    , searchResult
+    , srPerson
 
     -- * DomainMembership
     , DomainMembership
     , domainMembership
     , dmInViewerDomain
+
+    -- * PeopleConnectionsListSources
+    , PeopleConnectionsListSources (..)
 
     -- * RelationshipInterest
     , RelationshipInterest
@@ -122,6 +147,26 @@ module Network.Google.People.Types
     , mContactGroupMembership
     , mMetadata
 
+    -- * SearchResponse
+    , SearchResponse
+    , searchResponse
+    , srResults
+
+    -- * PeopleListDirectoryPeopleMergeSources
+    , PeopleListDirectoryPeopleMergeSources (..)
+
+    -- * Location
+    , Location
+    , location
+    , lFloor
+    , lBuildingId
+    , lValue
+    , lCurrent
+    , lDeskCode
+    , lMetadata
+    , lType
+    , lFloorSection
+
     -- * Person
     , Person
     , person
@@ -139,6 +184,7 @@ module Network.Google.People.Types
     , perAddresses
     , perUserDefined
     , perNicknames
+    , perExternalIds
     , perRelationshipStatuses
     , perImClients
     , perPhoneNumbers
@@ -148,6 +194,8 @@ module Network.Google.People.Types
     , perPhotos
     , perAgeRanges
     , perEvents
+    , perCalendarURLs
+    , perFileAses
     , perCoverPhotos
     , perSkills
     , perSipAddresses
@@ -155,12 +203,18 @@ module Network.Google.People.Types
     , perInterests
     , perOrganizations
     , perLocales
+    , perLocations
+    , perMiscKeywords
     , perMemberships
     , perRelationshipInterests
+    , perClientData
 
     -- * Empty
     , Empty
     , empty
+
+    -- * PeopleListDirectoryPeopleSources
+    , PeopleListDirectoryPeopleSources (..)
 
     -- * SourceType
     , SourceType (..)
@@ -179,6 +233,14 @@ module Network.Google.People.Types
     , cgmContactGroupResourceName
     , cgmContactGroupId
 
+    -- * MiscKeyword
+    , MiscKeyword
+    , miscKeyword
+    , mkValue
+    , mkMetadata
+    , mkType
+    , mkFormattedType
+
     -- * ContactGroupGroupType
     , ContactGroupGroupType (..)
 
@@ -189,14 +251,20 @@ module Network.Google.People.Types
     , udKey
     , udMetadata
 
+    -- * CopyOtherContactToMyContactsGroupRequestSourcesItem
+    , CopyOtherContactToMyContactsGroupRequestSourcesItem (..)
+
     -- * NicknameType
     , NicknameType (..)
 
     -- * Locale
     , Locale
     , locale
-    , lValue
-    , lMetadata
+    , locValue
+    , locMetadata
+
+    -- * PeopleConnectionsListSortOrder
+    , PeopleConnectionsListSortOrder (..)
 
     -- * RelationshipStatus
     , RelationshipStatus
@@ -204,6 +272,9 @@ module Network.Google.People.Types
     , rsValue
     , rsMetadata
     , rsFormattedValue
+
+    -- * PeopleDeleteContactPhotoSources
+    , PeopleDeleteContactPhotoSources (..)
 
     -- * URL
     , URL
@@ -213,10 +284,29 @@ module Network.Google.People.Types
     , uType
     , uFormattedType
 
+    -- * PeopleGetSources
+    , PeopleGetSources (..)
+
     -- * StatusDetailsItem
     , StatusDetailsItem
     , statusDetailsItem
     , sdiAddtional
+
+    -- * DeleteContactPhotoResponse
+    , DeleteContactPhotoResponse
+    , deleteContactPhotoResponse
+    , dcprPerson
+
+    -- * UpdateContactPhotoResponse
+    , UpdateContactPhotoResponse
+    , updateContactPhotoResponse
+    , ucprPerson
+
+    -- * GroupClientData
+    , GroupClientData
+    , groupClientData
+    , gcdValue
+    , gcdKey
 
     -- * Address
     , Address
@@ -253,6 +343,16 @@ module Network.Google.People.Types
     , getPeopleResponse
     , gprResponses
 
+    -- * ListOtherContactsResponse
+    , ListOtherContactsResponse
+    , listOtherContactsResponse
+    , locrNextPageToken
+    , locrOtherContacts
+    , locrNextSyncToken
+
+    -- * PeopleSearchDirectoryPeopleSources
+    , PeopleSearchDirectoryPeopleSources (..)
+
     -- * Birthday
     , Birthday
     , birthday
@@ -260,8 +360,14 @@ module Network.Google.People.Types
     , bDate
     , bMetadata
 
+    -- * PeopleCreateContactSources
+    , PeopleCreateContactSources (..)
+
     -- * PersonAgeRange
     , PersonAgeRange (..)
+
+    -- * PeopleSearchDirectoryPeopleMergeSources
+    , PeopleSearchDirectoryPeopleMergeSources (..)
 
     -- * Date
     , Date
@@ -283,6 +389,13 @@ module Network.Google.People.Types
     , resCurrent
     , resMetadata
 
+    -- * UpdateContactPhotoRequest
+    , UpdateContactPhotoRequest
+    , updateContactPhotoRequest
+    , ucprSources
+    , ucprPersonFields
+    , ucprPhotoBytes
+
     -- * AgeRangeType
     , AgeRangeType
     , ageRangeType
@@ -293,8 +406,12 @@ module Network.Google.People.Types
     , Gender
     , gender
     , gValue
+    , gAddressMeAs
     , gMetadata
     , gFormattedValue
+
+    -- * UpdateContactPhotoRequestSourcesItem
+    , UpdateContactPhotoRequestSourcesItem (..)
 
     -- * Name
     , Name
@@ -302,6 +419,7 @@ module Network.Google.People.Types
     , nGivenName
     , nPhoneticHonorificSuffix
     , nMiddleName
+    , nUnstructuredName
     , nPhoneticMiddleName
     , nPhoneticFamilyName
     , nPhoneticHonorificPrefix
@@ -320,6 +438,13 @@ module Network.Google.People.Types
     , fmVerified
     , fmPrimary
     , fmSource
+
+    -- * SearchDirectoryPeopleResponse
+    , SearchDirectoryPeopleResponse
+    , searchDirectoryPeopleResponse
+    , sdprNextPageToken
+    , sdprPeople
+    , sdprTotalSize
 
     -- * PhoneNumber
     , PhoneNumber
@@ -352,6 +477,7 @@ module Network.Google.People.Types
     , CreateContactGroupRequest
     , createContactGroupRequest
     , ccgrContactGroup
+    , ccgrReadGroupFields
 
     -- * ContactGroupMetadata
     , ContactGroupMetadata
@@ -376,6 +502,9 @@ module Network.Google.People.Types
     , sUpdateTime
     , sId
     , sType
+
+    -- * MiscKeywordType
+    , MiscKeywordType (..)
 
     -- * ImClient
     , ImClient
@@ -414,8 +543,30 @@ module Network.Google.People.Types
     , nicMetadata
     , nicType
 
+    -- * ExternalId
+    , ExternalId
+    , externalId
+    , eiValue
+    , eiMetadata
+    , eiType
+    , eiFormattedType
+
     -- * ProFileMetadataObjectType
     , ProFileMetadataObjectType (..)
+
+    -- * ListDirectoryPeopleResponse
+    , ListDirectoryPeopleResponse
+    , listDirectoryPeopleResponse
+    , ldprNextPageToken
+    , ldprPeople
+    , ldprNextSyncToken
+
+    -- * CopyOtherContactToMyContactsGroupRequest
+    , CopyOtherContactToMyContactsGroupRequest
+    , copyOtherContactToMyContactsGroupRequest
+    , coctmcgrReadMask
+    , coctmcgrSources
+    , coctmcgrCopyMask
 
     -- * Organization
     , Organization
@@ -449,6 +600,27 @@ module Network.Google.People.Types
     , prPerson
     , prHTTPStatusCode
 
+    -- * CalendarURL
+    , CalendarURL
+    , calendarURL
+    , cuURL
+    , cuMetadata
+    , cuType
+    , cuFormattedType
+
+    -- * ClientData
+    , ClientData
+    , clientData
+    , cdValue
+    , cdKey
+    , cdMetadata
+
+    -- * PeopleGetBatchGetSources
+    , PeopleGetBatchGetSources (..)
+
+    -- * ProFileMetadataUserTypesItem
+    , ProFileMetadataUserTypesItem (..)
+
     -- * Skill
     , Skill
     , skill
@@ -470,9 +642,9 @@ module Network.Google.People.Types
     , cpMetadata
     ) where
 
-import           Network.Google.People.Types.Product
-import           Network.Google.People.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.People.Types.Product
+import Network.Google.People.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the People API. This contains the host and root path used as a starting point for constructing service requests.
 peopleService :: ServiceConfig
@@ -480,7 +652,16 @@ peopleService
   = defaultService (ServiceId "people:v1")
       "people.googleapis.com"
 
--- | View your complete date of birth
+-- | See and download contact info automatically saved in your \"Other
+-- contacts\"
+contactsOtherReadOnlyScope :: Proxy '["https://www.googleapis.com/auth/contacts.other.readonly"]
+contactsOtherReadOnlyScope = Proxy
+
+-- | See and download your organization\'s GSuite directory
+directoryReadOnlyScope :: Proxy '["https://www.googleapis.com/auth/directory.readonly"]
+directoryReadOnlyScope = Proxy
+
+-- | See and download your exact date of birth
 userBirthdayReadScope :: Proxy '["https://www.googleapis.com/auth/user.birthday.read"]
 userBirthdayReadScope = Proxy
 
@@ -489,7 +670,7 @@ userBirthdayReadScope = Proxy
 userInfoProFileScope :: Proxy '["https://www.googleapis.com/auth/userinfo.profile"]
 userInfoProFileScope = Proxy
 
--- | View your phone numbers
+-- | See and download your personal phone numbers
 userPhoneNumbersReadScope :: Proxy '["https://www.googleapis.com/auth/user.phonenumbers.read"]
 userPhoneNumbersReadScope = Proxy
 
@@ -505,10 +686,18 @@ contactsReadOnlyScope = Proxy
 userAddressesReadScope :: Proxy '["https://www.googleapis.com/auth/user.addresses.read"]
 userAddressesReadScope = Proxy
 
+-- | See your education, work history and org info
+userOrganizationReadScope :: Proxy '["https://www.googleapis.com/auth/user.organization.read"]
+userOrganizationReadScope = Proxy
+
 -- | See, edit, download, and permanently delete your contacts
 contactsScope :: Proxy '["https://www.googleapis.com/auth/contacts"]
 contactsScope = Proxy
 
--- | View your email addresses
+-- | See and download all of your Google Account email addresses
 userEmailsReadScope :: Proxy '["https://www.googleapis.com/auth/user.emails.read"]
 userEmailsReadScope = Proxy
+
+-- | See your gender
+userGenderReadScope :: Proxy '["https://www.googleapis.com/auth/user.gender.read"]
+userGenderReadScope = Proxy

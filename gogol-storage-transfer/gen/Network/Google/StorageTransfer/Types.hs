@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -29,6 +29,11 @@ module Network.Google.StorageTransfer.Types
     , esErrorCode
     , esErrorLogEntries
 
+    -- * RunTransferJobRequest
+    , RunTransferJobRequest
+    , runTransferJobRequest
+    , rtjrProjectId
+
     -- * Status
     , Status
     , status
@@ -36,29 +41,47 @@ module Network.Google.StorageTransfer.Types
     , sCode
     , sMessage
 
+    -- * NotificationConfig
+    , NotificationConfig
+    , notificationConfig
+    , ncEventTypes
+    , ncPubsubTopic
+    , ncPayloadFormat
+
     -- * ListOperationsResponse
     , ListOperationsResponse
     , listOperationsResponse
     , lorNextPageToken
     , lorOperations
 
+    -- * CancelOperationRequest
+    , CancelOperationRequest
+    , cancelOperationRequest
+
     -- * TransferOperationStatus
     , TransferOperationStatus (..)
+
+    -- * NotificationConfigPayloadFormat
+    , NotificationConfigPayloadFormat (..)
 
     -- * Schedule
     , Schedule
     , schedule
+    , sRepeatInterval
     , sScheduleEndDate
     , sScheduleStartDate
+    , sEndTimeOfDay
     , sStartTimeOfDay
 
     -- * ObjectConditions
     , ObjectConditions
     , objectConditions
+    , ocLastModifiedBefore
     , ocMinTimeElapsedSinceLastModification
     , ocIncludePrefixes
     , ocMaxTimeElapsedSinceLastModification
     , ocExcludePrefixes
+    , ocLastModifiedSince
 
     -- * Operation
     , Operation
@@ -86,6 +109,11 @@ module Network.Google.StorageTransfer.Types
     , StatusDetailsItem
     , statusDetailsItem
     , sdiAddtional
+
+    -- * AzureCredentials
+    , AzureCredentials
+    , azureCredentials
+    , acSasToken
 
     -- * Date
     , Date
@@ -126,6 +154,7 @@ module Network.Google.StorageTransfer.Types
     , transferJob
     , tjCreationTime
     , tjStatus
+    , tjNotificationConfig
     , tjSchedule
     , tjDeletionTime
     , tjName
@@ -133,18 +162,24 @@ module Network.Google.StorageTransfer.Types
     , tjTransferSpec
     , tjDescription
     , tjLastModificationTime
+    , tjLatestOperationName
 
     -- * GcsData
     , GcsData
     , gcsData
+    , gdPath
     , gdBucketName
 
     -- * Xgafv
     , Xgafv (..)
 
+    -- * NotificationConfigEventTypesItem
+    , NotificationConfigEventTypesItem (..)
+
     -- * AwsS3Data
     , AwsS3Data
     , awsS3Data
+    , asdPath
     , asdBucketName
     , asdAwsAccessKey
 
@@ -175,6 +210,14 @@ module Network.Google.StorageTransfer.Types
     , operationMetadata
     , omAddtional
 
+    -- * AzureBlobStorageData
+    , AzureBlobStorageData
+    , azureBlobStorageData
+    , absdPath
+    , absdAzureCredentials
+    , absdContainer
+    , absdStorageAccount
+
     -- * TransferOptions
     , TransferOptions
     , transferOptions
@@ -187,6 +230,7 @@ module Network.Google.StorageTransfer.Types
     , transferOperation
     , toStatus
     , toCounters
+    , toNotificationConfig
     , toStartTime
     , toTransferJobName
     , toName
@@ -204,6 +248,7 @@ module Network.Google.StorageTransfer.Types
     , tsAwsS3DataSource
     , tsGcsDataSink
     , tsTransferOptions
+    , tsAzureBlobStorageDataSource
 
     -- * ListTransferJobsResponse
     , ListTransferJobsResponse
@@ -230,9 +275,9 @@ module Network.Google.StorageTransfer.Types
     , ErrorSummaryErrorCode (..)
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.StorageTransfer.Types.Product
-import           Network.Google.StorageTransfer.Types.Sum
+import Network.Google.Prelude
+import Network.Google.StorageTransfer.Types.Product
+import Network.Google.StorageTransfer.Types.Sum
 
 -- | Default request referring to version 'v1' of the Storage Transfer API. This contains the host and root path used as a starting point for constructing service requests.
 storageTransferService :: ServiceConfig

@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -54,6 +54,14 @@ module Network.Google.Redis.Types
     , lorNextPageToken
     , lorOperations
 
+    -- * GcsSource
+    , GcsSource
+    , gcsSource
+    , gsURI
+
+    -- * InstanceTransitEncryptionMode
+    , InstanceTransitEncryptionMode (..)
+
     -- * Location
     , Location
     , location
@@ -83,6 +91,11 @@ module Network.Google.Redis.Types
     -- * InstanceTier
     , InstanceTier (..)
 
+    -- * GcsDestination
+    , GcsDestination
+    , gcsDestination
+    , gdURI
+
     -- * StatusDetailsItem
     , StatusDetailsItem
     , statusDetailsItem
@@ -109,6 +122,24 @@ module Network.Google.Redis.Types
     , instanceRedisConfigs
     , ircAddtional
 
+    -- * InputConfig
+    , InputConfig
+    , inputConfig
+    , icGcsSource
+
+    -- * InstanceConnectMode
+    , InstanceConnectMode (..)
+
+    -- * ExportInstanceRequest
+    , ExportInstanceRequest
+    , exportInstanceRequest
+    , eirOutputConfig
+
+    -- * InstanceAuthString
+    , InstanceAuthString
+    , instanceAuthString
+    , iasAuthString
+
     -- * GoogleCloudRedisV1LocationMetadataAvailableZones
     , GoogleCloudRedisV1LocationMetadataAvailableZones
     , googleCloudRedisV1LocationMetadataAvailableZones
@@ -116,6 +147,21 @@ module Network.Google.Redis.Types
 
     -- * Xgafv
     , Xgafv (..)
+
+    -- * OutputConfig
+    , OutputConfig
+    , outputConfig
+    , ocGcsDestination
+
+    -- * ImportInstanceRequest
+    , ImportInstanceRequest
+    , importInstanceRequest
+    , iirInputConfig
+
+    -- * UpgradeInstanceRequest
+    , UpgradeInstanceRequest
+    , upgradeInstanceRequest
+    , uirRedisVersion
 
     -- * LocationLabels
     , LocationLabels
@@ -147,10 +193,23 @@ module Network.Google.Redis.Types
     , operationResponse
     , orAddtional
 
+    -- * TLSCertificate
+    , TLSCertificate
+    , tlsCertificate
+    , tcCert
+    , tcSerialNumber
+    , tcSha1Fingerprint
+    , tcExpireTime
+    , tcCreateTime
+
     -- * Instance
     , Instance
     , instance'
+    , iServerCaCerts
+    , iPersistenceIAMIdentity
     , iState
+    , iAuthEnabled
+    , iTransitEncryptionMode
     , iAuthorizedNetwork
     , iMemorySizeGb
     , iName
@@ -160,6 +219,7 @@ module Network.Google.Redis.Types
     , iTier
     , iDisplayName
     , iLabels
+    , iConnectMode
     , iLocationId
     , iHost
     , iRedisConfigs
@@ -169,9 +229,9 @@ module Network.Google.Redis.Types
     , iCurrentLocationId
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Redis.Types.Product
-import           Network.Google.Redis.Types.Sum
+import Network.Google.Prelude
+import Network.Google.Redis.Types.Product
+import Network.Google.Redis.Types.Sum
 
 -- | Default request referring to version 'v1' of the Google Cloud Memorystore for Redis API. This contains the host and root path used as a starting point for constructing service requests.
 redisService :: ServiceConfig

@@ -16,7 +16,7 @@
 -- Schedule queries or transfer external data from SaaS applications to
 -- Google BigQuery on a regular basis.
 --
--- /See:/ <https://cloud.google.com/bigquery/ BigQuery Data Transfer API Reference>
+-- /See:/ <https://cloud.google.com/bigquery-transfer/ BigQuery Data Transfer API Reference>
 module Network.Google.BigQueryDataTransfer
     (
     -- * Service Configuration
@@ -26,6 +26,7 @@ module Network.Google.BigQueryDataTransfer
     , cloudPlatformReadOnlyScope
     , cloudPlatformScope
     , bigQueryScope
+    , bigQueryReadOnlyScope
 
     -- * API Declaration
     , BigQueryDataTransferAPI
@@ -127,6 +128,11 @@ module Network.Google.BigQueryDataTransfer
     -- ** DataSourceParameterType
     , DataSourceParameterType (..)
 
+    -- ** EmailPreferences
+    , EmailPreferences
+    , emailPreferences
+    , epEnableFailureEmail
+
     -- ** Status
     , Status
     , status
@@ -150,7 +156,9 @@ module Network.Google.BigQueryDataTransfer
     , TransferRun
     , transferRun
     , tRunTime
+    , tEmailPreferences
     , tErrorStatus
+    , tNotificationPubsubTopic
     , tState
     , tSchedule
     , tStartTime
@@ -220,6 +228,12 @@ module Network.Google.BigQueryDataTransfer
     -- ** DataSourceTransferType
     , DataSourceTransferType (..)
 
+    -- ** ProjectsLocationsTransferConfigsRunsListStates
+    , ProjectsLocationsTransferConfigsRunsListStates (..)
+
+    -- ** ProjectsLocationsTransferConfigsRunsTransferLogsListMessageTypes
+    , ProjectsLocationsTransferConfigsRunsTransferLogsListMessageTypes (..)
+
     -- ** DataSourceAuthorizationType
     , DataSourceAuthorizationType (..)
 
@@ -227,6 +241,9 @@ module Network.Google.BigQueryDataTransfer
     , TransferRunParams
     , transferRunParams
     , trpAddtional
+
+    -- ** ProjectsLocationsTransferConfigsRunsListRunAttempt
+    , ProjectsLocationsTransferConfigsRunsListRunAttempt (..)
 
     -- ** DataSourceParameter
     , DataSourceParameter
@@ -246,6 +263,7 @@ module Network.Google.BigQueryDataTransfer
     , dspMinValue
     , dspValidationHelpURL
     , dspFields
+    , dspDeprecated
 
     -- ** ScheduleTransferRunsResponse
     , ScheduleTransferRunsResponse
@@ -305,6 +323,12 @@ module Network.Google.BigQueryDataTransfer
     , tmMessageTime
     , tmMessageText
 
+    -- ** ProjectsTransferConfigsRunsTransferLogsListMessageTypes
+    , ProjectsTransferConfigsRunsTransferLogsListMessageTypes (..)
+
+    -- ** ProjectsTransferConfigsRunsListStates
+    , ProjectsTransferConfigsRunsListStates (..)
+
     -- ** LocationLabels
     , LocationLabels
     , locationLabels
@@ -314,6 +338,9 @@ module Network.Google.BigQueryDataTransfer
     , StartManualTransferRunsResponse
     , startManualTransferRunsResponse
     , smtrrRuns
+
+    -- ** ProjectsTransferConfigsRunsListRunAttempt
+    , ProjectsTransferConfigsRunsListRunAttempt (..)
 
     -- ** LocationMetadata
     , LocationMetadata
@@ -335,6 +362,8 @@ module Network.Google.BigQueryDataTransfer
     -- ** TransferConfig
     , TransferConfig
     , transferConfig
+    , tcEmailPreferences
+    , tcNotificationPubsubTopic
     , tcState
     , tcSchedule
     , tcScheduleOptions
@@ -351,38 +380,38 @@ module Network.Google.BigQueryDataTransfer
     , tcDataRefreshWindowDays
     ) where
 
-import           Network.Google.BigQueryDataTransfer.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.DataSources.CheckValidCreds
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.DataSources.Get
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.DataSources.List
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.DataSources.CheckValidCreds
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.DataSources.Get
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.DataSources.List
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.Get
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.List
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Create
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Delete
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Get
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.List
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Patch
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Runs.Delete
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Runs.Get
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Runs.List
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Runs.TransferLogs.List
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.ScheduleRuns
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.StartManualRuns
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Create
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Delete
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Get
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.List
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Patch
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Runs.Delete
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Runs.Get
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Runs.List
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Runs.TransferLogs.List
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.ScheduleRuns
-import           Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.StartManualRuns
+import Network.Google.Prelude
+import Network.Google.BigQueryDataTransfer.Types
+import Network.Google.Resource.BigQueryDataTransfer.Projects.DataSources.CheckValidCreds
+import Network.Google.Resource.BigQueryDataTransfer.Projects.DataSources.Get
+import Network.Google.Resource.BigQueryDataTransfer.Projects.DataSources.List
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.DataSources.CheckValidCreds
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.DataSources.Get
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.DataSources.List
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.Get
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.List
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Create
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Delete
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Get
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.List
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Patch
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Runs.Delete
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Runs.Get
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Runs.List
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.Runs.TransferLogs.List
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.ScheduleRuns
+import Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.StartManualRuns
+import Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Create
+import Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Delete
+import Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Get
+import Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.List
+import Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Patch
+import Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Runs.Delete
+import Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Runs.Get
+import Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Runs.List
+import Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.Runs.TransferLogs.List
+import Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.ScheduleRuns
+import Network.Google.Resource.BigQueryDataTransfer.Projects.TransferConfigs.StartManualRuns
 
 {- $resources
 TODO

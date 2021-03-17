@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -27,6 +27,13 @@ module Network.Google.Slides.Types
     , driveFileScope
     , spreadsheetsScope
     , presentationsReadOnlyScope
+
+    -- * Autofit
+    , Autofit
+    , autofit
+    , aFontScale
+    , aLineSpacingReduction
+    , aAutofitType
 
     -- * ParagraphMarker
     , ParagraphMarker
@@ -400,6 +407,9 @@ module Network.Google.Slides.Types
     , dorObjectId
     , dorObjectIds
 
+    -- * PresentationsPagesGetThumbnailThumbnailPropertiesThumbnailSize
+    , PresentationsPagesGetThumbnailThumbnailPropertiesThumbnailSize (..)
+
     -- * PlaceholderType
     , PlaceholderType (..)
 
@@ -493,6 +503,9 @@ module Network.Google.Slides.Types
 
     -- * LinePropertiesDashStyle
     , LinePropertiesDashStyle (..)
+
+    -- * PresentationsPagesGetThumbnailThumbnailPropertiesMimeType
+    , PresentationsPagesGetThumbnailThumbnailPropertiesMimeType (..)
 
     -- * ImageProperties
     , ImageProperties
@@ -854,6 +867,9 @@ module Network.Google.Slides.Types
     , listNestingLevel
     , lnlAddtional
 
+    -- * AutofitAutofitType
+    , AutofitAutofitType (..)
+
     -- * Outline
     , Outline
     , outline
@@ -992,6 +1008,7 @@ module Network.Google.Slides.Types
     -- * ShapeProperties
     , ShapeProperties
     , shapeProperties
+    , spAutofit
     , spLink
     , spShadow
     , spOutline
@@ -1166,9 +1183,9 @@ module Network.Google.Slides.Types
     , smcText
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Slides.Types.Product
-import           Network.Google.Slides.Types.Sum
+import Network.Google.Prelude
+import Network.Google.Slides.Types.Product
+import Network.Google.Slides.Types.Sum
 
 -- | Default request referring to version 'v1' of the Google Slides API. This contains the host and root path used as a starting point for constructing service requests.
 slidesService :: ServiceConfig

@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -23,21 +23,12 @@ module Network.Google.ResourceManager.Types
     , cloudPlatformReadOnlyScope
     , cloudPlatformScope
 
-    -- * ListFoldersResponse
-    , ListFoldersResponse
-    , listFoldersResponse
-    , lfrNextPageToken
-    , lfrFolders
-
     -- * Status
     , Status
     , status
     , sDetails
     , sCode
     , sMessage
-
-    -- * FolderLifecycleState
-    , FolderLifecycleState (..)
 
     -- * AuditConfig
     , AuditConfig
@@ -56,17 +47,15 @@ module Network.Google.ResourceManager.Types
     -- * GetIAMPolicyRequest
     , GetIAMPolicyRequest
     , getIAMPolicyRequest
+    , giprOptions
 
-    -- * SearchFoldersRequest
-    , SearchFoldersRequest
-    , searchFoldersRequest
-    , sfrQuery
-    , sfrPageToken
-    , sfrPageSize
+    -- * DeleteTagValueMetadata
+    , DeleteTagValueMetadata
+    , deleteTagValueMetadata
 
-    -- * UndeleteFolderRequest
-    , UndeleteFolderRequest
-    , undeleteFolderRequest
+    -- * UpdateTagValueMetadata
+    , UpdateTagValueMetadata
+    , updateTagValueMetadata
 
     -- * Operation
     , Operation
@@ -77,14 +66,12 @@ module Network.Google.ResourceManager.Types
     , oName
     , oMetadata
 
+    -- * Empty
+    , Empty
+    , empty
+
     -- * FolderOperationErrorErrorMessageId
     , FolderOperationErrorErrorMessageId (..)
-
-    -- * SearchFoldersResponse
-    , SearchFoldersResponse
-    , searchFoldersResponse
-    , sfrNextPageToken
-    , sfrFolders
 
     -- * ProjectCreationStatus
     , ProjectCreationStatus
@@ -92,6 +79,24 @@ module Network.Google.ResourceManager.Types
     , pcsGettable
     , pcsReady
     , pcsCreateTime
+
+    -- * CreateTagValueMetadata
+    , CreateTagValueMetadata
+    , createTagValueMetadata
+
+    -- * ListTagValuesResponse
+    , ListTagValuesResponse
+    , listTagValuesResponse
+    , ltvrNextPageToken
+    , ltvrTagValues
+
+    -- * CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation
+    , CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation
+    , cloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation
+    , crmgcrmvfoDestinationParent
+    , crmgcrmvfoDisplayName
+    , crmgcrmvfoOperationType
+    , crmgcrmvfoSourceParent
 
     -- * StatusDetailsItem
     , StatusDetailsItem
@@ -103,14 +108,10 @@ module Network.Google.ResourceManager.Types
     , folderOperationError
     , foeErrorMessageId
 
-    -- * Folder
-    , Folder
-    , folder
-    , fParent
-    , fName
-    , fDisplayName
-    , fLifecycleState
-    , fCreateTime
+    -- * GetPolicyOptions
+    , GetPolicyOptions
+    , getPolicyOptions
+    , gpoRequestedPolicyVersion
 
     -- * FolderOperationOperationType
     , FolderOperationOperationType (..)
@@ -120,6 +121,34 @@ module Network.Google.ResourceManager.Types
     , setIAMPolicyRequest
     , siprUpdateMask
     , siprPolicy
+
+    -- * TagValue
+    , TagValue
+    , tagValue
+    , tvParent
+    , tvEtag
+    , tvShortName
+    , tvUpdateTime
+    , tvName
+    , tvNamespacedName
+    , tvDescription
+    , tvCreateTime
+
+    -- * ListLiensResponse
+    , ListLiensResponse
+    , listLiensResponse
+    , llrNextPageToken
+    , llrLiens
+
+    -- * CreateTagKeyMetadata
+    , CreateTagKeyMetadata
+    , createTagKeyMetadata
+
+    -- * ListTagKeysResponse
+    , ListTagKeysResponse
+    , listTagKeysResponse
+    , ltkrNextPageToken
+    , ltkrTagKeys
 
     -- * AuditLogConfigLogType
     , AuditLogConfigLogType (..)
@@ -131,6 +160,26 @@ module Network.Google.ResourceManager.Types
     , TestIAMPermissionsRequest
     , testIAMPermissionsRequest
     , tiprPermissions
+
+    -- * TagKey
+    , TagKey
+    , tagKey
+    , tkParent
+    , tkEtag
+    , tkShortName
+    , tkUpdateTime
+    , tkName
+    , tkNamespacedName
+    , tkDescription
+    , tkCreateTime
+
+    -- * CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation
+    , CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation
+    , cloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation
+    , cDestinationParent
+    , cDisplayName
+    , cOperationType
+    , cSourceParent
 
     -- * TestIAMPermissionsResponse
     , TestIAMPermissionsResponse
@@ -144,6 +193,9 @@ module Network.Google.ResourceManager.Types
     , pEtag
     , pVersion
     , pBindings
+
+    -- * CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperationOperationType
+    , CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperationOperationType (..)
 
     -- * OperationMetadata
     , OperationMetadata
@@ -164,15 +216,38 @@ module Network.Google.ResourceManager.Types
     , alcLogType
     , alcExemptedMembers
 
+    -- * TagBinding
+    , TagBinding
+    , tagBinding
+    , tbParent
+    , tbTagValue
+    , tbName
+
+    -- * CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperationOperationType
+    , CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperationOperationType (..)
+
     -- * OperationResponse
     , OperationResponse
     , operationResponse
     , orAddtional
 
-    -- * MoveFolderRequest
-    , MoveFolderRequest
-    , moveFolderRequest
-    , mfrDestinationParent
+    -- * Lien
+    , Lien
+    , lien
+    , lParent
+    , lOrigin
+    , lReason
+    , lName
+    , lRestrictions
+    , lCreateTime
+
+    -- * UpdateTagKeyMetadata
+    , UpdateTagKeyMetadata
+    , updateTagKeyMetadata
+
+    -- * DeleteTagKeyMetadata
+    , DeleteTagKeyMetadata
+    , deleteTagKeyMetadata
 
     -- * Binding
     , Binding
@@ -180,23 +255,29 @@ module Network.Google.ResourceManager.Types
     , bMembers
     , bRole
     , bCondition
+
+    -- * ListTagBindingsResponse
+    , ListTagBindingsResponse
+    , listTagBindingsResponse
+    , ltbrNextPageToken
+    , ltbrTagBindings
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ResourceManager.Types.Product
-import           Network.Google.ResourceManager.Types.Sum
+import Network.Google.Prelude
+import Network.Google.ResourceManager.Types.Product
+import Network.Google.ResourceManager.Types.Sum
 
--- | Default request referring to version 'v2' of the Cloud Resource Manager API. This contains the host and root path used as a starting point for constructing service requests.
+-- | Default request referring to version 'v3' of the Cloud Resource Manager API. This contains the host and root path used as a starting point for constructing service requests.
 resourceManagerService :: ServiceConfig
 resourceManagerService
   = defaultService
-      (ServiceId "cloudresourcemanager:v2")
+      (ServiceId "cloudresourcemanager:v3")
       "cloudresourcemanager.googleapis.com"
 
 -- | View your data across Google Cloud Platform services
 cloudPlatformReadOnlyScope :: Proxy '["https://www.googleapis.com/auth/cloud-platform.read-only"]
 cloudPlatformReadOnlyScope = Proxy
 
--- | View and manage your data across Google Cloud Platform services
+-- | See, edit, configure, and delete your Google Cloud Platform data
 cloudPlatformScope :: Proxy '["https://www.googleapis.com/auth/cloud-platform"]
 cloudPlatformScope = Proxy

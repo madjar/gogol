@@ -40,8 +40,8 @@ module Network.Google.Resource.BigQuery.Jobs.Get
     , jgProjectId
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.jobs.get@ method which the
 -- 'JobsGet' request conforms to.
@@ -62,8 +62,8 @@ type JobsGetResource =
 -- /See:/ 'jobsGet' smart constructor.
 data JobsGet =
   JobsGet'
-    { _jgJobId     :: !Text
-    , _jgLocation  :: !(Maybe Text)
+    { _jgJobId :: !Text
+    , _jgLocation :: !(Maybe Text)
     , _jgProjectId :: !Text
     }
   deriving (Eq, Show, Data, Typeable, Generic)
@@ -107,6 +107,7 @@ instance GoogleRequest JobsGet where
         type Rs JobsGet = Job
         type Scopes JobsGet =
              '["https://www.googleapis.com/auth/bigquery",
+               "https://www.googleapis.com/auth/bigquery.readonly",
                "https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud-platform.read-only"]
         requestClient JobsGet'{..}

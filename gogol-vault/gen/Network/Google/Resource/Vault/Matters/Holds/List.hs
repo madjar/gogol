@@ -45,8 +45,8 @@ module Network.Google.Resource.Vault.Matters.Holds.List
     , mhlCallback
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Vault.Types
+import Network.Google.Prelude
+import Network.Google.Vault.Types
 
 -- | A resource alias for @vault.matters.holds.list@ method which the
 -- 'MattersHoldsList' request conforms to.
@@ -59,7 +59,7 @@ type MattersHoldsListResource =
                QueryParam "upload_protocol" Text :>
                  QueryParam "access_token" Text :>
                    QueryParam "uploadType" Text :>
-                     QueryParam "view" Text :>
+                     QueryParam "view" MattersHoldsListView :>
                        QueryParam "pageToken" Text :>
                          QueryParam "pageSize" (Textual Int32) :>
                            QueryParam "callback" Text :>
@@ -72,15 +72,15 @@ type MattersHoldsListResource =
 -- /See:/ 'mattersHoldsList' smart constructor.
 data MattersHoldsList =
   MattersHoldsList'
-    { _mhlXgafv          :: !(Maybe Xgafv)
+    { _mhlXgafv :: !(Maybe Xgafv)
     , _mhlUploadProtocol :: !(Maybe Text)
-    , _mhlAccessToken    :: !(Maybe Text)
-    , _mhlUploadType     :: !(Maybe Text)
-    , _mhlMatterId       :: !Text
-    , _mhlView           :: !(Maybe Text)
-    , _mhlPageToken      :: !(Maybe Text)
-    , _mhlPageSize       :: !(Maybe (Textual Int32))
-    , _mhlCallback       :: !(Maybe Text)
+    , _mhlAccessToken :: !(Maybe Text)
+    , _mhlUploadType :: !(Maybe Text)
+    , _mhlMatterId :: !Text
+    , _mhlView :: !(Maybe MattersHoldsListView)
+    , _mhlPageToken :: !(Maybe Text)
+    , _mhlPageSize :: !(Maybe (Textual Int32))
+    , _mhlCallback :: !(Maybe Text)
     }
   deriving (Eq, Show, Data, Typeable, Generic)
 
@@ -151,7 +151,7 @@ mhlMatterId
   = lens _mhlMatterId (\ s a -> s{_mhlMatterId = a})
 
 -- | Specifies which parts of the Hold to return.
-mhlView :: Lens' MattersHoldsList (Maybe Text)
+mhlView :: Lens' MattersHoldsList (Maybe MattersHoldsListView)
 mhlView = lens _mhlView (\ s a -> s{_mhlView = a})
 
 -- | The pagination token as returned in the response. An empty token means

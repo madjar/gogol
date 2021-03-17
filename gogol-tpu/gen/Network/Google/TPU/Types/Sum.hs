@@ -16,7 +16,7 @@
 --
 module Network.Google.TPU.Types.Sum where
 
-import           Network.Google.Prelude hiding (Bytes)
+import Network.Google.Prelude hiding (Bytes)
 
 -- | Output only. The current state for the TPU Node.
 data NodeState
@@ -112,6 +112,56 @@ instance FromJSON NodeState where
     parseJSON = parseJSONText "NodeState"
 
 instance ToJSON NodeState where
+    toJSON = toJSONText
+
+-- | Type of the Symptom.
+data SymptomSymptomType
+    = SymptomTypeUnspecified
+      -- ^ @SYMPTOM_TYPE_UNSPECIFIED@
+      -- Unspecified symptom.
+    | LowMemory
+      -- ^ @LOW_MEMORY@
+      -- TPU VM memory is low.
+    | OutOfMemory
+      -- ^ @OUT_OF_MEMORY@
+      -- TPU runtime is out of memory.
+    | ExecuteTimedOut
+      -- ^ @EXECUTE_TIMED_OUT@
+      -- TPU runtime execution has timed out.
+    | MeshBuildFail
+      -- ^ @MESH_BUILD_FAIL@
+      -- TPU runtime fails to construct a mesh that recognizes each TPU device\'s
+      -- neighbors.
+    | HbmOutOfMemory
+      -- ^ @HBM_OUT_OF_MEMORY@
+      -- TPU HBM is out of memory.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable SymptomSymptomType
+
+instance FromHttpApiData SymptomSymptomType where
+    parseQueryParam = \case
+        "SYMPTOM_TYPE_UNSPECIFIED" -> Right SymptomTypeUnspecified
+        "LOW_MEMORY" -> Right LowMemory
+        "OUT_OF_MEMORY" -> Right OutOfMemory
+        "EXECUTE_TIMED_OUT" -> Right ExecuteTimedOut
+        "MESH_BUILD_FAIL" -> Right MeshBuildFail
+        "HBM_OUT_OF_MEMORY" -> Right HbmOutOfMemory
+        x -> Left ("Unable to parse SymptomSymptomType from: " <> x)
+
+instance ToHttpApiData SymptomSymptomType where
+    toQueryParam = \case
+        SymptomTypeUnspecified -> "SYMPTOM_TYPE_UNSPECIFIED"
+        LowMemory -> "LOW_MEMORY"
+        OutOfMemory -> "OUT_OF_MEMORY"
+        ExecuteTimedOut -> "EXECUTE_TIMED_OUT"
+        MeshBuildFail -> "MESH_BUILD_FAIL"
+        HbmOutOfMemory -> "HBM_OUT_OF_MEMORY"
+
+instance FromJSON SymptomSymptomType where
+    parseJSON = parseJSONText "SymptomSymptomType"
+
+instance ToJSON SymptomSymptomType where
     toJSON = toJSONText
 
 -- | The health status of the TPU node.

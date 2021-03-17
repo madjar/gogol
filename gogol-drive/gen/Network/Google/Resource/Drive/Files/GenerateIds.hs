@@ -20,7 +20,8 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Generates a set of file IDs which can be provided in create requests.
+-- Generates a set of file IDs which can be provided in create or copy
+-- requests.
 --
 -- /See:/ <https://developers.google.com/drive/ Drive API Reference> for @drive.files.generateIds@.
 module Network.Google.Resource.Drive.Files.GenerateIds
@@ -37,8 +38,8 @@ module Network.Google.Resource.Drive.Files.GenerateIds
     , fgiCount
     ) where
 
-import           Network.Google.Drive.Types
-import           Network.Google.Prelude
+import Network.Google.Drive.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @drive.files.generateIds@ method which the
 -- 'FilesGenerateIds' request conforms to.
@@ -51,7 +52,8 @@ type FilesGenerateIdsResource =
                QueryParam "count" (Textual Int32) :>
                  QueryParam "alt" AltJSON :> Get '[JSON] GeneratedIds
 
--- | Generates a set of file IDs which can be provided in create requests.
+-- | Generates a set of file IDs which can be provided in create or copy
+-- requests.
 --
 -- /See:/ 'filesGenerateIds' smart constructor.
 data FilesGenerateIds =

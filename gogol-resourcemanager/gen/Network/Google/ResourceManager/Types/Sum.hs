@@ -16,42 +16,7 @@
 --
 module Network.Google.ResourceManager.Types.Sum where
 
-import           Network.Google.Prelude hiding (Bytes)
-
--- | Output only. The lifecycle state of the folder. Updates to the
--- lifecycle_state must be performed via DeleteFolder and UndeleteFolder.
-data FolderLifecycleState
-    = LifecycleStateUnspecified
-      -- ^ @LIFECYCLE_STATE_UNSPECIFIED@
-      -- Unspecified state.
-    | Active
-      -- ^ @ACTIVE@
-      -- The normal and active state.
-    | DeleteRequested
-      -- ^ @DELETE_REQUESTED@
-      -- The folder has been marked for deletion by the user.
-      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
-
-instance Hashable FolderLifecycleState
-
-instance FromHttpApiData FolderLifecycleState where
-    parseQueryParam = \case
-        "LIFECYCLE_STATE_UNSPECIFIED" -> Right LifecycleStateUnspecified
-        "ACTIVE" -> Right Active
-        "DELETE_REQUESTED" -> Right DeleteRequested
-        x -> Left ("Unable to parse FolderLifecycleState from: " <> x)
-
-instance ToHttpApiData FolderLifecycleState where
-    toQueryParam = \case
-        LifecycleStateUnspecified -> "LIFECYCLE_STATE_UNSPECIFIED"
-        Active -> "ACTIVE"
-        DeleteRequested -> "DELETE_REQUESTED"
-
-instance FromJSON FolderLifecycleState where
-    parseJSON = parseJSONText "FolderLifecycleState"
-
-instance ToJSON FolderLifecycleState where
-    toJSON = toJSONText
+import Network.Google.Prelude hiding (Bytes)
 
 -- | The type of operation error experienced.
 data FolderOperationErrorErrorMessageId
@@ -224,4 +189,72 @@ instance FromJSON Xgafv where
     parseJSON = parseJSONText "Xgafv"
 
 instance ToJSON Xgafv where
+    toJSON = toJSONText
+
+-- | The type of this operation.
+data CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperationOperationType
+    = CRMGCRMVFOOTOperationTypeUnspecified
+      -- ^ @OPERATION_TYPE_UNSPECIFIED@
+      -- Operation type not specified.
+    | CRMGCRMVFOOTCreate
+      -- ^ @CREATE@
+      -- A create folder operation.
+    | CRMGCRMVFOOTMove
+      -- ^ @MOVE@
+      -- A move folder operation.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperationOperationType
+
+instance FromHttpApiData CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperationOperationType where
+    parseQueryParam = \case
+        "OPERATION_TYPE_UNSPECIFIED" -> Right CRMGCRMVFOOTOperationTypeUnspecified
+        "CREATE" -> Right CRMGCRMVFOOTCreate
+        "MOVE" -> Right CRMGCRMVFOOTMove
+        x -> Left ("Unable to parse CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperationOperationType from: " <> x)
+
+instance ToHttpApiData CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperationOperationType where
+    toQueryParam = \case
+        CRMGCRMVFOOTOperationTypeUnspecified -> "OPERATION_TYPE_UNSPECIFIED"
+        CRMGCRMVFOOTCreate -> "CREATE"
+        CRMGCRMVFOOTMove -> "MOVE"
+
+instance FromJSON CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperationOperationType where
+    parseJSON = parseJSONText "CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperationOperationType"
+
+instance ToJSON CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperationOperationType where
+    toJSON = toJSONText
+
+-- | The type of this operation.
+data CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperationOperationType
+    = COperationTypeUnspecified
+      -- ^ @OPERATION_TYPE_UNSPECIFIED@
+      -- Operation type not specified.
+    | CCreate
+      -- ^ @CREATE@
+      -- A create folder operation.
+    | CMove
+      -- ^ @MOVE@
+      -- A move folder operation.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperationOperationType
+
+instance FromHttpApiData CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperationOperationType where
+    parseQueryParam = \case
+        "OPERATION_TYPE_UNSPECIFIED" -> Right COperationTypeUnspecified
+        "CREATE" -> Right CCreate
+        "MOVE" -> Right CMove
+        x -> Left ("Unable to parse CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperationOperationType from: " <> x)
+
+instance ToHttpApiData CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperationOperationType where
+    toQueryParam = \case
+        COperationTypeUnspecified -> "OPERATION_TYPE_UNSPECIFIED"
+        CCreate -> "CREATE"
+        CMove -> "MOVE"
+
+instance FromJSON CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperationOperationType where
+    parseJSON = parseJSONText "CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperationOperationType"
+
+instance ToJSON CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperationOperationType where
     toJSON = toJSONText

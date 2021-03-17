@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -24,6 +24,13 @@ module Network.Google.ServiceUsage.Types
     , cloudPlatformScope
     , serviceManagementScope
 
+    -- * JwtLocation
+    , JwtLocation
+    , jwtLocation
+    , jlValuePrefix
+    , jlHeader
+    , jlQuery
+
     -- * MetricDescriptorValueType
     , MetricDescriptorValueType (..)
 
@@ -42,6 +49,7 @@ module Network.Google.ServiceUsage.Types
     , mrdLabels
     , mrdType
     , mrdDescription
+    , mrdLaunchStage
 
     -- * BackendRulePathTranslation
     , BackendRulePathTranslation (..)
@@ -56,7 +64,6 @@ module Network.Google.ServiceUsage.Types
     , gasAPIs
     , gasTypes
     , gasSystemTypes
-    , gasExperimental
     , gasMonitoredResources
     , gasBackend
     , gasMonitoring
@@ -77,6 +84,9 @@ module Network.Google.ServiceUsage.Types
     , gasCustomError
     , gasLogging
     , gasQuota
+
+    -- * GoogleAPIServiceusageV1beta1GetServiceIdentityResponseState
+    , GoogleAPIServiceusageV1beta1GetServiceIdentityResponseState (..)
 
     -- * DocumentationRule
     , DocumentationRule
@@ -123,6 +133,11 @@ module Network.Google.ServiceUsage.Types
     , lsrNextPageToken
     , lsrServices
 
+    -- * ImportConsumerOverridesResponse
+    , ImportConsumerOverridesResponse
+    , importConsumerOverridesResponse
+    , icorOverrides
+
     -- * Context
     , Context
     , context
@@ -137,6 +152,7 @@ module Network.Google.ServiceUsage.Types
     -- * MetricDescriptor
     , MetricDescriptor
     , metricDescriptor
+    , mdMonitoredResourceTypes
     , mdMetricKind
     , mdName
     , mdMetadata
@@ -146,6 +162,7 @@ module Network.Google.ServiceUsage.Types
     , mdValueType
     , mdDescription
     , mdUnit
+    , mdLaunchStage
 
     -- * ListOperationsResponse
     , ListOperationsResponse
@@ -164,6 +181,8 @@ module Network.Google.ServiceUsage.Types
     , brSelector
     , brMinDeadline
     , brAddress
+    , brProtocol
+    , brDisableAuth
     , brOperationDeadline
     , brDeadline
     , brPathTranslation
@@ -259,6 +278,12 @@ module Network.Google.ServiceUsage.Types
     , batchCreateAdminOverridesResponse
     , bcaorOverrides
 
+    -- * ServiceIdentity
+    , ServiceIdentity
+    , serviceIdentity
+    , siEmail
+    , siUniqueId
+
     -- * Mixin
     , Mixin
     , mixin
@@ -290,6 +315,12 @@ module Network.Google.ServiceUsage.Types
     , pContent
     , pName
 
+    -- * GoogleAPIServiceusageV1beta1ServiceIdentity
+    , GoogleAPIServiceusageV1beta1ServiceIdentity
+    , googleAPIServiceusageV1beta1ServiceIdentity
+    , gasvsiEmail
+    , gasvsiUniqueId
+
     -- * AuthenticationRule
     , AuthenticationRule
     , authenticationRule
@@ -297,6 +328,12 @@ module Network.Google.ServiceUsage.Types
     , arSelector
     , arAllowWithoutCredential
     , arOAuth
+
+    -- * GetServiceIdentityResponse
+    , GetServiceIdentityResponse
+    , getServiceIdentityResponse
+    , gsirState
+    , gsirIdentity
 
     -- * LabelDescriptorValueType
     , LabelDescriptorValueType (..)
@@ -306,13 +343,23 @@ module Network.Google.ServiceUsage.Types
     , metricRuleMetricCosts
     , mrmcAddtional
 
-    -- * AuthorizationConfig
-    , AuthorizationConfig
-    , authorizationConfig
-    , acProvider
+    -- * AdminQuotaPolicy
+    , AdminQuotaPolicy
+    , adminQuotaPolicy
+    , aqpMetric
+    , aqpName
+    , aqpContainer
+    , aqpDimensions
+    , aqpPolicyValue
+    , aqpUnit
 
     -- * APISyntax
     , APISyntax (..)
+
+    -- * ImportAdminQuotaPoliciesResponse
+    , ImportAdminQuotaPoliciesResponse
+    , importAdminQuotaPoliciesResponse
+    , iaqprPolicies
 
     -- * TypeSyntax
     , TypeSyntax (..)
@@ -327,11 +374,6 @@ module Network.Google.ServiceUsage.Types
     , enableFailure
     , efServiceId
     , efErrorMessage
-
-    -- * Experimental
-    , Experimental
-    , experimental
-    , eAuthorization
 
     -- * Backend
     , Backend
@@ -363,6 +405,11 @@ module Network.Google.ServiceUsage.Types
     , metOptions
     , metSyntax
 
+    -- * BatchGetServicesResponse
+    , BatchGetServicesResponse
+    , batchGetServicesResponse
+    , bgsrServices
+
     -- * SystemParameters
     , SystemParameters
     , systemParameters
@@ -376,9 +423,12 @@ module Network.Google.ServiceUsage.Types
     -- * QuotaOverride
     , QuotaOverride
     , quotaOverride
+    , qoAdminOverrideAncestor
+    , qoMetric
     , qoOverrideValue
     , qoName
     , qoDimensions
+    , qoUnit
 
     -- * BatchCreateConsumerOverridesResponse
     , BatchCreateConsumerOverridesResponse
@@ -392,6 +442,7 @@ module Network.Google.ServiceUsage.Types
     , dDocumentationRootURL
     , dRules
     , dPages
+    , dServiceRootURL
     , dOverview
 
     -- * Xgafv
@@ -409,6 +460,11 @@ module Network.Google.ServiceUsage.Types
     , mdmIngestDelay
     , mdmLaunchStage
 
+    -- * AdminQuotaPolicyDimensions
+    , AdminQuotaPolicyDimensions
+    , adminQuotaPolicyDimensions
+    , aqpdAddtional
+
     -- * SystemParameterRule
     , SystemParameterRule
     , systemParameterRule
@@ -421,6 +477,9 @@ module Network.Google.ServiceUsage.Types
     , lKey
     , lValueType
     , lDescription
+
+    -- * MonitoredResourceDescriptorLaunchStage
+    , MonitoredResourceDescriptorLaunchStage (..)
 
     -- * Usage
     , Usage
@@ -441,6 +500,7 @@ module Network.Google.ServiceUsage.Types
     -- * DisableServiceRequest
     , DisableServiceRequest
     , disableServiceRequest
+    , dsrCheckIfServiceHasUsage
     , dsrDisableDependentServices
 
     -- * Type
@@ -481,7 +541,6 @@ module Network.Google.ServiceUsage.Types
     , eAliases
     , eAllowCORS
     , eName
-    , eFeatures
     , eTarget
 
     -- * OAuthRequirements
@@ -523,6 +582,9 @@ module Network.Google.ServiceUsage.Types
     , billing
     , bConsumerDestinations
 
+    -- * DisableServiceRequestCheckIfServiceHasUsage
+    , DisableServiceRequestCheckIfServiceHasUsage (..)
+
     -- * SourceInfo
     , SourceInfo
     , sourceInfo
@@ -540,6 +602,12 @@ module Network.Google.ServiceUsage.Types
     , gasvsState
     , gasvsConfig
     , gasvsName
+
+    -- * GoogleAPIServiceusageV1beta1GetServiceIdentityResponse
+    , GoogleAPIServiceusageV1beta1GetServiceIdentityResponse
+    , googleAPIServiceusageV1beta1GetServiceIdentityResponse
+    , gasvgsirState
+    , gasvgsirIdentity
 
     -- * Enum'
     , Enum'
@@ -589,19 +657,31 @@ module Network.Google.ServiceUsage.Types
     , operationResponse
     , orAddtional
 
+    -- * MetricDescriptorLaunchStage
+    , MetricDescriptorLaunchStage (..)
+
     -- * GoogleAPIServiceusageV1OperationMetadata
     , GoogleAPIServiceusageV1OperationMetadata
     , googleAPIServiceusageV1OperationMetadata
     , gasvomResourceNames
+
+    -- * ImportAdminOverridesResponse
+    , ImportAdminOverridesResponse
+    , importAdminOverridesResponse
+    , iaorOverrides
 
     -- * AuthProvider
     , AuthProvider
     , authProvider
     , apJWKsURI
     , apAudiences
+    , apJwtLocations
     , apId
     , apAuthorizationURL
     , apIssuer
+
+    -- * GetServiceIdentityResponseState
+    , GetServiceIdentityResponseState (..)
 
     -- * ContextRule
     , ContextRule
@@ -617,6 +697,8 @@ module Network.Google.ServiceUsage.Types
     , googleAPIServiceusageV1ServiceConfig
     , gasvscAuthentication
     , gasvscAPIs
+    , gasvscMonitoredResources
+    , gasvscMonitoring
     , gasvscName
     , gasvscDocumentation
     , gasvscUsage
@@ -625,9 +707,9 @@ module Network.Google.ServiceUsage.Types
     , gasvscQuota
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceUsage.Types.Product
-import           Network.Google.ServiceUsage.Types.Sum
+import Network.Google.Prelude
+import Network.Google.ServiceUsage.Types.Product
+import Network.Google.ServiceUsage.Types.Sum
 
 -- | Default request referring to version 'v1' of the Service Usage API. This contains the host and root path used as a starting point for constructing service requests.
 serviceUsageService :: ServiceConfig

@@ -20,11 +20,13 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- Deletes all the log entries in a log. The log reappears if it receives
--- new entries. Log entries written shortly before the delete operation
--- might not be deleted.
+-- Deletes all the log entries in a log for the _Default Log Bucket. The
+-- log reappears if it receives new entries. Log entries written shortly
+-- before the delete operation might not be deleted. Entries received after
+-- the delete operation with a timestamp before the operation will be
+-- deleted.
 --
--- /See:/ <https://cloud.google.com/logging/docs/ Stackdriver Logging API Reference> for @logging.organizations.logs.delete@.
+-- /See:/ <https://cloud.google.com/logging/docs/ Cloud Logging API Reference> for @logging.organizations.logs.delete@.
 module Network.Google.Resource.Logging.Organizations.Logs.Delete
     (
     -- * REST Resource
@@ -43,8 +45,8 @@ module Network.Google.Resource.Logging.Organizations.Logs.Delete
     , oldCallback
     ) where
 
-import           Network.Google.Logging.Types
-import           Network.Google.Prelude
+import Network.Google.Logging.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @logging.organizations.logs.delete@ method which the
 -- 'OrganizationsLogsDelete' request conforms to.
@@ -58,19 +60,21 @@ type OrganizationsLogsDeleteResource =
                  QueryParam "callback" Text :>
                    QueryParam "alt" AltJSON :> Delete '[JSON] Empty
 
--- | Deletes all the log entries in a log. The log reappears if it receives
--- new entries. Log entries written shortly before the delete operation
--- might not be deleted.
+-- | Deletes all the log entries in a log for the _Default Log Bucket. The
+-- log reappears if it receives new entries. Log entries written shortly
+-- before the delete operation might not be deleted. Entries received after
+-- the delete operation with a timestamp before the operation will be
+-- deleted.
 --
 -- /See:/ 'organizationsLogsDelete' smart constructor.
 data OrganizationsLogsDelete =
   OrganizationsLogsDelete'
-    { _oldXgafv          :: !(Maybe Xgafv)
+    { _oldXgafv :: !(Maybe Xgafv)
     , _oldUploadProtocol :: !(Maybe Text)
-    , _oldAccessToken    :: !(Maybe Text)
-    , _oldUploadType     :: !(Maybe Text)
-    , _oldLogName        :: !Text
-    , _oldCallback       :: !(Maybe Text)
+    , _oldAccessToken :: !(Maybe Text)
+    , _oldUploadType :: !(Maybe Text)
+    , _oldLogName :: !Text
+    , _oldCallback :: !(Maybe Text)
     }
   deriving (Eq, Show, Data, Typeable, Generic)
 

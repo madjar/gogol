@@ -28,7 +28,7 @@
 -- point of the dataset, only the overlapping portion of the data point
 -- will be deleted.
 --
--- /See:/ <https://developers.google.com/fit/rest/ Fitness Reference> for @fitness.users.dataSources.datasets.delete@.
+-- /See:/ <https://developers.google.com/fit/rest/v1/get-started Fitness API Reference> for @fitness.users.dataSources.datasets.delete@.
 module Network.Google.Resource.Fitness.Users.DataSources.DataSets.Delete
     (
     -- * REST Resource
@@ -39,15 +39,20 @@ module Network.Google.Resource.Fitness.Users.DataSources.DataSets.Delete
     , UsersDataSourcesDataSetsDelete
 
     -- * Request Lenses
+    , udsdsdXgafv
+    , udsdsdUploadProtocol
+    , udsdsdAccessToken
     , udsdsdDataSourceId
+    , udsdsdUploadType
     , udsdsdUserId
     , udsdsdDataSetId
     , udsdsdModifiedTimeMillis
     , udsdsdCurrentTimeMillis
+    , udsdsdCallback
     ) where
 
-import           Network.Google.Fitness.Types
-import           Network.Google.Prelude
+import Network.Google.Fitness.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @fitness.users.dataSources.datasets.delete@ method which the
 -- 'UsersDataSourcesDataSetsDelete' request conforms to.
@@ -60,9 +65,14 @@ type UsersDataSourcesDataSetsDeleteResource =
                Capture "dataSourceId" Text :>
                  "datasets" :>
                    Capture "datasetId" Text :>
-                     QueryParam "modifiedTimeMillis" (Textual Int64) :>
-                       QueryParam "currentTimeMillis" (Textual Int64) :>
-                         QueryParam "alt" AltJSON :> Delete '[JSON] ()
+                     QueryParam "$.xgafv" Xgafv :>
+                       QueryParam "upload_protocol" Text :>
+                         QueryParam "access_token" Text :>
+                           QueryParam "uploadType" Text :>
+                             QueryParam "modifiedTimeMillis" (Textual Int64) :>
+                               QueryParam "currentTimeMillis" (Textual Int64) :>
+                                 QueryParam "callback" Text :>
+                                   QueryParam "alt" AltJSON :> Delete '[JSON] ()
 
 -- | Performs an inclusive delete of all data points whose start and end
 -- times have any overlap with the time range specified by the dataset ID.
@@ -75,11 +85,16 @@ type UsersDataSourcesDataSetsDeleteResource =
 -- /See:/ 'usersDataSourcesDataSetsDelete' smart constructor.
 data UsersDataSourcesDataSetsDelete =
   UsersDataSourcesDataSetsDelete'
-    { _udsdsdDataSourceId       :: !Text
-    , _udsdsdUserId             :: !Text
-    , _udsdsdDataSetId          :: !Text
+    { _udsdsdXgafv :: !(Maybe Xgafv)
+    , _udsdsdUploadProtocol :: !(Maybe Text)
+    , _udsdsdAccessToken :: !(Maybe Text)
+    , _udsdsdDataSourceId :: !Text
+    , _udsdsdUploadType :: !(Maybe Text)
+    , _udsdsdUserId :: !Text
+    , _udsdsdDataSetId :: !Text
     , _udsdsdModifiedTimeMillis :: !(Maybe (Textual Int64))
-    , _udsdsdCurrentTimeMillis  :: !(Maybe (Textual Int64))
+    , _udsdsdCurrentTimeMillis :: !(Maybe (Textual Int64))
+    , _udsdsdCallback :: !(Maybe Text)
     }
   deriving (Eq, Show, Data, Typeable, Generic)
 
@@ -88,7 +103,15 @@ data UsersDataSourcesDataSetsDelete =
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
+-- * 'udsdsdXgafv'
+--
+-- * 'udsdsdUploadProtocol'
+--
+-- * 'udsdsdAccessToken'
+--
 -- * 'udsdsdDataSourceId'
+--
+-- * 'udsdsdUploadType'
 --
 -- * 'udsdsdUserId'
 --
@@ -97,6 +120,8 @@ data UsersDataSourcesDataSetsDelete =
 -- * 'udsdsdModifiedTimeMillis'
 --
 -- * 'udsdsdCurrentTimeMillis'
+--
+-- * 'udsdsdCallback'
 usersDataSourcesDataSetsDelete
     :: Text -- ^ 'udsdsdDataSourceId'
     -> Text -- ^ 'udsdsdUserId'
@@ -104,19 +129,47 @@ usersDataSourcesDataSetsDelete
     -> UsersDataSourcesDataSetsDelete
 usersDataSourcesDataSetsDelete pUdsdsdDataSourceId_ pUdsdsdUserId_ pUdsdsdDataSetId_ =
   UsersDataSourcesDataSetsDelete'
-    { _udsdsdDataSourceId = pUdsdsdDataSourceId_
+    { _udsdsdXgafv = Nothing
+    , _udsdsdUploadProtocol = Nothing
+    , _udsdsdAccessToken = Nothing
+    , _udsdsdDataSourceId = pUdsdsdDataSourceId_
+    , _udsdsdUploadType = Nothing
     , _udsdsdUserId = pUdsdsdUserId_
     , _udsdsdDataSetId = pUdsdsdDataSetId_
     , _udsdsdModifiedTimeMillis = Nothing
     , _udsdsdCurrentTimeMillis = Nothing
+    , _udsdsdCallback = Nothing
     }
 
+
+-- | V1 error format.
+udsdsdXgafv :: Lens' UsersDataSourcesDataSetsDelete (Maybe Xgafv)
+udsdsdXgafv
+  = lens _udsdsdXgafv (\ s a -> s{_udsdsdXgafv = a})
+
+-- | Upload protocol for media (e.g. \"raw\", \"multipart\").
+udsdsdUploadProtocol :: Lens' UsersDataSourcesDataSetsDelete (Maybe Text)
+udsdsdUploadProtocol
+  = lens _udsdsdUploadProtocol
+      (\ s a -> s{_udsdsdUploadProtocol = a})
+
+-- | OAuth access token.
+udsdsdAccessToken :: Lens' UsersDataSourcesDataSetsDelete (Maybe Text)
+udsdsdAccessToken
+  = lens _udsdsdAccessToken
+      (\ s a -> s{_udsdsdAccessToken = a})
 
 -- | The data stream ID of the data source that created the dataset.
 udsdsdDataSourceId :: Lens' UsersDataSourcesDataSetsDelete Text
 udsdsdDataSourceId
   = lens _udsdsdDataSourceId
       (\ s a -> s{_udsdsdDataSourceId = a})
+
+-- | Legacy upload protocol for media (e.g. \"media\", \"multipart\").
+udsdsdUploadType :: Lens' UsersDataSourcesDataSetsDelete (Maybe Text)
+udsdsdUploadType
+  = lens _udsdsdUploadType
+      (\ s a -> s{_udsdsdUploadType = a})
 
 -- | Delete a dataset for the person identified. Use me to indicate the
 -- authenticated user. Only me is supported at this time.
@@ -147,6 +200,12 @@ udsdsdCurrentTimeMillis
       (\ s a -> s{_udsdsdCurrentTimeMillis = a})
       . mapping _Coerce
 
+-- | JSONP
+udsdsdCallback :: Lens' UsersDataSourcesDataSetsDelete (Maybe Text)
+udsdsdCallback
+  = lens _udsdsdCallback
+      (\ s a -> s{_udsdsdCallback = a})
+
 instance GoogleRequest UsersDataSourcesDataSetsDelete
          where
         type Rs UsersDataSourcesDataSetsDelete = ()
@@ -156,15 +215,22 @@ instance GoogleRequest UsersDataSourcesDataSetsDelete
                "https://www.googleapis.com/auth/fitness.blood_pressure.write",
                "https://www.googleapis.com/auth/fitness.body.write",
                "https://www.googleapis.com/auth/fitness.body_temperature.write",
+               "https://www.googleapis.com/auth/fitness.heart_rate.write",
                "https://www.googleapis.com/auth/fitness.location.write",
                "https://www.googleapis.com/auth/fitness.nutrition.write",
                "https://www.googleapis.com/auth/fitness.oxygen_saturation.write",
-               "https://www.googleapis.com/auth/fitness.reproductive_health.write"]
+               "https://www.googleapis.com/auth/fitness.reproductive_health.write",
+               "https://www.googleapis.com/auth/fitness.sleep.write"]
         requestClient UsersDataSourcesDataSetsDelete'{..}
           = go _udsdsdUserId _udsdsdDataSourceId
               _udsdsdDataSetId
+              _udsdsdXgafv
+              _udsdsdUploadProtocol
+              _udsdsdAccessToken
+              _udsdsdUploadType
               _udsdsdModifiedTimeMillis
               _udsdsdCurrentTimeMillis
+              _udsdsdCallback
               (Just AltJSON)
               fitnessService
           where go

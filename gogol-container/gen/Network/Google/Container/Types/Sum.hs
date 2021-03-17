@@ -16,7 +16,51 @@
 --
 module Network.Google.Container.Types.Sum where
 
-import           Network.Google.Prelude hiding (Bytes)
+import Network.Google.Prelude hiding (Bytes)
+
+-- | Status of an operation stage. Unset for single-stage operations.
+data OperationProgressStatus
+    = StatusUnspecified
+      -- ^ @STATUS_UNSPECIFIED@
+      -- Not set.
+    | Pending
+      -- ^ @PENDING@
+      -- The operation has been created.
+    | Running
+      -- ^ @RUNNING@
+      -- The operation is currently running.
+    | Done
+      -- ^ @DONE@
+      -- The operation is done, either cancelled or completed.
+    | Aborting
+      -- ^ @ABORTING@
+      -- The operation is aborting.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable OperationProgressStatus
+
+instance FromHttpApiData OperationProgressStatus where
+    parseQueryParam = \case
+        "STATUS_UNSPECIFIED" -> Right StatusUnspecified
+        "PENDING" -> Right Pending
+        "RUNNING" -> Right Running
+        "DONE" -> Right Done
+        "ABORTING" -> Right Aborting
+        x -> Left ("Unable to parse OperationProgressStatus from: " <> x)
+
+instance ToHttpApiData OperationProgressStatus where
+    toQueryParam = \case
+        StatusUnspecified -> "STATUS_UNSPECIFIED"
+        Pending -> "PENDING"
+        Running -> "RUNNING"
+        Done -> "DONE"
+        Aborting -> "ABORTING"
+
+instance FromJSON OperationProgressStatus where
+    parseJSON = parseJSONText "OperationProgressStatus"
+
+instance ToJSON OperationProgressStatus where
+    toJSON = toJSONText
 
 -- | This field is to determine the status of the secondary range
 -- programmably.
@@ -67,6 +111,45 @@ instance FromJSON UsableSubnetworkSecondaryRangeStatus where
 instance ToJSON UsableSubnetworkSecondaryRangeStatus where
     toJSON = toJSONText
 
+-- | The desired state of IPv6 connectivity to Google Services.
+data ClusterUpdateDesiredPrivateIPv6GoogleAccess
+    = PrivateIPV6GoogleAccessUnspecified
+      -- ^ @PRIVATE_IPV6_GOOGLE_ACCESS_UNSPECIFIED@
+      -- Default value. Same as DISABLED
+    | PrivateIPV6GoogleAccessDisabled
+      -- ^ @PRIVATE_IPV6_GOOGLE_ACCESS_DISABLED@
+      -- No private access to or from Google Services
+    | PrivateIPV6GoogleAccessToGoogle
+      -- ^ @PRIVATE_IPV6_GOOGLE_ACCESS_TO_GOOGLE@
+      -- Enables private IPv6 access to Google Services from GKE
+    | PrivateIPV6GoogleAccessBidirectional
+      -- ^ @PRIVATE_IPV6_GOOGLE_ACCESS_BIDIRECTIONAL@
+      -- Enables priate IPv6 access to and from Google Services
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable ClusterUpdateDesiredPrivateIPv6GoogleAccess
+
+instance FromHttpApiData ClusterUpdateDesiredPrivateIPv6GoogleAccess where
+    parseQueryParam = \case
+        "PRIVATE_IPV6_GOOGLE_ACCESS_UNSPECIFIED" -> Right PrivateIPV6GoogleAccessUnspecified
+        "PRIVATE_IPV6_GOOGLE_ACCESS_DISABLED" -> Right PrivateIPV6GoogleAccessDisabled
+        "PRIVATE_IPV6_GOOGLE_ACCESS_TO_GOOGLE" -> Right PrivateIPV6GoogleAccessToGoogle
+        "PRIVATE_IPV6_GOOGLE_ACCESS_BIDIRECTIONAL" -> Right PrivateIPV6GoogleAccessBidirectional
+        x -> Left ("Unable to parse ClusterUpdateDesiredPrivateIPv6GoogleAccess from: " <> x)
+
+instance ToHttpApiData ClusterUpdateDesiredPrivateIPv6GoogleAccess where
+    toQueryParam = \case
+        PrivateIPV6GoogleAccessUnspecified -> "PRIVATE_IPV6_GOOGLE_ACCESS_UNSPECIFIED"
+        PrivateIPV6GoogleAccessDisabled -> "PRIVATE_IPV6_GOOGLE_ACCESS_DISABLED"
+        PrivateIPV6GoogleAccessToGoogle -> "PRIVATE_IPV6_GOOGLE_ACCESS_TO_GOOGLE"
+        PrivateIPV6GoogleAccessBidirectional -> "PRIVATE_IPV6_GOOGLE_ACCESS_BIDIRECTIONAL"
+
+instance FromJSON ClusterUpdateDesiredPrivateIPv6GoogleAccess where
+    parseJSON = parseJSONText "ClusterUpdateDesiredPrivateIPv6GoogleAccess"
+
+instance ToJSON ClusterUpdateDesiredPrivateIPv6GoogleAccess where
+    toJSON = toJSONText
+
 -- | Machine-friendly representation of the condition
 data StatusConditionCode
     = SCCUnknown
@@ -74,7 +157,8 @@ data StatusConditionCode
       -- UNKNOWN indicates a generic condition.
     | SCCGceStockout
       -- ^ @GCE_STOCKOUT@
-      -- GCE_STOCKOUT indicates a Google Compute Engine stockout.
+      -- GCE_STOCKOUT indicates that Google Compute Engine resources are
+      -- temporarily unavailable.
     | SCCGkeServiceAccountDeleted
       -- ^ @GKE_SERVICE_ACCOUNT_DELETED@
       -- GKE_SERVICE_ACCOUNT_DELETED indicates that the user deleted their robot
@@ -85,7 +169,11 @@ data StatusConditionCode
     | SCCSetByOperator
       -- ^ @SET_BY_OPERATOR@
       -- Cluster state was manually changed by an SRE due to a system logic
-      -- error. More codes TBA
+      -- error.
+    | SCCCloudKmsKeyError
+      -- ^ @CLOUD_KMS_KEY_ERROR@
+      -- Unable to perform an encrypt operation against the CloudKMS key used for
+      -- etcd level encryption. More codes TBA
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable StatusConditionCode
@@ -97,6 +185,7 @@ instance FromHttpApiData StatusConditionCode where
         "GKE_SERVICE_ACCOUNT_DELETED" -> Right SCCGkeServiceAccountDeleted
         "GCE_QUOTA_EXCEEDED" -> Right SCCGceQuotaExceeded
         "SET_BY_OPERATOR" -> Right SCCSetByOperator
+        "CLOUD_KMS_KEY_ERROR" -> Right SCCCloudKmsKeyError
         x -> Left ("Unable to parse StatusConditionCode from: " <> x)
 
 instance ToHttpApiData StatusConditionCode where
@@ -106,11 +195,87 @@ instance ToHttpApiData StatusConditionCode where
         SCCGkeServiceAccountDeleted -> "GKE_SERVICE_ACCOUNT_DELETED"
         SCCGceQuotaExceeded -> "GCE_QUOTA_EXCEEDED"
         SCCSetByOperator -> "SET_BY_OPERATOR"
+        SCCCloudKmsKeyError -> "CLOUD_KMS_KEY_ERROR"
 
 instance FromJSON StatusConditionCode where
     parseJSON = parseJSONText "StatusConditionCode"
 
 instance ToJSON StatusConditionCode where
+    toJSON = toJSONText
+
+-- | The desired state of IPv6 connectivity to Google Services. By default,
+-- no private IPv6 access to or from Google Services (all access will be
+-- via IPv4)
+data NetworkConfigPrivateIPv6GoogleAccess
+    = NCPIGAPrivateIPV6GoogleAccessUnspecified
+      -- ^ @PRIVATE_IPV6_GOOGLE_ACCESS_UNSPECIFIED@
+      -- Default value. Same as DISABLED
+    | NCPIGAPrivateIPV6GoogleAccessDisabled
+      -- ^ @PRIVATE_IPV6_GOOGLE_ACCESS_DISABLED@
+      -- No private access to or from Google Services
+    | NCPIGAPrivateIPV6GoogleAccessToGoogle
+      -- ^ @PRIVATE_IPV6_GOOGLE_ACCESS_TO_GOOGLE@
+      -- Enables private IPv6 access to Google Services from GKE
+    | NCPIGAPrivateIPV6GoogleAccessBidirectional
+      -- ^ @PRIVATE_IPV6_GOOGLE_ACCESS_BIDIRECTIONAL@
+      -- Enables priate IPv6 access to and from Google Services
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable NetworkConfigPrivateIPv6GoogleAccess
+
+instance FromHttpApiData NetworkConfigPrivateIPv6GoogleAccess where
+    parseQueryParam = \case
+        "PRIVATE_IPV6_GOOGLE_ACCESS_UNSPECIFIED" -> Right NCPIGAPrivateIPV6GoogleAccessUnspecified
+        "PRIVATE_IPV6_GOOGLE_ACCESS_DISABLED" -> Right NCPIGAPrivateIPV6GoogleAccessDisabled
+        "PRIVATE_IPV6_GOOGLE_ACCESS_TO_GOOGLE" -> Right NCPIGAPrivateIPV6GoogleAccessToGoogle
+        "PRIVATE_IPV6_GOOGLE_ACCESS_BIDIRECTIONAL" -> Right NCPIGAPrivateIPV6GoogleAccessBidirectional
+        x -> Left ("Unable to parse NetworkConfigPrivateIPv6GoogleAccess from: " <> x)
+
+instance ToHttpApiData NetworkConfigPrivateIPv6GoogleAccess where
+    toQueryParam = \case
+        NCPIGAPrivateIPV6GoogleAccessUnspecified -> "PRIVATE_IPV6_GOOGLE_ACCESS_UNSPECIFIED"
+        NCPIGAPrivateIPV6GoogleAccessDisabled -> "PRIVATE_IPV6_GOOGLE_ACCESS_DISABLED"
+        NCPIGAPrivateIPV6GoogleAccessToGoogle -> "PRIVATE_IPV6_GOOGLE_ACCESS_TO_GOOGLE"
+        NCPIGAPrivateIPV6GoogleAccessBidirectional -> "PRIVATE_IPV6_GOOGLE_ACCESS_BIDIRECTIONAL"
+
+instance FromJSON NetworkConfigPrivateIPv6GoogleAccess where
+    parseJSON = parseJSONText "NetworkConfigPrivateIPv6GoogleAccess"
+
+instance ToJSON NetworkConfigPrivateIPv6GoogleAccess where
+    toJSON = toJSONText
+
+-- | Which load balancer type is installed for Cloud Run.
+data CloudRunConfigLoadBalancerType
+    = LoadBalancerTypeUnspecified
+      -- ^ @LOAD_BALANCER_TYPE_UNSPECIFIED@
+      -- Load balancer type for Cloud Run is unspecified.
+    | LoadBalancerTypeExternal
+      -- ^ @LOAD_BALANCER_TYPE_EXTERNAL@
+      -- Install external load balancer for Cloud Run.
+    | LoadBalancerTypeInternal
+      -- ^ @LOAD_BALANCER_TYPE_INTERNAL@
+      -- Install internal load balancer for Cloud Run.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable CloudRunConfigLoadBalancerType
+
+instance FromHttpApiData CloudRunConfigLoadBalancerType where
+    parseQueryParam = \case
+        "LOAD_BALANCER_TYPE_UNSPECIFIED" -> Right LoadBalancerTypeUnspecified
+        "LOAD_BALANCER_TYPE_EXTERNAL" -> Right LoadBalancerTypeExternal
+        "LOAD_BALANCER_TYPE_INTERNAL" -> Right LoadBalancerTypeInternal
+        x -> Left ("Unable to parse CloudRunConfigLoadBalancerType from: " <> x)
+
+instance ToHttpApiData CloudRunConfigLoadBalancerType where
+    toQueryParam = \case
+        LoadBalancerTypeUnspecified -> "LOAD_BALANCER_TYPE_UNSPECIFIED"
+        LoadBalancerTypeExternal -> "LOAD_BALANCER_TYPE_EXTERNAL"
+        LoadBalancerTypeInternal -> "LOAD_BALANCER_TYPE_INTERNAL"
+
+instance FromJSON CloudRunConfigLoadBalancerType where
+    parseJSON = parseJSONText "CloudRunConfigLoadBalancerType"
+
+instance ToJSON CloudRunConfigLoadBalancerType where
     toJSON = toJSONText
 
 -- | The operation type.
@@ -219,19 +384,19 @@ instance ToJSON OperationOperationType where
 
 -- | The current status of the operation.
 data OperationStatus
-    = StatusUnspecified
+    = OSStatusUnspecified
       -- ^ @STATUS_UNSPECIFIED@
       -- Not set.
-    | Pending
+    | OSPending
       -- ^ @PENDING@
       -- The operation has been created.
-    | Running
+    | OSRunning
       -- ^ @RUNNING@
       -- The operation is currently running.
-    | Done
+    | OSDone
       -- ^ @DONE@
       -- The operation is done, either cancelled or completed.
-    | Aborting
+    | OSAborting
       -- ^ @ABORTING@
       -- The operation is aborting.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
@@ -240,25 +405,54 @@ instance Hashable OperationStatus
 
 instance FromHttpApiData OperationStatus where
     parseQueryParam = \case
-        "STATUS_UNSPECIFIED" -> Right StatusUnspecified
-        "PENDING" -> Right Pending
-        "RUNNING" -> Right Running
-        "DONE" -> Right Done
-        "ABORTING" -> Right Aborting
+        "STATUS_UNSPECIFIED" -> Right OSStatusUnspecified
+        "PENDING" -> Right OSPending
+        "RUNNING" -> Right OSRunning
+        "DONE" -> Right OSDone
+        "ABORTING" -> Right OSAborting
         x -> Left ("Unable to parse OperationStatus from: " <> x)
 
 instance ToHttpApiData OperationStatus where
     toQueryParam = \case
-        StatusUnspecified -> "STATUS_UNSPECIFIED"
-        Pending -> "PENDING"
-        Running -> "RUNNING"
-        Done -> "DONE"
-        Aborting -> "ABORTING"
+        OSStatusUnspecified -> "STATUS_UNSPECIFIED"
+        OSPending -> "PENDING"
+        OSRunning -> "RUNNING"
+        OSDone -> "DONE"
+        OSAborting -> "ABORTING"
 
 instance FromJSON OperationStatus where
     parseJSON = parseJSONText "OperationStatus"
 
 instance ToJSON OperationStatus where
+    toJSON = toJSONText
+
+-- | Type of the sandbox to use for the node.
+data SandboxConfigType
+    = Unspecified
+      -- ^ @UNSPECIFIED@
+      -- Default value. This should not be used.
+    | Gvisor
+      -- ^ @GVISOR@
+      -- Run sandbox using gvisor.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable SandboxConfigType
+
+instance FromHttpApiData SandboxConfigType where
+    parseQueryParam = \case
+        "UNSPECIFIED" -> Right Unspecified
+        "GVISOR" -> Right Gvisor
+        x -> Left ("Unable to parse SandboxConfigType from: " <> x)
+
+instance ToHttpApiData SandboxConfigType where
+    toQueryParam = \case
+        Unspecified -> "UNSPECIFIED"
+        Gvisor -> "GVISOR"
+
+instance FromJSON SandboxConfigType where
+    parseJSON = parseJSONText "SandboxConfigType"
+
+instance ToJSON SandboxConfigType where
     toJSON = toJSONText
 
 -- | The selected network policy provider.
@@ -317,6 +511,41 @@ instance FromJSON Xgafv where
     parseJSON = parseJSONText "Xgafv"
 
 instance ToJSON Xgafv where
+    toJSON = toJSONText
+
+-- | Denotes the state of etcd encryption.
+data DatabaseEncryptionState
+    = DESUnknown
+      -- ^ @UNKNOWN@
+      -- Should never be set
+    | DESEncrypted
+      -- ^ @ENCRYPTED@
+      -- Secrets in etcd are encrypted.
+    | DESDecrypted
+      -- ^ @DECRYPTED@
+      -- Secrets in etcd are stored in plain text (at etcd level) - this is
+      -- unrelated to Compute Engine level full disk encryption.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable DatabaseEncryptionState
+
+instance FromHttpApiData DatabaseEncryptionState where
+    parseQueryParam = \case
+        "UNKNOWN" -> Right DESUnknown
+        "ENCRYPTED" -> Right DESEncrypted
+        "DECRYPTED" -> Right DESDecrypted
+        x -> Left ("Unable to parse DatabaseEncryptionState from: " <> x)
+
+instance ToHttpApiData DatabaseEncryptionState where
+    toQueryParam = \case
+        DESUnknown -> "UNKNOWN"
+        DESEncrypted -> "ENCRYPTED"
+        DESDecrypted -> "DECRYPTED"
+
+instance FromJSON DatabaseEncryptionState where
+    parseJSON = parseJSONText "DatabaseEncryptionState"
+
+instance ToJSON DatabaseEncryptionState where
     toJSON = toJSONText
 
 -- | [Output only] The status of the nodes in this pool instance.
@@ -380,6 +609,90 @@ instance FromJSON NodePoolStatus where
 instance ToJSON NodePoolStatus where
     toJSON = toJSONText
 
+-- | The release channel this configuration applies to.
+data ReleaseChannelConfigChannel
+    = RCCCUnspecified
+      -- ^ @UNSPECIFIED@
+      -- No channel specified.
+    | RCCCRapid
+      -- ^ @RAPID@
+      -- RAPID channel is offered on an early access basis for customers who want
+      -- to test new releases. WARNING: Versions available in the RAPID Channel
+      -- may be subject to unresolved issues with no known workaround and are not
+      -- subject to any SLAs.
+    | RCCCRegular
+      -- ^ @REGULAR@
+      -- Clusters subscribed to REGULAR receive versions that are considered GA
+      -- quality. REGULAR is intended for production users who want to take
+      -- advantage of new features.
+    | RCCCStable
+      -- ^ @STABLE@
+      -- Clusters subscribed to STABLE receive versions that are known to be
+      -- stable and reliable in production.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable ReleaseChannelConfigChannel
+
+instance FromHttpApiData ReleaseChannelConfigChannel where
+    parseQueryParam = \case
+        "UNSPECIFIED" -> Right RCCCUnspecified
+        "RAPID" -> Right RCCCRapid
+        "REGULAR" -> Right RCCCRegular
+        "STABLE" -> Right RCCCStable
+        x -> Left ("Unable to parse ReleaseChannelConfigChannel from: " <> x)
+
+instance ToHttpApiData ReleaseChannelConfigChannel where
+    toQueryParam = \case
+        RCCCUnspecified -> "UNSPECIFIED"
+        RCCCRapid -> "RAPID"
+        RCCCRegular -> "REGULAR"
+        RCCCStable -> "STABLE"
+
+instance FromJSON ReleaseChannelConfigChannel where
+    parseJSON = parseJSONText "ReleaseChannelConfigChannel"
+
+instance ToJSON ReleaseChannelConfigChannel where
+    toJSON = toJSONText
+
+-- | Mode is the configuration for how to expose metadata to workloads
+-- running on the node pool.
+data WorkLoadMetadataConfigMode
+    = ModeUnspecified
+      -- ^ @MODE_UNSPECIFIED@
+      -- Not set.
+    | GceMetadata
+      -- ^ @GCE_METADATA@
+      -- Expose all Compute Engine metadata to pods.
+    | GkeMetadata
+      -- ^ @GKE_METADATA@
+      -- Run the GKE Metadata Server on this node. The GKE Metadata Server
+      -- exposes a metadata API to workloads that is compatible with the V1
+      -- Compute Metadata APIs exposed by the Compute Engine and App Engine
+      -- Metadata Servers. This feature can only be enabled if Workload Identity
+      -- is enabled at the cluster level.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable WorkLoadMetadataConfigMode
+
+instance FromHttpApiData WorkLoadMetadataConfigMode where
+    parseQueryParam = \case
+        "MODE_UNSPECIFIED" -> Right ModeUnspecified
+        "GCE_METADATA" -> Right GceMetadata
+        "GKE_METADATA" -> Right GkeMetadata
+        x -> Left ("Unable to parse WorkLoadMetadataConfigMode from: " <> x)
+
+instance ToHttpApiData WorkLoadMetadataConfigMode where
+    toQueryParam = \case
+        ModeUnspecified -> "MODE_UNSPECIFIED"
+        GceMetadata -> "GCE_METADATA"
+        GkeMetadata -> "GKE_METADATA"
+
+instance FromJSON WorkLoadMetadataConfigMode where
+    parseJSON = parseJSONText "WorkLoadMetadataConfigMode"
+
+instance ToJSON WorkLoadMetadataConfigMode where
+    toJSON = toJSONText
+
 -- | [Output only] The current status of this cluster.
 data ClusterStatus
     = CSStatusUnspecified
@@ -402,8 +715,9 @@ data ClusterStatus
       -- The STOPPING state indicates the cluster is being deleted.
     | CSError'
       -- ^ @ERROR@
-      -- The ERROR state indicates the cluster may be unusable. Details can be
-      -- found in the \`statusMessage\` field.
+      -- The ERROR state indicates the cluster is unusable. It will be
+      -- automatically deleted. Details can be found in the \`statusMessage\`
+      -- field.
     | CSDegraded
       -- ^ @DEGRADED@
       -- The DEGRADED state indicates the cluster requires user action to restore
@@ -437,6 +751,80 @@ instance FromJSON ClusterStatus where
     parseJSON = parseJSONText "ClusterStatus"
 
 instance ToJSON ClusterStatus where
+    toJSON = toJSONText
+
+-- | The resource type that is upgrading.
+data UpgradeEventResourceType
+    = UpgradeResourceTypeUnspecified
+      -- ^ @UPGRADE_RESOURCE_TYPE_UNSPECIFIED@
+      -- Default value. This shouldn\'t be used.
+    | Master
+      -- ^ @MASTER@
+      -- Master \/ control plane
+    | NodePool
+      -- ^ @NODE_POOL@
+      -- Node pool
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable UpgradeEventResourceType
+
+instance FromHttpApiData UpgradeEventResourceType where
+    parseQueryParam = \case
+        "UPGRADE_RESOURCE_TYPE_UNSPECIFIED" -> Right UpgradeResourceTypeUnspecified
+        "MASTER" -> Right Master
+        "NODE_POOL" -> Right NodePool
+        x -> Left ("Unable to parse UpgradeEventResourceType from: " <> x)
+
+instance ToHttpApiData UpgradeEventResourceType where
+    toQueryParam = \case
+        UpgradeResourceTypeUnspecified -> "UPGRADE_RESOURCE_TYPE_UNSPECIFIED"
+        Master -> "MASTER"
+        NodePool -> "NODE_POOL"
+
+instance FromJSON UpgradeEventResourceType where
+    parseJSON = parseJSONText "UpgradeEventResourceType"
+
+instance ToJSON UpgradeEventResourceType where
+    toJSON = toJSONText
+
+-- | Corresponds to the type of reservation consumption.
+data ReservationAffinityConsumeReservationType
+    = RACRTUnspecified
+      -- ^ @UNSPECIFIED@
+      -- Default value. This should not be used.
+    | RACRTNoReservation
+      -- ^ @NO_RESERVATION@
+      -- Do not consume from any reserved capacity.
+    | RACRTAnyReservation
+      -- ^ @ANY_RESERVATION@
+      -- Consume any reservation available.
+    | RACRTSpecificReservation
+      -- ^ @SPECIFIC_RESERVATION@
+      -- Must consume from a specific reservation. Must specify key value fields
+      -- for specifying the reservations.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable ReservationAffinityConsumeReservationType
+
+instance FromHttpApiData ReservationAffinityConsumeReservationType where
+    parseQueryParam = \case
+        "UNSPECIFIED" -> Right RACRTUnspecified
+        "NO_RESERVATION" -> Right RACRTNoReservation
+        "ANY_RESERVATION" -> Right RACRTAnyReservation
+        "SPECIFIC_RESERVATION" -> Right RACRTSpecificReservation
+        x -> Left ("Unable to parse ReservationAffinityConsumeReservationType from: " <> x)
+
+instance ToHttpApiData ReservationAffinityConsumeReservationType where
+    toQueryParam = \case
+        RACRTUnspecified -> "UNSPECIFIED"
+        RACRTNoReservation -> "NO_RESERVATION"
+        RACRTAnyReservation -> "ANY_RESERVATION"
+        RACRTSpecificReservation -> "SPECIFIC_RESERVATION"
+
+instance FromJSON ReservationAffinityConsumeReservationType where
+    parseJSON = parseJSONText "ReservationAffinityConsumeReservationType"
+
+instance ToJSON ReservationAffinityConsumeReservationType where
     toJSON = toJSONText
 
 -- | Effect for taint.
@@ -478,7 +866,52 @@ instance FromJSON NodeTaintEffect where
 instance ToJSON NodeTaintEffect where
     toJSON = toJSONText
 
--- | The exact form of action to be taken on the master auth.
+-- | channel specifies which release channel the cluster is subscribed to.
+data ReleaseChannelChannel
+    = RCCUnspecified
+      -- ^ @UNSPECIFIED@
+      -- No channel specified.
+    | RCCRapid
+      -- ^ @RAPID@
+      -- RAPID channel is offered on an early access basis for customers who want
+      -- to test new releases. WARNING: Versions available in the RAPID Channel
+      -- may be subject to unresolved issues with no known workaround and are not
+      -- subject to any SLAs.
+    | RCCRegular
+      -- ^ @REGULAR@
+      -- Clusters subscribed to REGULAR receive versions that are considered GA
+      -- quality. REGULAR is intended for production users who want to take
+      -- advantage of new features.
+    | RCCStable
+      -- ^ @STABLE@
+      -- Clusters subscribed to STABLE receive versions that are known to be
+      -- stable and reliable in production.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable ReleaseChannelChannel
+
+instance FromHttpApiData ReleaseChannelChannel where
+    parseQueryParam = \case
+        "UNSPECIFIED" -> Right RCCUnspecified
+        "RAPID" -> Right RCCRapid
+        "REGULAR" -> Right RCCRegular
+        "STABLE" -> Right RCCStable
+        x -> Left ("Unable to parse ReleaseChannelChannel from: " <> x)
+
+instance ToHttpApiData ReleaseChannelChannel where
+    toQueryParam = \case
+        RCCUnspecified -> "UNSPECIFIED"
+        RCCRapid -> "RAPID"
+        RCCRegular -> "REGULAR"
+        RCCStable -> "STABLE"
+
+instance FromJSON ReleaseChannelChannel where
+    parseJSON = parseJSONText "ReleaseChannelChannel"
+
+instance ToJSON ReleaseChannelChannel where
+    toJSON = toJSONText
+
+-- | Required. The exact form of action to be taken on the master auth.
 data SetMasterAuthRequestAction
     = SMARAUnknown
       -- ^ @UNKNOWN@

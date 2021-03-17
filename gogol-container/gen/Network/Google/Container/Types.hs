@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -22,6 +22,19 @@ module Network.Google.Container.Types
     -- * OAuth Scopes
     , cloudPlatformScope
 
+    -- * OperationProgressStatus
+    , OperationProgressStatus (..)
+
+    -- * ConsumptionMeteringConfig
+    , ConsumptionMeteringConfig
+    , consumptionMeteringConfig
+    , cmcEnabled
+
+    -- * LinuxNodeConfig
+    , LinuxNodeConfig
+    , linuxNodeConfig
+    , lncSysctls
+
     -- * NetworkPolicyConfig
     , NetworkPolicyConfig
     , networkPolicyConfig
@@ -36,6 +49,8 @@ module Network.Google.Container.Types
     -- * UpdateNodePoolRequest
     , UpdateNodePoolRequest
     , updateNodePoolRequest
+    , unprLinuxNodeConfig
+    , unprUpgradeSettings
     , unprZone
     , unprNodePoolId
     , unprImageType
@@ -43,6 +58,19 @@ module Network.Google.Container.Types
     , unprClusterId
     , unprNodeVersion
     , unprProjectId
+    , unprWorkLoadMetadataConfig
+    , unprKubeletConfig
+    , unprLocations
+
+    -- * UpgradeEvent
+    , UpgradeEvent
+    , upgradeEvent
+    , ueResourceType
+    , ueOperation
+    , ueCurrentVersion
+    , ueResource
+    , ueOperationStartTime
+    , ueTargetVersion
 
     -- * UpdateMasterRequest
     , UpdateMasterRequest
@@ -62,6 +90,11 @@ module Network.Google.Container.Types
     , sirrClusterId
     , sirrProjectId
 
+    -- * BinaryAuthorization
+    , BinaryAuthorization
+    , binaryAuthorization
+    , baEnabled
+
     -- * SetLegacyAbacRequest
     , SetLegacyAbacRequest
     , setLegacyAbacRequest
@@ -78,6 +111,23 @@ module Network.Google.Container.Types
     , HorizontalPodAutoscaling
     , horizontalPodAutoscaling
     , hpaDisabled
+
+    -- * SandboxConfig
+    , SandboxConfig
+    , sandboxConfig
+    , scType
+
+    -- * NotificationConfig
+    , NotificationConfig
+    , notificationConfig
+    , ncPubsub
+
+    -- * ResourceLimit
+    , ResourceLimit
+    , resourceLimit
+    , rlResourceType
+    , rlMaximum
+    , rlMinimum
 
     -- * SetMasterAuthRequest
     , SetMasterAuthRequest
@@ -106,23 +156,29 @@ module Network.Google.Container.Types
     -- * Cluster
     , Cluster
     , cluster
+    , cBinaryAuthorization
     , cStatus
     , cNodePools
     , cEnableKubernetesAlpha
     , cResourceLabels
     , cTpuIPv4CIdRBlock
+    , cNotificationConfig
     , cNodeConfig
+    , cAutoscaling
     , cNodeIPv4CIdRSize
     , cClusterIPv4CIdR
     , cLocation
     , cInitialNodeCount
     , cCurrentNodeVersion
+    , cWorkLoadIdentityConfig
     , cNetwork
     , cInitialClusterVersion
     , cZone
+    , cResourceUsageExportConfig
     , cAddonsConfig
     , cServicesIPv4CIdR
     , cIPAllocationPolicy
+    , cAutopilot
     , cMasterAuthorizedNetworksConfig
     , cLegacyAbac
     , cNetworkConfig
@@ -132,13 +188,18 @@ module Network.Google.Container.Types
     , cCurrentMasterVersion
     , cStatusMessage
     , cDefaultMaxPodsConstraint
+    , cReleaseChannel
+    , cDatabaseEncryption
     , cSubnetwork
     , cCurrentNodeCount
     , cPrivateClusterConfig
     , cMaintenancePolicy
+    , cShieldedNodes
     , cConditions
     , cEnableTpu
     , cEndpoint
+    , cVerticalPodAutoscaling
+    , cAuthenticatorGroupsConfig
     , cExpireTime
     , cNetworkPolicy
     , cLocations
@@ -166,6 +227,15 @@ module Network.Google.Container.Types
     , ucrProjectId
     , ucrUpdate
 
+    -- * ClusterUpdateDesiredPrivateIPv6GoogleAccess
+    , ClusterUpdateDesiredPrivateIPv6GoogleAccess (..)
+
+    -- * CloudRunConfig
+    , CloudRunConfig
+    , cloudRunConfig
+    , crcLoadBalancerType
+    , crcDisabled
+
     -- * SetAddonsConfigRequest
     , SetAddonsConfigRequest
     , setAddonsConfigRequest
@@ -181,6 +251,10 @@ module Network.Google.Container.Types
     -- * NodeConfig
     , NodeConfig
     , nodeConfig
+    , ncLinuxNodeConfig
+    , ncSandboxConfig
+    , ncNodeGroup
+    , ncReservationAffinity
     , ncLocalSsdCount
     , ncDiskSizeGb
     , ncTaints
@@ -191,15 +265,34 @@ module Network.Google.Container.Types
     , ncMachineType
     , ncMetadata
     , ncDiskType
+    , ncShieldedInstanceConfig
     , ncLabels
+    , ncWorkLoadMetadataConfig
     , ncMinCPUPlatform
+    , ncKubeletConfig
+    , ncBootDiskKmsKey
     , ncTags
     , ncPreemptible
+
+    -- * BigQueryDestination
+    , BigQueryDestination
+    , bigQueryDestination
+    , bqdDataSetId
+
+    -- * ReservationAffinity
+    , ReservationAffinity
+    , reservationAffinity
+    , raConsumeReservationType
+    , raValues
+    , raKey
 
     -- * HTTPLoadBalancing
     , HTTPLoadBalancing
     , hTTPLoadBalancing
     , httplbDisabled
+
+    -- * NetworkConfigPrivateIPv6GoogleAccess
+    , NetworkConfigPrivateIPv6GoogleAccess (..)
 
     -- * Operation
     , Operation
@@ -207,6 +300,7 @@ module Network.Google.Container.Types
     , oNodepoolConditions
     , oStatus
     , oLocation
+    , oProgress
     , oStartTime
     , oZone
     , oSelfLink
@@ -245,8 +339,49 @@ module Network.Google.Container.Types
     , cirrClusterId
     , cirrProjectId
 
+    -- * LinuxNodeConfigSysctls
+    , LinuxNodeConfigSysctls
+    , linuxNodeConfigSysctls
+    , lncsAddtional
+
+    -- * UpgradeSettings
+    , UpgradeSettings
+    , upgradeSettings
+    , usMaxSurge
+    , usMaxUnavailable
+
+    -- * CloudRunConfigLoadBalancerType
+    , CloudRunConfigLoadBalancerType (..)
+
+    -- * RecurringTimeWindow
+    , RecurringTimeWindow
+    , recurringTimeWindow
+    , rtwWindow
+    , rtwRecurrence
+
+    -- * OperationProgress
+    , OperationProgress
+    , operationProgress
+    , opStatus
+    , opMetrics
+    , opName
+    , opStages
+
+    -- * ClusterAutoscaling
+    , ClusterAutoscaling
+    , clusterAutoscaling
+    , caResourceLimits
+    , caEnableNodeAutoprovisioning
+    , caAutoprovisioningLocations
+    , caAutoprovisioningNodePoolDefaults
+
     -- * OperationOperationType
     , OperationOperationType (..)
+
+    -- * ConfigConnectorConfig
+    , ConfigConnectorConfig
+    , configConnectorConfig
+    , cccEnabled
 
     -- * UsableSubnetworkSecondaryRange
     , UsableSubnetworkSecondaryRange
@@ -254,6 +389,22 @@ module Network.Google.Container.Types
     , ussrStatus
     , ussrRangeName
     , ussrIPCIdRRange
+
+    -- * MaintenanceWindowMaintenanceExclusions
+    , MaintenanceWindowMaintenanceExclusions
+    , maintenanceWindowMaintenanceExclusions
+    , mwmeAddtional
+
+    -- * PubSub
+    , PubSub
+    , pubSub
+    , psEnabled
+    , psTopic
+
+    -- * WorkLoadIdentityConfig
+    , WorkLoadIdentityConfig
+    , workLoadIdentityConfig
+    , wlicWorkLoadPool
 
     -- * NodeManagement
     , NodeManagement
@@ -274,6 +425,7 @@ module Network.Google.Container.Types
     , nodePoolAutoscaling
     , npaMaxNodeCount
     , npaEnabled
+    , npaAutoprovisioned
     , npaMinNodeCount
 
     -- * SetMaintenancePolicyRequest
@@ -317,6 +469,7 @@ module Network.Google.Container.Types
     -- * GetOpenIdConfigResponse
     , GetOpenIdConfigResponse
     , getOpenIdConfigResponse
+    , goicrCacheHeader
     , goicrIdTokenSigningAlgValuesSupported
     , goicrResponseTypesSupported
     , goicrJWKsURI
@@ -324,6 +477,11 @@ module Network.Google.Container.Types
     , goicrClaimsSupported
     , goicrIssuer
     , goicrSubjectTypesSupported
+
+    -- * PrivateClusterMasterGlobalAccessConfig
+    , PrivateClusterMasterGlobalAccessConfig
+    , privateClusterMasterGlobalAccessConfig
+    , pcmgacEnabled
 
     -- * JWK
     , JWK
@@ -341,10 +499,25 @@ module Network.Google.Container.Types
     -- * OperationStatus
     , OperationStatus (..)
 
+    -- * ResourceUsageExportConfig
+    , ResourceUsageExportConfig
+    , resourceUsageExportConfig
+    , ruecConsumptionMeteringConfig
+    , ruecBigQueryDestination
+    , ruecEnableNetworkEgressMetering
+
     -- * MaintenanceWindow
     , MaintenanceWindow
     , maintenanceWindow
+    , mwRecurringWindow
+    , mwMaintenanceExclusions
     , mwDailyMaintenanceWindow
+
+    -- * TimeWindow
+    , TimeWindow
+    , timeWindow
+    , twStartTime
+    , twEndTime
 
     -- * MaxPodsConstraint
     , MaxPodsConstraint
@@ -363,6 +536,7 @@ module Network.Google.Container.Types
     , iapClusterSecondaryRangeName
     , iapNodeIPv4CIdRBlock
     , iapServicesIPv4CIdR
+    , iapUseRoutes
     , iapClusterIPv4CIdRBlock
     , iapServicesIPv4CIdRBlock
     , iapCreateSubnetwork
@@ -372,14 +546,26 @@ module Network.Google.Container.Types
     , addonsConfig
     , acNetworkPolicyConfig
     , acHorizontalPodAutoscaling
+    , acCloudRunConfig
     , acHTTPLoadBalancing
+    , acConfigConnectorConfig
     , acKubernetesDashboard
+    , acGcePersistentDiskCsiDriverConfig
+    , acDNSCacheConfig
+
+    -- * Autopilot
+    , Autopilot
+    , autopilot
+    , aEnabled
 
     -- * NetworkConfig
     , NetworkConfig
     , networkConfig
+    , ncEnableIntraNodeVisibility
     , ncNetwork
+    , ncDefaultSnatStatus
     , ncSubnetwork
+    , ncPrivateIPv6GoogleAccess
 
     -- * NodePool
     , NodePool
@@ -387,6 +573,7 @@ module Network.Google.Container.Types
     , npStatus
     , npAutoscaling
     , npConfig
+    , npUpgradeSettings
     , npInitialNodeCount
     , npManagement
     , npMaxPodsConstraint
@@ -395,7 +582,9 @@ module Network.Google.Container.Types
     , npStatusMessage
     , npVersion
     , npConditions
+    , npLocations
     , npInstanceGroupURLs
+    , npPodIPv4CIdRSize
 
     -- * SetNodePoolManagementRequest
     , SetNodePoolManagementRequest
@@ -406,6 +595,16 @@ module Network.Google.Container.Types
     , snpmrName
     , snpmrClusterId
     , snpmrProjectId
+
+    -- * GcePersistentDiskCsiDriverConfig
+    , GcePersistentDiskCsiDriverConfig
+    , gcePersistentDiskCsiDriverConfig
+    , gpdcdcEnabled
+
+    -- * IntraNodeVisibilityConfig
+    , IntraNodeVisibilityConfig
+    , intraNodeVisibilityConfig
+    , invcEnabled
 
     -- * MasterAuthorizedNetworksConfig
     , MasterAuthorizedNetworksConfig
@@ -428,11 +627,24 @@ module Network.Google.Container.Types
     , maPassword
     , maClusterCaCertificate
 
+    -- * Metric
+    , Metric
+    , metric
+    , mIntValue
+    , mDoubleValue
+    , mStringValue
+    , mName
+
     -- * StatusCondition
     , StatusCondition
     , statusCondition
     , scCode
     , scMessage
+
+    -- * DefaultSnatStatus
+    , DefaultSnatStatus
+    , defaultSnatStatus
+    , dssDisabled
 
     -- * NodeConfigMetadata
     , NodeConfigMetadata
@@ -444,14 +656,30 @@ module Network.Google.Container.Types
     , nodeConfigLabels
     , nclAddtional
 
+    -- * DNSCacheConfig
+    , DNSCacheConfig
+    , dnsCacheConfig
+    , dccEnabled
+
     -- * ServerConfig
     , ServerConfig
     , serverConfig
     , scDefaultImageType
     , scValidNodeVersions
+    , scChannels
     , scValidImageTypes
     , scDefaultClusterVersion
     , scValidMasterVersions
+
+    -- * HTTPCacheControlResponseHeader
+    , HTTPCacheControlResponseHeader
+    , hTTPCacheControlResponseHeader
+    , httpccrhDirective
+    , httpccrhExpires
+    , httpccrhAge
+
+    -- * SandboxConfigType
+    , SandboxConfigType (..)
 
     -- * NetworkPolicyProvider
     , NetworkPolicyProvider (..)
@@ -462,6 +690,11 @@ module Network.Google.Container.Types
     , auoAutoUpgradeStartTime
     , auoDescription
 
+    -- * ReleaseChannel
+    , ReleaseChannel
+    , releaseChannel
+    , rcChannel
+
     -- * SetNodePoolSizeRequest
     , SetNodePoolSizeRequest
     , setNodePoolSizeRequest
@@ -471,6 +704,12 @@ module Network.Google.Container.Types
     , snpsrName
     , snpsrClusterId
     , snpsrProjectId
+
+    -- * DatabaseEncryption
+    , DatabaseEncryption
+    , databaseEncryption
+    , deState
+    , deKeyName
 
     -- * Xgafv
     , Xgafv (..)
@@ -484,6 +723,19 @@ module Network.Google.Container.Types
     , smsrProjectId
     , smsrMonitoringService
 
+    -- * AutoprovisioningNodePoolDefaults
+    , AutoprovisioningNodePoolDefaults
+    , autoprovisioningNodePoolDefaults
+    , anpdDiskSizeGb
+    , anpdUpgradeSettings
+    , anpdManagement
+    , anpdOAuthScopes
+    , anpdServiceAccount
+    , anpdDiskType
+    , anpdShieldedInstanceConfig
+    , anpdMinCPUPlatform
+    , anpdBootDiskKmsKey
+
     -- * SetLoggingServiceRequest
     , SetLoggingServiceRequest
     , setLoggingServiceRequest
@@ -493,16 +745,31 @@ module Network.Google.Container.Types
     , slsrProjectId
     , slsrLoggingService
 
+    -- * DatabaseEncryptionState
+    , DatabaseEncryptionState (..)
+
     -- * MaintenancePolicy
     , MaintenancePolicy
     , maintenancePolicy
     , mpWindow
+    , mpResourceVersion
+
+    -- * ShieldedNodes
+    , ShieldedNodes
+    , shieldedNodes
+    , snEnabled
 
     -- * CIdRBlock
     , CIdRBlock
     , cIdRBlock
     , cirbCIdRBlock
     , cirbDisplayName
+
+    -- * ShieldedInstanceConfig
+    , ShieldedInstanceConfig
+    , shieldedInstanceConfig
+    , sicEnableIntegrityMonitoring
+    , sicEnableSecureBoot
 
     -- * AcceleratorConfig
     , AcceleratorConfig
@@ -536,6 +803,13 @@ module Network.Google.Container.Types
     , pccPublicEndpoint
     , pccMasterIPv4CIdRBlock
     , pccPrivateEndpoint
+    , pccMasterGlobalAccessConfig
+    , pccPeeringName
+
+    -- * WorkLoadMetadataConfig
+    , WorkLoadMetadataConfig
+    , workLoadMetadataConfig
+    , wlmcMode
 
     -- * DailyMaintenanceWindow
     , DailyMaintenanceWindow
@@ -552,18 +826,56 @@ module Network.Google.Container.Types
     , lcrClusters
     , lcrMissingZones
 
+    -- * ReleaseChannelConfig
+    , ReleaseChannelConfig
+    , releaseChannelConfig
+    , rccValidVersions
+    , rccChannel
+    , rccDefaultVersion
+
+    -- * AuthenticatorGroupsConfig
+    , AuthenticatorGroupsConfig
+    , authenticatorGroupsConfig
+    , agcEnabled
+    , agcSecurityGroup
+
+    -- * ReleaseChannelConfigChannel
+    , ReleaseChannelConfigChannel (..)
+
     -- * ClusterUpdate
     , ClusterUpdate
     , clusterUpdate
+    , cuDesiredBinaryAuthorization
+    , cuDesiredNotificationConfig
+    , cuDesiredClusterAutoscaling
+    , cuDesiredWorkLoadIdentityConfig
     , cuDesiredNodePoolAutoscaling
     , cuDesiredAddonsConfig
+    , cuDesiredResourceUsageExportConfig
     , cuDesiredNodePoolId
     , cuDesiredMasterAuthorizedNetworksConfig
+    , cuDesiredIntraNodeVisibilityConfig
     , cuDesiredImageType
+    , cuDesiredDefaultSnatStatus
     , cuDesiredNodeVersion
+    , cuDesiredReleaseChannel
+    , cuDesiredDatabaseEncryption
+    , cuDesiredPrivateClusterConfig
+    , cuDesiredShieldedNodes
+    , cuDesiredVerticalPodAutoscaling
     , cuDesiredMasterVersion
     , cuDesiredLocations
+    , cuDesiredLoggingService
     , cuDesiredMonitoringService
+    , cuDesiredPrivateIPv6GoogleAccess
+
+    -- * WorkLoadMetadataConfigMode
+    , WorkLoadMetadataConfigMode (..)
+
+    -- * VerticalPodAutoscaling
+    , VerticalPodAutoscaling
+    , verticalPodAutoscaling
+    , vpaEnabled
 
     -- * RollbackNodePoolUpgradeRequest
     , RollbackNodePoolUpgradeRequest
@@ -588,13 +900,30 @@ module Network.Google.Container.Types
     -- * ClusterStatus
     , ClusterStatus (..)
 
+    -- * NodeKubeletConfig
+    , NodeKubeletConfig
+    , nodeKubeletConfig
+    , nkcCPUCfsQuotaPeriod
+    , nkcCPUManagerPolicy
+    , nkcCPUCfsQuota
+
+    -- * UpgradeEventResourceType
+    , UpgradeEventResourceType (..)
+
+    -- * ReservationAffinityConsumeReservationType
+    , ReservationAffinityConsumeReservationType (..)
+
     -- * GetJSONWebKeysResponse
     , GetJSONWebKeysResponse
     , getJSONWebKeysResponse
+    , gjwkrCacheHeader
     , gjwkrKeys
 
     -- * NodeTaintEffect
     , NodeTaintEffect (..)
+
+    -- * ReleaseChannelChannel
+    , ReleaseChannelChannel (..)
 
     -- * CreateNodePoolRequest
     , CreateNodePoolRequest
@@ -614,9 +943,9 @@ module Network.Google.Container.Types
     , SetMasterAuthRequestAction (..)
     ) where
 
-import           Network.Google.Container.Types.Product
-import           Network.Google.Container.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Container.Types.Product
+import Network.Google.Container.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Kubernetes Engine API. This contains the host and root path used as a starting point for constructing service requests.
 containerService :: ServiceConfig

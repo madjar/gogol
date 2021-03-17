@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -81,6 +81,9 @@ module Network.Google.AppsReseller.Types
     , spciStartTime
     , spciEndTime
 
+    -- * Xgafv
+    , Xgafv (..)
+
     -- * SubscriptionsDeleteDeletionType
     , SubscriptionsDeleteDeletionType (..)
 
@@ -141,15 +144,15 @@ module Network.Google.AppsReseller.Types
     , stiMinimumTransferableSeats
     ) where
 
-import           Network.Google.AppsReseller.Types.Product
-import           Network.Google.AppsReseller.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.AppsReseller.Types.Product
+import Network.Google.AppsReseller.Types.Sum
+import Network.Google.Prelude
 
--- | Default request referring to version 'v1' of the Enterprise Apps Reseller API. This contains the host and root path used as a starting point for constructing service requests.
+-- | Default request referring to version 'v1' of the Google Workspace Reseller API. This contains the host and root path used as a starting point for constructing service requests.
 appsResellerService :: ServiceConfig
 appsResellerService
   = defaultService (ServiceId "reseller:v1")
-      "www.googleapis.com"
+      "reseller.googleapis.com"
 
 -- | Manage users on your domain
 appsOrderReadOnlyScope :: Proxy '["https://www.googleapis.com/auth/apps.order.readonly"]

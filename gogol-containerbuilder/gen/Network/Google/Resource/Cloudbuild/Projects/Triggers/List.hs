@@ -43,8 +43,8 @@ module Network.Google.Resource.Cloudbuild.Projects.Triggers.List
     , ptlCallback
     ) where
 
-import           Network.Google.ContainerBuilder.Types
-import           Network.Google.Prelude
+import Network.Google.ContainerBuilder.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @cloudbuild.projects.triggers.list@ method which the
 -- 'ProjectsTriggersList' request conforms to.
@@ -68,14 +68,14 @@ type ProjectsTriggersListResource =
 -- /See:/ 'projectsTriggersList' smart constructor.
 data ProjectsTriggersList =
   ProjectsTriggersList'
-    { _ptlXgafv          :: !(Maybe Xgafv)
+    { _ptlXgafv :: !(Maybe Xgafv)
     , _ptlUploadProtocol :: !(Maybe Text)
-    , _ptlAccessToken    :: !(Maybe Text)
-    , _ptlUploadType     :: !(Maybe Text)
-    , _ptlPageToken      :: !(Maybe Text)
-    , _ptlProjectId      :: !Text
-    , _ptlPageSize       :: !(Maybe (Textual Int32))
-    , _ptlCallback       :: !(Maybe Text)
+    , _ptlAccessToken :: !(Maybe Text)
+    , _ptlUploadType :: !(Maybe Text)
+    , _ptlPageToken :: !(Maybe Text)
+    , _ptlProjectId :: !Text
+    , _ptlPageSize :: !(Maybe (Textual Int32))
+    , _ptlCallback :: !(Maybe Text)
     }
   deriving (Eq, Show, Data, Typeable, Generic)
 
@@ -142,7 +142,7 @@ ptlPageToken :: Lens' ProjectsTriggersList (Maybe Text)
 ptlPageToken
   = lens _ptlPageToken (\ s a -> s{_ptlPageToken = a})
 
--- | ID of the project for which to list BuildTriggers.
+-- | Required. ID of the project for which to list BuildTriggers.
 ptlProjectId :: Lens' ProjectsTriggersList Text
 ptlProjectId
   = lens _ptlProjectId (\ s a -> s{_ptlProjectId = a})

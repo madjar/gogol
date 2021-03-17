@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -34,6 +34,7 @@ module Network.Google.FactCheckTools.Types
     , GoogleFactcheckingFactchecktoolsV1alpha1ClaimRating
     , googleFactcheckingFactchecktoolsV1alpha1ClaimRating
     , gffvcrWorstRating
+    , gffvcrRatingExplanation
     , gffvcrRatingValue
     , gffvcrImageURL
     , gffvcrBestRating
@@ -111,9 +112,9 @@ module Network.Google.FactCheckTools.Types
     , gffvlcrmprClaimReviewMarkupPages
     ) where
 
-import           Network.Google.FactCheckTools.Types.Product
-import           Network.Google.FactCheckTools.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.FactCheckTools.Types.Product
+import Network.Google.FactCheckTools.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1alpha1' of the Fact Check Tools API. This contains the host and root path used as a starting point for constructing service requests.
 factCheckToolsService :: ServiceConfig

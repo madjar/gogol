@@ -239,6 +239,9 @@ module Network.Google.AdExchangeBuyer2
     -- ** DealProgrammaticCreativeSource
     , DealProgrammaticCreativeSource (..)
 
+    -- ** SecurityContextSecuritiesItem
+    , SecurityContextSecuritiesItem (..)
+
     -- ** DealCreativePreApprovalPolicy
     , DealCreativePreApprovalPolicy (..)
 
@@ -246,6 +249,9 @@ module Network.Google.AdExchangeBuyer2
     , NonGuaranteedFixedPriceTerms
     , nonGuaranteedFixedPriceTerms
     , ngfptFixedPrices
+
+    -- ** VideoTargetingTargetedPositionTypesItem
+    , VideoTargetingTargetedPositionTypesItem (..)
 
     -- ** DeliveryControlCreativeBlockingLevel
     , DeliveryControlCreativeBlockingLevel (..)
@@ -288,6 +294,19 @@ module Network.Google.AdExchangeBuyer2
     , ngatReservePricesPerBuyer
     , ngatAutoOptimizePrivateAuction
 
+    -- ** AccountsCreativesCreateDuplicateIdMode
+    , AccountsCreativesCreateDuplicateIdMode (..)
+
+    -- ** FilterSetFormatsItem
+    , FilterSetFormatsItem (..)
+
+    -- ** PublisherProFileMobileApplication
+    , PublisherProFileMobileApplication
+    , publisherProFileMobileApplication
+    , ppfmaExternalAppId
+    , ppfmaName
+    , ppfmaAppStore
+
     -- ** CreativeRestrictionsSkippableAdType
     , CreativeRestrictionsSkippableAdType (..)
 
@@ -307,6 +326,7 @@ module Network.Google.AdExchangeBuyer2
     , bmrMeasurableImpressions
     , bmrViewableImpressions
     , bmrBilledImpressions
+    , bmrReachedQueries
 
     -- ** ServingRestrictionStatus
     , ServingRestrictionStatus (..)
@@ -341,6 +361,7 @@ module Network.Google.AdExchangeBuyer2
     , fbdrDetailId
     , fbdrRowDimensions
     , fbdrBidCount
+    , fbdrDetail
 
     -- ** PrivateData
     , PrivateData
@@ -377,9 +398,11 @@ module Network.Google.AdExchangeBuyer2
     , ppfAudienceDescription
     , ppfLogoURL
     , ppfOverview
+    , ppfIsParent
     , ppfSamplePageURL
     , ppfSeller
     , ppfMediaKitURL
+    , ppfMobileApps
     , ppfBuyerPitchStatement
     , ppfDisplayName
     , ppfPublisherProFileId
@@ -482,6 +505,12 @@ module Network.Google.AdExchangeBuyer2
     , StopWatchingCreativeRequest
     , stopWatchingCreativeRequest
 
+    -- ** FilterSetPlatformsItem
+    , FilterSetPlatformsItem (..)
+
+    -- ** CreativeSizeAllowedFormatsItem
+    , CreativeSizeAllowedFormatsItem (..)
+
     -- ** WatchCreativeRequest
     , WatchCreativeRequest
     , watchCreativeRequest
@@ -521,6 +550,7 @@ module Network.Google.AdExchangeBuyer2
     , cDealsStatus
     , cCreativeId
     , cVideo
+    , cAdTechnologyProviders
     , cNATive
     , cDetectedSensitiveCategories
     , cImpressionTrackingURLs
@@ -533,7 +563,6 @@ module Network.Google.AdExchangeBuyer2
     , cServingRestrictions
     , cDetectedDomains
     , cOpenAuctionStatus
-    , cFilteringStats
     , cDeclaredClickThroughURLs
 
     -- ** AppContext
@@ -579,11 +608,23 @@ module Network.Google.AdExchangeBuyer2
     , sAccountId
     , sSubAccountId
 
+    -- ** PublisherProFileMobileApplicationAppStore
+    , PublisherProFileMobileApplicationAppStore (..)
+
+    -- ** CreativeAttributesItem
+    , CreativeAttributesItem (..)
+
     -- ** ListCreativesResponse
     , ListCreativesResponse
     , listCreativesResponse
     , lcrNextPageToken
     , lcrCreatives
+
+    -- ** AdTechnologyProviders
+    , AdTechnologyProviders
+    , adTechnologyProviders
+    , atpHasUnidentifiedProvider
+    , atpDetectedProviderIds
 
     -- ** RowDimensions
     , RowDimensions
@@ -611,6 +652,9 @@ module Network.Google.AdExchangeBuyer2
     , SecurityContext
     , securityContext
     , scSecurities
+
+    -- ** PlatformContextPlatformsItem
+    , PlatformContextPlatformsItem (..)
 
     -- ** Date
     , Date
@@ -643,12 +687,6 @@ module Network.Google.AdExchangeBuyer2
 
     -- ** CreativeRestrictionsCreativeFormat
     , CreativeRestrictionsCreativeFormat (..)
-
-    -- ** Reason
-    , Reason
-    , reason
-    , rStatus
-    , rCount
 
     -- ** AuctionContext
     , AuctionContext
@@ -714,6 +752,7 @@ module Network.Google.AdExchangeBuyer2
     , pNotes
     , pProposalState
     , pLastUpdaterOrCommentorRole
+    , pTermsAndConditions
     , pBuyer
 
     -- ** RelativeDateRange
@@ -804,6 +843,7 @@ module Network.Google.AdExchangeBuyer2
     , fsRealtimeTimeRange
     , fsEnvironment
     , fsFormats
+    , fsFormat
     , fsCreativeId
     , fsBreakdownDimensions
     , fsSellerNetworkIds
@@ -848,6 +888,9 @@ module Network.Google.AdExchangeBuyer2
     -- ** FrequencyCapTimeUnitType
     , FrequencyCapTimeUnitType (..)
 
+    -- ** CreativeRestrictedCategoriesItem
+    , CreativeRestrictedCategoriesItem (..)
+
     -- ** ListLosingBidsResponse
     , ListLosingBidsResponse
     , listLosingBidsResponse
@@ -859,6 +902,9 @@ module Network.Google.AdExchangeBuyer2
 
     -- ** NonBillableWinningBidStatusRowStatus
     , NonBillableWinningBidStatusRowStatus (..)
+
+    -- ** VideoTargetingExcludedPositionTypesItem
+    , VideoTargetingExcludedPositionTypesItem (..)
 
     -- ** ClientStatus
     , ClientStatus (..)
@@ -888,6 +934,9 @@ module Network.Google.AdExchangeBuyer2
     , PlatformContext
     , platformContext
     , pcPlatforms
+
+    -- ** AccountsFinalizedProposalsListFilterSyntax
+    , AccountsFinalizedProposalsListFilterSyntax (..)
 
     -- ** VideoContent
     , VideoContent
@@ -1034,6 +1083,9 @@ module Network.Google.AdExchangeBuyer2
     , imrBidRequests
     , imrResponsesWithBids
 
+    -- ** AccountsProposalsListFilterSyntax
+    , AccountsProposalsListFilterSyntax (..)
+
     -- ** CreativeSize
     , CreativeSize
     , creativeSize
@@ -1071,11 +1123,8 @@ module Network.Google.AdExchangeBuyer2
     , dtGuaranteedFixedPriceTerms
     , dtDescription
 
-    -- ** FilteringStats
-    , FilteringStats
-    , filteringStats
-    , fsReasons
-    , fsDate
+    -- ** AuctionContextAuctionTypesItem
+    , AuctionContextAuctionTypesItem (..)
 
     -- ** ClientUserInvitation
     , ClientUserInvitation
@@ -1096,6 +1145,9 @@ module Network.Google.AdExchangeBuyer2
     , listProductsResponse
     , lisNextPageToken
     , lisProducts
+
+    -- ** FilterSetFormat
+    , FilterSetFormat (..)
 
     -- ** Buyer
     , Buyer
@@ -1126,72 +1178,78 @@ module Network.Google.AdExchangeBuyer2
     , disApproval
     , daReason
     , daDetails
+
+    -- ** AppContextAppTypesItem
+    , AppContextAppTypesItem (..)
+
+    -- ** FilterSetBreakdownDimensionsItem
+    , FilterSetBreakdownDimensionsItem (..)
     ) where
 
-import           Network.Google.AdExchangeBuyer2.Types
-import           Network.Google.Prelude
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Create
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Get
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Invitations.Create
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Invitations.Get
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Invitations.List
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.List
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Update
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Users.Get
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Users.List
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Users.Update
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.Create
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.DealAssociations.Add
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.DealAssociations.List
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.DealAssociations.Remove
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.Get
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.List
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.StopWatching
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.Update
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.Watch
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.FinalizedProposals.List
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Products.Get
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Products.List
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.Accept
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.AddNote
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.CancelNegotiation
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.CompleteSetup
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.Create
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.Get
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.List
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.Pause
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.Resume
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.Update
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.PublisherProFiles.Get
-import           Network.Google.Resource.AdExchangeBuyer2.Accounts.PublisherProFiles.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.BidMetrics.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.BidResponseErrors.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.BidResponsesWithoutBids.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.Create
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.Delete
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.FilteredBidRequests.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.FilteredBids.Creatives.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.FilteredBids.Details.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.FilteredBids.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.Get
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.ImpressionMetrics.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.LosingBids.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.NonBillableWinningBids.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.BidMetrics.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.BidResponseErrors.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.BidResponsesWithoutBids.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.Create
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.Delete
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.FilteredBidRequests.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.FilteredBids.Creatives.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.FilteredBids.Details.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.FilteredBids.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.Get
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.ImpressionMetrics.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.LosingBids.List
-import           Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.NonBillableWinningBids.List
+import Network.Google.Prelude
+import Network.Google.AdExchangeBuyer2.Types
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Create
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Get
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Invitations.Create
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Invitations.Get
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Invitations.List
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.List
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Update
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Users.Get
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Users.List
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Clients.Users.Update
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.Create
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.DealAssociations.Add
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.DealAssociations.List
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.DealAssociations.Remove
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.Get
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.List
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.StopWatching
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.Update
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Creatives.Watch
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.FinalizedProposals.List
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Products.Get
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Products.List
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.Accept
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.AddNote
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.CancelNegotiation
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.CompleteSetup
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.Create
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.Get
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.List
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.Pause
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.Resume
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.Proposals.Update
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.PublisherProFiles.Get
+import Network.Google.Resource.AdExchangeBuyer2.Accounts.PublisherProFiles.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.BidMetrics.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.BidResponseErrors.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.BidResponsesWithoutBids.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.Create
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.Delete
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.FilteredBidRequests.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.FilteredBids.Creatives.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.FilteredBids.Details.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.FilteredBids.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.Get
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.ImpressionMetrics.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.LosingBids.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.Accounts.FilterSets.NonBillableWinningBids.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.BidMetrics.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.BidResponseErrors.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.BidResponsesWithoutBids.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.Create
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.Delete
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.FilteredBidRequests.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.FilteredBids.Creatives.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.FilteredBids.Details.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.FilteredBids.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.Get
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.ImpressionMetrics.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.LosingBids.List
+import Network.Google.Resource.AdExchangeBuyer2.Bidders.FilterSets.NonBillableWinningBids.List
 
 {- $resources
 TODO

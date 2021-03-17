@@ -20,9 +20,9 @@
 -- Stability   : auto-generated
 -- Portability : non-portable (GHC extensions)
 --
--- List all aliases for a user
+-- Lists all aliases for a user.
 --
--- /See:/ <https://developers.google.com/admin-sdk/directory/ Admin Directory API Reference> for @directory.users.aliases.list@.
+-- /See:/ <http://developers.google.com/admin-sdk/ Admin SDK API Reference> for @directory.users.aliases.list@.
 module Network.Google.Resource.Directory.Users.Aliases.List
     (
     -- * REST Resource
@@ -33,12 +33,16 @@ module Network.Google.Resource.Directory.Users.Aliases.List
     , UsersAliasesList
 
     -- * Request Lenses
-    , ualEvent
+    , ualXgafv
+    , ualUploadProtocol
+    , ualAccessToken
+    , ualUploadType
     , ualUserKey
+    , ualCallback
     ) where
 
-import           Network.Google.Directory.Types
-import           Network.Google.Prelude
+import Network.Google.Directory.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @directory.users.aliases.list@ method which the
 -- 'UsersAliasesList' request conforms to.
@@ -49,16 +53,24 @@ type UsersAliasesListResource =
            "users" :>
              Capture "userKey" Text :>
                "aliases" :>
-                 QueryParam "event" UsersAliasesListEvent :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] Aliases
+                 QueryParam "$.xgafv" Xgafv :>
+                   QueryParam "upload_protocol" Text :>
+                     QueryParam "access_token" Text :>
+                       QueryParam "uploadType" Text :>
+                         QueryParam "callback" Text :>
+                           QueryParam "alt" AltJSON :> Get '[JSON] Aliases
 
--- | List all aliases for a user
+-- | Lists all aliases for a user.
 --
 -- /See:/ 'usersAliasesList' smart constructor.
 data UsersAliasesList =
   UsersAliasesList'
-    { _ualEvent   :: !(Maybe UsersAliasesListEvent)
+    { _ualXgafv :: !(Maybe Xgafv)
+    , _ualUploadProtocol :: !(Maybe Text)
+    , _ualAccessToken :: !(Maybe Text)
+    , _ualUploadType :: !(Maybe Text)
     , _ualUserKey :: !Text
+    , _ualCallback :: !(Maybe Text)
     }
   deriving (Eq, Show, Data, Typeable, Generic)
 
@@ -67,24 +79,63 @@ data UsersAliasesList =
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'ualEvent'
+-- * 'ualXgafv'
+--
+-- * 'ualUploadProtocol'
+--
+-- * 'ualAccessToken'
+--
+-- * 'ualUploadType'
 --
 -- * 'ualUserKey'
+--
+-- * 'ualCallback'
 usersAliasesList
     :: Text -- ^ 'ualUserKey'
     -> UsersAliasesList
 usersAliasesList pUalUserKey_ =
-  UsersAliasesList' {_ualEvent = Nothing, _ualUserKey = pUalUserKey_}
+  UsersAliasesList'
+    { _ualXgafv = Nothing
+    , _ualUploadProtocol = Nothing
+    , _ualAccessToken = Nothing
+    , _ualUploadType = Nothing
+    , _ualUserKey = pUalUserKey_
+    , _ualCallback = Nothing
+    }
 
 
--- | Event on which subscription is intended (if subscribing)
-ualEvent :: Lens' UsersAliasesList (Maybe UsersAliasesListEvent)
-ualEvent = lens _ualEvent (\ s a -> s{_ualEvent = a})
+-- | V1 error format.
+ualXgafv :: Lens' UsersAliasesList (Maybe Xgafv)
+ualXgafv = lens _ualXgafv (\ s a -> s{_ualXgafv = a})
 
--- | Email or immutable ID of the user
+-- | Upload protocol for media (e.g. \"raw\", \"multipart\").
+ualUploadProtocol :: Lens' UsersAliasesList (Maybe Text)
+ualUploadProtocol
+  = lens _ualUploadProtocol
+      (\ s a -> s{_ualUploadProtocol = a})
+
+-- | OAuth access token.
+ualAccessToken :: Lens' UsersAliasesList (Maybe Text)
+ualAccessToken
+  = lens _ualAccessToken
+      (\ s a -> s{_ualAccessToken = a})
+
+-- | Legacy upload protocol for media (e.g. \"media\", \"multipart\").
+ualUploadType :: Lens' UsersAliasesList (Maybe Text)
+ualUploadType
+  = lens _ualUploadType
+      (\ s a -> s{_ualUploadType = a})
+
+-- | Identifies the user in the API request. The value can be the user\'s
+-- primary email address, alias email address, or unique user ID.
 ualUserKey :: Lens' UsersAliasesList Text
 ualUserKey
   = lens _ualUserKey (\ s a -> s{_ualUserKey = a})
+
+-- | JSONP
+ualCallback :: Lens' UsersAliasesList (Maybe Text)
+ualCallback
+  = lens _ualCallback (\ s a -> s{_ualCallback = a})
 
 instance GoogleRequest UsersAliasesList where
         type Rs UsersAliasesList = Aliases
@@ -94,7 +145,11 @@ instance GoogleRequest UsersAliasesList where
                "https://www.googleapis.com/auth/admin.directory.user.alias.readonly",
                "https://www.googleapis.com/auth/admin.directory.user.readonly"]
         requestClient UsersAliasesList'{..}
-          = go _ualUserKey _ualEvent (Just AltJSON)
+          = go _ualUserKey _ualXgafv _ualUploadProtocol
+              _ualAccessToken
+              _ualUploadType
+              _ualCallback
+              (Just AltJSON)
               directoryService
           where go
                   = buildClient

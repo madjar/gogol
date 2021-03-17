@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -42,6 +42,9 @@ module Network.Google.AdExchangeBuyer2.Types
     -- * DealProgrammaticCreativeSource
     , DealProgrammaticCreativeSource (..)
 
+    -- * SecurityContextSecuritiesItem
+    , SecurityContextSecuritiesItem (..)
+
     -- * DealCreativePreApprovalPolicy
     , DealCreativePreApprovalPolicy (..)
 
@@ -49,6 +52,9 @@ module Network.Google.AdExchangeBuyer2.Types
     , NonGuaranteedFixedPriceTerms
     , nonGuaranteedFixedPriceTerms
     , ngfptFixedPrices
+
+    -- * VideoTargetingTargetedPositionTypesItem
+    , VideoTargetingTargetedPositionTypesItem (..)
 
     -- * DeliveryControlCreativeBlockingLevel
     , DeliveryControlCreativeBlockingLevel (..)
@@ -91,6 +97,19 @@ module Network.Google.AdExchangeBuyer2.Types
     , ngatReservePricesPerBuyer
     , ngatAutoOptimizePrivateAuction
 
+    -- * AccountsCreativesCreateDuplicateIdMode
+    , AccountsCreativesCreateDuplicateIdMode (..)
+
+    -- * FilterSetFormatsItem
+    , FilterSetFormatsItem (..)
+
+    -- * PublisherProFileMobileApplication
+    , PublisherProFileMobileApplication
+    , publisherProFileMobileApplication
+    , ppfmaExternalAppId
+    , ppfmaName
+    , ppfmaAppStore
+
     -- * CreativeRestrictionsSkippableAdType
     , CreativeRestrictionsSkippableAdType (..)
 
@@ -110,6 +129,7 @@ module Network.Google.AdExchangeBuyer2.Types
     , bmrMeasurableImpressions
     , bmrViewableImpressions
     , bmrBilledImpressions
+    , bmrReachedQueries
 
     -- * ServingRestrictionStatus
     , ServingRestrictionStatus (..)
@@ -144,6 +164,7 @@ module Network.Google.AdExchangeBuyer2.Types
     , fbdrDetailId
     , fbdrRowDimensions
     , fbdrBidCount
+    , fbdrDetail
 
     -- * PrivateData
     , PrivateData
@@ -180,9 +201,11 @@ module Network.Google.AdExchangeBuyer2.Types
     , ppfAudienceDescription
     , ppfLogoURL
     , ppfOverview
+    , ppfIsParent
     , ppfSamplePageURL
     , ppfSeller
     , ppfMediaKitURL
+    , ppfMobileApps
     , ppfBuyerPitchStatement
     , ppfDisplayName
     , ppfPublisherProFileId
@@ -285,6 +308,12 @@ module Network.Google.AdExchangeBuyer2.Types
     , StopWatchingCreativeRequest
     , stopWatchingCreativeRequest
 
+    -- * FilterSetPlatformsItem
+    , FilterSetPlatformsItem (..)
+
+    -- * CreativeSizeAllowedFormatsItem
+    , CreativeSizeAllowedFormatsItem (..)
+
     -- * WatchCreativeRequest
     , WatchCreativeRequest
     , watchCreativeRequest
@@ -324,6 +353,7 @@ module Network.Google.AdExchangeBuyer2.Types
     , cDealsStatus
     , cCreativeId
     , cVideo
+    , cAdTechnologyProviders
     , cNATive
     , cDetectedSensitiveCategories
     , cImpressionTrackingURLs
@@ -336,7 +366,6 @@ module Network.Google.AdExchangeBuyer2.Types
     , cServingRestrictions
     , cDetectedDomains
     , cOpenAuctionStatus
-    , cFilteringStats
     , cDeclaredClickThroughURLs
 
     -- * AppContext
@@ -382,11 +411,23 @@ module Network.Google.AdExchangeBuyer2.Types
     , sAccountId
     , sSubAccountId
 
+    -- * PublisherProFileMobileApplicationAppStore
+    , PublisherProFileMobileApplicationAppStore (..)
+
+    -- * CreativeAttributesItem
+    , CreativeAttributesItem (..)
+
     -- * ListCreativesResponse
     , ListCreativesResponse
     , listCreativesResponse
     , lcrNextPageToken
     , lcrCreatives
+
+    -- * AdTechnologyProviders
+    , AdTechnologyProviders
+    , adTechnologyProviders
+    , atpHasUnidentifiedProvider
+    , atpDetectedProviderIds
 
     -- * RowDimensions
     , RowDimensions
@@ -414,6 +455,9 @@ module Network.Google.AdExchangeBuyer2.Types
     , SecurityContext
     , securityContext
     , scSecurities
+
+    -- * PlatformContextPlatformsItem
+    , PlatformContextPlatformsItem (..)
 
     -- * Date
     , Date
@@ -446,12 +490,6 @@ module Network.Google.AdExchangeBuyer2.Types
 
     -- * CreativeRestrictionsCreativeFormat
     , CreativeRestrictionsCreativeFormat (..)
-
-    -- * Reason
-    , Reason
-    , reason
-    , rStatus
-    , rCount
 
     -- * AuctionContext
     , AuctionContext
@@ -517,6 +555,7 @@ module Network.Google.AdExchangeBuyer2.Types
     , pNotes
     , pProposalState
     , pLastUpdaterOrCommentorRole
+    , pTermsAndConditions
     , pBuyer
 
     -- * RelativeDateRange
@@ -607,6 +646,7 @@ module Network.Google.AdExchangeBuyer2.Types
     , fsRealtimeTimeRange
     , fsEnvironment
     , fsFormats
+    , fsFormat
     , fsCreativeId
     , fsBreakdownDimensions
     , fsSellerNetworkIds
@@ -651,6 +691,9 @@ module Network.Google.AdExchangeBuyer2.Types
     -- * FrequencyCapTimeUnitType
     , FrequencyCapTimeUnitType (..)
 
+    -- * CreativeRestrictedCategoriesItem
+    , CreativeRestrictedCategoriesItem (..)
+
     -- * ListLosingBidsResponse
     , ListLosingBidsResponse
     , listLosingBidsResponse
@@ -662,6 +705,9 @@ module Network.Google.AdExchangeBuyer2.Types
 
     -- * NonBillableWinningBidStatusRowStatus
     , NonBillableWinningBidStatusRowStatus (..)
+
+    -- * VideoTargetingExcludedPositionTypesItem
+    , VideoTargetingExcludedPositionTypesItem (..)
 
     -- * ClientStatus
     , ClientStatus (..)
@@ -691,6 +737,9 @@ module Network.Google.AdExchangeBuyer2.Types
     , PlatformContext
     , platformContext
     , pcPlatforms
+
+    -- * AccountsFinalizedProposalsListFilterSyntax
+    , AccountsFinalizedProposalsListFilterSyntax (..)
 
     -- * VideoContent
     , VideoContent
@@ -837,6 +886,9 @@ module Network.Google.AdExchangeBuyer2.Types
     , imrBidRequests
     , imrResponsesWithBids
 
+    -- * AccountsProposalsListFilterSyntax
+    , AccountsProposalsListFilterSyntax (..)
+
     -- * CreativeSize
     , CreativeSize
     , creativeSize
@@ -874,11 +926,8 @@ module Network.Google.AdExchangeBuyer2.Types
     , dtGuaranteedFixedPriceTerms
     , dtDescription
 
-    -- * FilteringStats
-    , FilteringStats
-    , filteringStats
-    , fsReasons
-    , fsDate
+    -- * AuctionContextAuctionTypesItem
+    , AuctionContextAuctionTypesItem (..)
 
     -- * ClientUserInvitation
     , ClientUserInvitation
@@ -899,6 +948,9 @@ module Network.Google.AdExchangeBuyer2.Types
     , listProductsResponse
     , lisNextPageToken
     , lisProducts
+
+    -- * FilterSetFormat
+    , FilterSetFormat (..)
 
     -- * Buyer
     , Buyer
@@ -929,11 +981,17 @@ module Network.Google.AdExchangeBuyer2.Types
     , disApproval
     , daReason
     , daDetails
+
+    -- * AppContextAppTypesItem
+    , AppContextAppTypesItem (..)
+
+    -- * FilterSetBreakdownDimensionsItem
+    , FilterSetBreakdownDimensionsItem (..)
     ) where
 
-import           Network.Google.AdExchangeBuyer2.Types.Product
-import           Network.Google.AdExchangeBuyer2.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.AdExchangeBuyer2.Types.Product
+import Network.Google.AdExchangeBuyer2.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v2beta1' of the Ad Exchange Buyer API II. This contains the host and root path used as a starting point for constructing service requests.
 adExchangeBuyer2Service :: ServiceConfig

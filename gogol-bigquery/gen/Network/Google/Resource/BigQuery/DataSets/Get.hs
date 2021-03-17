@@ -37,8 +37,8 @@ module Network.Google.Resource.BigQuery.DataSets.Get
     , dsgProjectId
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.datasets.get@ method which the
 -- 'DataSetsGet' request conforms to.
@@ -91,6 +91,7 @@ instance GoogleRequest DataSetsGet where
         type Rs DataSetsGet = DataSet
         type Scopes DataSetsGet =
              '["https://www.googleapis.com/auth/bigquery",
+               "https://www.googleapis.com/auth/bigquery.readonly",
                "https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud-platform.read-only"]
         requestClient DataSetsGet'{..}

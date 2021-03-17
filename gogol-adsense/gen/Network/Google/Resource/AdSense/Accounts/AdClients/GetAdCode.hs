@@ -34,11 +34,12 @@ module Network.Google.Resource.AdSense.Accounts.AdClients.GetAdCode
 
     -- * Request Lenses
     , aacgacAdClientId
+    , aacgacTagPartner
     , aacgacAccountId
     ) where
 
-import           Network.Google.AdSense.Types
-import           Network.Google.Prelude
+import Network.Google.AdSense.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @adsense.accounts.adclients.getAdCode@ method which the
 -- 'AccountsAdClientsGetAdCode' request conforms to.
@@ -50,7 +51,8 @@ type AccountsAdClientsGetAdCodeResource =
              "adclients" :>
                Capture "adClientId" Text :>
                  "adcode" :>
-                   QueryParam "alt" AltJSON :> Get '[JSON] AdCode
+                   QueryParam "tagPartner" Text :>
+                     QueryParam "alt" AltJSON :> Get '[JSON] AdCode
 
 -- | Get Auto ad code for a given ad client.
 --
@@ -58,7 +60,8 @@ type AccountsAdClientsGetAdCodeResource =
 data AccountsAdClientsGetAdCode =
   AccountsAdClientsGetAdCode'
     { _aacgacAdClientId :: !Text
-    , _aacgacAccountId  :: !Text
+    , _aacgacTagPartner :: !(Maybe Text)
+    , _aacgacAccountId :: !Text
     }
   deriving (Eq, Show, Data, Typeable, Generic)
 
@@ -69,6 +72,8 @@ data AccountsAdClientsGetAdCode =
 --
 -- * 'aacgacAdClientId'
 --
+-- * 'aacgacTagPartner'
+--
 -- * 'aacgacAccountId'
 accountsAdClientsGetAdCode
     :: Text -- ^ 'aacgacAdClientId'
@@ -77,6 +82,7 @@ accountsAdClientsGetAdCode
 accountsAdClientsGetAdCode pAacgacAdClientId_ pAacgacAccountId_ =
   AccountsAdClientsGetAdCode'
     { _aacgacAdClientId = pAacgacAdClientId_
+    , _aacgacTagPartner = Nothing
     , _aacgacAccountId = pAacgacAccountId_
     }
 
@@ -86,6 +92,12 @@ aacgacAdClientId :: Lens' AccountsAdClientsGetAdCode Text
 aacgacAdClientId
   = lens _aacgacAdClientId
       (\ s a -> s{_aacgacAdClientId = a})
+
+-- | Tag partner to include in the ad code snippet.
+aacgacTagPartner :: Lens' AccountsAdClientsGetAdCode (Maybe Text)
+aacgacTagPartner
+  = lens _aacgacTagPartner
+      (\ s a -> s{_aacgacTagPartner = a})
 
 -- | Account which contains the ad client.
 aacgacAccountId :: Lens' AccountsAdClientsGetAdCode Text
@@ -101,6 +113,7 @@ instance GoogleRequest AccountsAdClientsGetAdCode
                "https://www.googleapis.com/auth/adsense.readonly"]
         requestClient AccountsAdClientsGetAdCode'{..}
           = go _aacgacAccountId _aacgacAdClientId
+              _aacgacTagPartner
               (Just AltJSON)
               adSenseService
           where go

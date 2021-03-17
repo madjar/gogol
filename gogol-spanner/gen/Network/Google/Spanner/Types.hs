@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -29,6 +29,13 @@ module Network.Google.Spanner.Types
     , executeSQLRequestParams
     , esqlrpAddtional
 
+    -- * RestoreDatabaseRequest
+    , RestoreDatabaseRequest
+    , restoreDatabaseRequest
+    , rdrBackup
+    , rdrEncryptionConfig
+    , rdrDatabaseId
+
     -- * InstanceLabels
     , InstanceLabels
     , instanceLabels
@@ -45,6 +52,12 @@ module Network.Google.Spanner.Types
     , toReadWrite
     , toPartitionedDml
     , toReadOnly
+
+    -- * ListBackupsResponse
+    , ListBackupsResponse
+    , listBackupsResponse
+    , lbrNextPageToken
+    , lbrBackups
 
     -- * GetDatabaseDdlResponse
     , GetDatabaseDdlResponse
@@ -63,6 +76,12 @@ module Network.Google.Spanner.Types
     , createInstanceRequest
     , cirInstanceId
     , cirInstance
+
+    -- * BatchCreateSessionsRequest
+    , BatchCreateSessionsRequest
+    , batchCreateSessionsRequest
+    , bcsrSessionCount
+    , bcsrSessionTemplate
 
     -- * ReadWrite
     , ReadWrite
@@ -96,6 +115,7 @@ module Network.Google.Spanner.Types
     -- * GetIAMPolicyRequest
     , GetIAMPolicyRequest
     , getIAMPolicyRequest
+    , giprOptions
 
     -- * ChildLink
     , ChildLink
@@ -108,6 +128,12 @@ module Network.Google.Spanner.Types
     , BeginTransactionRequest
     , beginTransactionRequest
     , btrOptions
+
+    -- * ListDatabaseOperationsResponse
+    , ListDatabaseOperationsResponse
+    , listDatabaseOperationsResponse
+    , ldorNextPageToken
+    , ldorOperations
 
     -- * PartitionOptions
     , PartitionOptions
@@ -128,6 +154,11 @@ module Network.Google.Spanner.Types
     , field
     , fName
     , fType
+
+    -- * QueryOptions
+    , QueryOptions
+    , queryOptions
+    , qoOptimizerVersion
 
     -- * TypeCode
     , TypeCode (..)
@@ -177,6 +208,7 @@ module Network.Google.Spanner.Types
     , UpdateDatabaseDdlMetadata
     , updateDatabaseDdlMetadata
     , uddmCommitTimestamps
+    , uddmThrottled
     , uddmDatabase
     , uddmStatements
 
@@ -188,7 +220,28 @@ module Network.Google.Spanner.Types
     , Database
     , database
     , dState
+    , dEarliestVersionTime
     , dName
+    , dEncryptionConfig
+    , dVersionRetentionPeriod
+    , dRestoreInfo
+    , dEncryptionInfo
+    , dCreateTime
+
+    -- * CommitStats
+    , CommitStats
+    , commitStats
+    , csMutationCount
+
+    -- * OperationProgress
+    , OperationProgress
+    , operationProgress
+    , opStartTime
+    , opProgressPercent
+    , opEndTime
+
+    -- * RestoreInfoSourceType
+    , RestoreInfoSourceType (..)
 
     -- * PlanNode
     , PlanNode
@@ -230,9 +283,33 @@ module Network.Google.Spanner.Types
     , planNodeMetadata
     , pnmAddtional
 
+    -- * EncryptionInfoEncryptionType
+    , EncryptionInfoEncryptionType (..)
+
+    -- * ReplicaInfoType
+    , ReplicaInfoType (..)
+
+    -- * GetPolicyOptions
+    , GetPolicyOptions
+    , getPolicyOptions
+    , gpoRequestedPolicyVersion
+
     -- * PartitionedDml
     , PartitionedDml
     , partitionedDml
+
+    -- * Backup
+    , Backup
+    , backup
+    , bSizeBytes
+    , bState
+    , bDatabase
+    , bName
+    , bVersionTime
+    , bReferencingDatabases
+    , bExpireTime
+    , bEncryptionInfo
+    , bCreateTime
 
     -- * SetIAMPolicyRequest
     , SetIAMPolicyRequest
@@ -296,10 +373,24 @@ module Network.Google.Spanner.Types
     , ebdrTransaction
     , ebdrStatements
 
+    -- * RestoreDatabaseEncryptionConfigEncryptionType
+    , RestoreDatabaseEncryptionConfigEncryptionType (..)
+
     -- * StructType
     , StructType
     , structType
     , stFields
+
+    -- * CreateBackupMetadata
+    , CreateBackupMetadata
+    , createBackupMetadata
+    , cbmProgress
+    , cbmDatabase
+    , cbmCancelTime
+    , cbmName
+
+    -- * ProjectsInstancesBackupsCreateEncryptionConfigEncryptionType
+    , ProjectsInstancesBackupsCreateEncryptionConfigEncryptionType (..)
 
     -- * DatabaseState
     , DatabaseState (..)
@@ -311,6 +402,7 @@ module Network.Google.Spanner.Types
     , CommitResponse
     , commitResponse
     , crCommitTimestamp
+    , crCommitStats
 
     -- * Partition
     , Partition
@@ -322,10 +414,24 @@ module Network.Google.Spanner.Types
     , testIAMPermissionsRequest
     , tiprPermissions
 
+    -- * OptimizeRestoredDatabaseMetadata
+    , OptimizeRestoredDatabaseMetadata
+    , optimizeRestoredDatabaseMetadata
+    , ordmProgress
+    , ordmName
+
     -- * PartitionQueryRequestParamTypes
     , PartitionQueryRequestParamTypes
     , partitionQueryRequestParamTypes
     , pqrptAddtional
+
+    -- * RestoreDatabaseMetadataSourceType
+    , RestoreDatabaseMetadataSourceType (..)
+
+    -- * EncryptionConfig
+    , EncryptionConfig
+    , encryptionConfig
+    , ecKmsKeyName
 
     -- * UpdateInstanceMetadata
     , UpdateInstanceMetadata
@@ -345,6 +451,16 @@ module Network.Google.Spanner.Types
     , testIAMPermissionsResponse
     , tiamprPermissions
 
+    -- * RestoreDatabaseMetadata
+    , RestoreDatabaseMetadata
+    , restoreDatabaseMetadata
+    , rdmSourceType
+    , rdmProgress
+    , rdmCancelTime
+    , rdmName
+    , rdmBackupInfo
+    , rdmOptimizeDatabaseOperationName
+
     -- * PartialResultSet
     , PartialResultSet
     , partialResultSet
@@ -353,6 +469,20 @@ module Network.Google.Spanner.Types
     , prsStats
     , prsMetadata
     , prsChunkedValue
+
+    -- * RestoreDatabaseEncryptionConfig
+    , RestoreDatabaseEncryptionConfig
+    , restoreDatabaseEncryptionConfig
+    , rdecEncryptionType
+    , rdecKmsKeyName
+
+    -- * BackupInfo
+    , BackupInfo
+    , backupInfo
+    , biBackup
+    , biVersionTime
+    , biSourceDatabase
+    , biCreateTime
 
     -- * Policy
     , Policy
@@ -365,12 +495,14 @@ module Network.Google.Spanner.Types
     , CreateDatabaseRequest
     , createDatabaseRequest
     , cdrExtraStatements
+    , cdrEncryptionConfig
     , cdrCreateStatement
 
     -- * ExecuteSQLRequest
     , ExecuteSQLRequest
     , executeSQLRequest
     , esqlrParamTypes
+    , esqlrQueryOptions
     , esqlrResumeToken
     , esqlrSeqno
     , esqlrParams
@@ -382,6 +514,7 @@ module Network.Google.Spanner.Types
     -- * CommitRequest
     , CommitRequest
     , commitRequest
+    , crReturnCommitStats
     , crMutations
     , crTransactionId
     , crSingleUseTransaction
@@ -419,6 +552,7 @@ module Network.Google.Spanner.Types
     , instanceConfig
     , icName
     , icDisplayName
+    , icReplicas
 
     -- * ResultSet
     , ResultSet
@@ -436,6 +570,7 @@ module Network.Google.Spanner.Types
     , ListInstancesResponse
     , listInstancesResponse
     , lirNextPageToken
+    , lirUnreachable
     , lirInstances
 
     -- * ReadRequest
@@ -450,6 +585,13 @@ module Network.Google.Spanner.Types
     , rrTable
     , rrPartitionToken
 
+    -- * ReplicaInfo
+    , ReplicaInfo
+    , replicaInfo
+    , riDefaultLeaderLocation
+    , riLocation
+    , riType
+
     -- * InstanceState
     , InstanceState (..)
 
@@ -460,6 +602,17 @@ module Network.Google.Spanner.Types
     , sName
     , sLabels
     , sCreateTime
+
+    -- * BatchCreateSessionsResponse
+    , BatchCreateSessionsResponse
+    , batchCreateSessionsResponse
+    , bcsrSession
+
+    -- * RestoreInfo
+    , RestoreInfo
+    , restoreInfo
+    , riSourceType
+    , riBackupInfo
 
     -- * OperationResponse
     , OperationResponse
@@ -494,6 +647,15 @@ module Network.Google.Spanner.Types
     , uirFieldMask
     , uirInstance
 
+    -- * ListBackupOperationsResponse
+    , ListBackupOperationsResponse
+    , listBackupOperationsResponse
+    , lborNextPageToken
+    , lborOperations
+
+    -- * BackupState
+    , BackupState (..)
+
     -- * ResultSetStatsQueryStats
     , ResultSetStatsQueryStats
     , resultSetStatsQueryStats
@@ -516,6 +678,13 @@ module Network.Google.Spanner.Types
     , listInstanceConfigsResponse
     , licrNextPageToken
     , licrInstanceConfigs
+
+    -- * EncryptionInfo
+    , EncryptionInfo
+    , encryptionInfo
+    , eiEncryptionType
+    , eiKmsKeyVersion
+    , eiEncryptionStatus
 
     -- * Binding
     , Binding
@@ -550,14 +719,15 @@ module Network.Google.Spanner.Types
     , iState
     , iConfig
     , iNodeCount
+    , iEndpointURIs
     , iName
     , iDisplayName
     , iLabels
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Spanner.Types.Product
-import           Network.Google.Spanner.Types.Sum
+import Network.Google.Prelude
+import Network.Google.Spanner.Types.Product
+import Network.Google.Spanner.Types.Sum
 
 -- | Default request referring to version 'v1' of the Cloud Spanner API. This contains the host and root path used as a starting point for constructing service requests.
 spannerService :: ServiceConfig

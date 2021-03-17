@@ -22,7 +22,7 @@
 --
 -- Returns information about all data transfers in the project.
 --
--- /See:/ <https://cloud.google.com/bigquery/ BigQuery Data Transfer API Reference> for @bigquerydatatransfer.projects.locations.transferConfigs.list@.
+-- /See:/ <https://cloud.google.com/bigquery-transfer/ BigQuery Data Transfer API Reference> for @bigquerydatatransfer.projects.locations.transferConfigs.list@.
 module Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferConfigs.List
     (
     -- * REST Resource
@@ -44,8 +44,8 @@ module Network.Google.Resource.BigQueryDataTransfer.Projects.Locations.TransferC
     , pltclCallback
     ) where
 
-import           Network.Google.BigQueryDataTransfer.Types
-import           Network.Google.Prelude
+import Network.Google.BigQueryDataTransfer.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquerydatatransfer.projects.locations.transferConfigs.list@ method which the
 -- 'ProjectsLocationsTransferConfigsList' request conforms to.
@@ -69,15 +69,15 @@ type ProjectsLocationsTransferConfigsListResource =
 -- /See:/ 'projectsLocationsTransferConfigsList' smart constructor.
 data ProjectsLocationsTransferConfigsList =
   ProjectsLocationsTransferConfigsList'
-    { _pltclParent         :: !Text
-    , _pltclXgafv          :: !(Maybe Xgafv)
+    { _pltclParent :: !Text
+    , _pltclXgafv :: !(Maybe Xgafv)
     , _pltclUploadProtocol :: !(Maybe Text)
-    , _pltclAccessToken    :: !(Maybe Text)
-    , _pltclUploadType     :: !(Maybe Text)
-    , _pltclPageToken      :: !(Maybe Text)
-    , _pltclDataSourceIds  :: !(Maybe [Text])
-    , _pltclPageSize       :: !(Maybe (Textual Int32))
-    , _pltclCallback       :: !(Maybe Text)
+    , _pltclAccessToken :: !(Maybe Text)
+    , _pltclUploadType :: !(Maybe Text)
+    , _pltclPageToken :: !(Maybe Text)
+    , _pltclDataSourceIds :: !(Maybe [Text])
+    , _pltclPageSize :: !(Maybe (Textual Int32))
+    , _pltclCallback :: !(Maybe Text)
     }
   deriving (Eq, Show, Data, Typeable, Generic)
 
@@ -120,8 +120,9 @@ projectsLocationsTransferConfigsList pPltclParent_ =
     }
 
 
--- | The BigQuery project id for which data sources should be returned:
--- \`projects\/{project_id}\`.
+-- | Required. The BigQuery project id for which data sources should be
+-- returned: \`projects\/{project_id}\` or
+-- \`projects\/{project_id}\/locations\/{location_id}\`
 pltclParent :: Lens' ProjectsLocationsTransferConfigsList Text
 pltclParent
   = lens _pltclParent (\ s a -> s{_pltclParent = a})
@@ -188,6 +189,7 @@ instance GoogleRequest
              ListTransferConfigsResponse
         type Scopes ProjectsLocationsTransferConfigsList =
              '["https://www.googleapis.com/auth/bigquery",
+               "https://www.googleapis.com/auth/bigquery.readonly",
                "https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud-platform.read-only"]
         requestClient

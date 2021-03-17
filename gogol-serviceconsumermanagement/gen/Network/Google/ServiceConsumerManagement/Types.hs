@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -22,6 +22,13 @@ module Network.Google.ServiceConsumerManagement.Types
     -- * OAuth Scopes
     , cloudPlatformScope
 
+    -- * JwtLocation
+    , JwtLocation
+    , jwtLocation
+    , jlValuePrefix
+    , jlHeader
+    , jlQuery
+
     -- * MetricDescriptorValueType
     , MetricDescriptorValueType (..)
 
@@ -40,6 +47,7 @@ module Network.Google.ServiceConsumerManagement.Types
     , mrdLabels
     , mrdType
     , mrdDescription
+    , mrdLaunchStage
 
     -- * BackendRulePathTranslation
     , BackendRulePathTranslation (..)
@@ -62,6 +70,14 @@ module Network.Google.ServiceConsumerManagement.Types
     , sCode
     , sMessage
 
+    -- * V1Beta1ServiceIdentity
+    , V1Beta1ServiceIdentity
+    , v1Beta1ServiceIdentity
+    , vbsiEmail
+    , vbsiTag
+    , vbsiUniqueId
+    , vbsiName
+
     -- * BillingDestination
     , BillingDestination
     , billingDestination
@@ -79,6 +95,11 @@ module Network.Google.ServiceConsumerManagement.Types
     , arProviderId
     , arAudiences
 
+    -- * V1Beta1GenerateServiceIdentityResponse
+    , V1Beta1GenerateServiceIdentityResponse
+    , v1Beta1GenerateServiceIdentityResponse
+    , vbgsirIdentity
+
     -- * Context
     , Context
     , context
@@ -93,6 +114,7 @@ module Network.Google.ServiceConsumerManagement.Types
     -- * MetricDescriptor
     , MetricDescriptor
     , metricDescriptor
+    , mdMonitoredResourceTypes
     , mdMetricKind
     , mdName
     , mdMetadata
@@ -102,6 +124,7 @@ module Network.Google.ServiceConsumerManagement.Types
     , mdValueType
     , mdDescription
     , mdUnit
+    , mdLaunchStage
 
     -- * ListOperationsResponse
     , ListOperationsResponse
@@ -123,6 +146,8 @@ module Network.Google.ServiceConsumerManagement.Types
     , brSelector
     , brMinDeadline
     , brAddress
+    , brProtocol
+    , brDisableAuth
     , brOperationDeadline
     , brDeadline
     , brPathTranslation
@@ -131,6 +156,11 @@ module Network.Google.ServiceConsumerManagement.Types
     , SourceContext
     , sourceContext
     , scFileName
+
+    -- * V1Beta1ImportProducerQuotaPoliciesResponse
+    , V1Beta1ImportProducerQuotaPoliciesResponse
+    , v1Beta1ImportProducerQuotaPoliciesResponse
+    , vbipqprPolicies
 
     -- * SearchTenancyUnitsResponse
     , SearchTenancyUnitsResponse
@@ -179,7 +209,6 @@ module Network.Google.ServiceConsumerManagement.Types
     , sAPIs
     , sTypes
     , sSystemTypes
-    , sExperimental
     , sMonitoredResources
     , sBackend
     , sMonitoring
@@ -312,6 +341,7 @@ module Network.Google.ServiceConsumerManagement.Types
     -- * V1Beta1QuotaOverride
     , V1Beta1QuotaOverride
     , v1Beta1QuotaOverride
+    , vbqoAdminOverrideAncestor
     , vbqoMetric
     , vbqoOverrideValue
     , vbqoName
@@ -326,10 +356,10 @@ module Network.Google.ServiceConsumerManagement.Types
     , metricRuleMetricCosts
     , mrmcAddtional
 
-    -- * AuthorizationConfig
-    , AuthorizationConfig
-    , authorizationConfig
-    , acProvider
+    -- * V1Beta1ProducerQuotaPolicyDimensions
+    , V1Beta1ProducerQuotaPolicyDimensions
+    , v1Beta1ProducerQuotaPolicyDimensions
+    , vbpqpdAddtional
 
     -- * DeleteTenantProjectRequest
     , DeleteTenantProjectRequest
@@ -352,11 +382,6 @@ module Network.Google.ServiceConsumerManagement.Types
 
     -- * TypeSyntax
     , TypeSyntax (..)
-
-    -- * Experimental
-    , Experimental
-    , experimental
-    , eAuthorization
 
     -- * Backend
     , Backend
@@ -413,7 +438,25 @@ module Network.Google.ServiceConsumerManagement.Types
     , dDocumentationRootURL
     , dRules
     , dPages
+    , dServiceRootURL
     , dOverview
+
+    -- * V1GenerateDefaultIdentityResponse
+    , V1GenerateDefaultIdentityResponse
+    , v1GenerateDefaultIdentityResponse
+    , vgdirAttachStatus
+    , vgdirRole
+    , vgdirIdentity
+
+    -- * V1Beta1ProducerQuotaPolicy
+    , V1Beta1ProducerQuotaPolicy
+    , v1Beta1ProducerQuotaPolicy
+    , vbpqpMetric
+    , vbpqpName
+    , vbpqpContainer
+    , vbpqpDimensions
+    , vbpqpPolicyValue
+    , vbpqpUnit
 
     -- * Xgafv
     , Xgafv (..)
@@ -424,6 +467,14 @@ module Network.Google.ServiceConsumerManagement.Types
     , mdmSamplePeriod
     , mdmIngestDelay
     , mdmLaunchStage
+
+    -- * V1DefaultIdentity
+    , V1DefaultIdentity
+    , v1DefaultIdentity
+    , vdiEmail
+    , vdiTag
+    , vdiUniqueId
+    , vdiName
 
     -- * UndeleteTenantProjectRequest
     , UndeleteTenantProjectRequest
@@ -436,12 +487,18 @@ module Network.Google.ServiceConsumerManagement.Types
     , sprSelector
     , sprParameters
 
+    -- * V1GenerateDefaultIdentityResponseAttachStatus
+    , V1GenerateDefaultIdentityResponseAttachStatus (..)
+
     -- * LabelDescriptor
     , LabelDescriptor
     , labelDescriptor
     , lKey
     , lValueType
     , lDescription
+
+    -- * MonitoredResourceDescriptorLaunchStage
+    , MonitoredResourceDescriptorLaunchStage (..)
 
     -- * V1Beta1DisableConsumerResponse
     , V1Beta1DisableConsumerResponse
@@ -506,7 +563,6 @@ module Network.Google.ServiceConsumerManagement.Types
     , eAliases
     , eAllowCORS
     , eName
-    , eFeatures
     , eTarget
 
     -- * OAuthRequirements
@@ -665,6 +721,9 @@ module Network.Google.ServiceConsumerManagement.Types
     , tenantProjectConfigLabels
     , tpclAddtional
 
+    -- * MetricDescriptorLaunchStage
+    , MetricDescriptorLaunchStage (..)
+
     -- * V1RemoveVisibilityLabelsResponse
     , V1RemoveVisibilityLabelsResponse
     , v1RemoveVisibilityLabelsResponse
@@ -675,6 +734,7 @@ module Network.Google.ServiceConsumerManagement.Types
     , authProvider
     , apJWKsURI
     , apAudiences
+    , apJwtLocations
     , apId
     , apAuthorizationURL
     , apIssuer
@@ -705,9 +765,9 @@ module Network.Google.ServiceConsumerManagement.Types
     , aTag
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.ServiceConsumerManagement.Types.Product
-import           Network.Google.ServiceConsumerManagement.Types.Sum
+import Network.Google.Prelude
+import Network.Google.ServiceConsumerManagement.Types.Product
+import Network.Google.ServiceConsumerManagement.Types.Sum
 
 -- | Default request referring to version 'v1' of the Service Consumer Management API. This contains the host and root path used as a starting point for constructing service requests.
 serviceConsumerManagementService :: ServiceConfig

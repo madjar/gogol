@@ -37,8 +37,8 @@ module Network.Google.Resource.BigQuery.Projects.GetServiceAccount
     , pgsaProjectId
     ) where
 
-import           Network.Google.BigQuery.Types
-import           Network.Google.Prelude
+import Network.Google.BigQuery.Types
+import Network.Google.Prelude
 
 -- | A resource alias for @bigquery.projects.getServiceAccount@ method which the
 -- 'ProjectsGetServiceAccount' request conforms to.
@@ -86,6 +86,7 @@ instance GoogleRequest ProjectsGetServiceAccount
              GetServiceAccountResponse
         type Scopes ProjectsGetServiceAccount =
              '["https://www.googleapis.com/auth/bigquery",
+               "https://www.googleapis.com/auth/bigquery.readonly",
                "https://www.googleapis.com/auth/cloud-platform",
                "https://www.googleapis.com/auth/cloud-platform.read-only"]
         requestClient ProjectsGetServiceAccount'{..}

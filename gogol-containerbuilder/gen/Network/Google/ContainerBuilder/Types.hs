@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -63,17 +63,20 @@ module Network.Google.ContainerBuilder.Types
     , PullRequestFilter
     , pullRequestFilter
     , prfCommentControl
+    , prfInvertRegex
     , prfBranch
 
     -- * RetryBuildRequest
     , RetryBuildRequest
     , retryBuildRequest
+    , rbrName
+    , rbrId
+    , rbrProjectId
 
-    -- * ListOperationsResponse
-    , ListOperationsResponse
-    , listOperationsResponse
-    , lorNextPageToken
-    , lorOperations
+    -- * HTTPBodyExtensionsItem
+    , HTTPBodyExtensionsItem
+    , hTTPBodyExtensionsItem
+    , httpbeiAddtional
 
     -- * CancelOperationRequest
     , CancelOperationRequest
@@ -103,12 +106,20 @@ module Network.Google.ContainerBuilder.Types
     -- * RepoSource
     , RepoSource
     , repoSource
+    , rsSubstitutions
+    , rsInvertRegex
     , rsRepoName
     , rsDir
     , rsCommitSha
     , rsBranchName
     , rsTagName
     , rsProjectId
+
+    -- * Secrets
+    , Secrets
+    , secrets
+    , sInline
+    , sSecretManager
 
     -- * Operation
     , Operation
@@ -128,6 +139,15 @@ module Network.Google.ContainerBuilder.Types
     , secretSecretEnv
     , sseAddtional
 
+    -- * Notification
+    , Notification
+    , notification
+    , nStructDelivery
+    , nSmtpDelivery
+    , nHTTPDelivery
+    , nSlackDelivery
+    , nFilter
+
     -- * Artifacts
     , Artifacts
     , artifacts
@@ -136,10 +156,6 @@ module Network.Google.ContainerBuilder.Types
 
     -- * BuildStepStatus
     , BuildStepStatus (..)
-
-    -- * CheckSuiteFilter
-    , CheckSuiteFilter
-    , checkSuiteFilter
 
     -- * ArtifactObjects
     , ArtifactObjects
@@ -154,7 +170,6 @@ module Network.Google.ContainerBuilder.Types
     , ghecOwner
     , ghecPullRequest
     , ghecName
-    , ghecCheckSuite
     , ghecPush
     , ghecInstallationId
 
@@ -167,6 +182,21 @@ module Network.Google.ContainerBuilder.Types
     , vPath
     , vName
 
+    -- * NotifierSecretRef
+    , NotifierSecretRef
+    , notifierSecretRef
+    , nsrSecretRef
+
+    -- * ReceiveTriggerWebhookResponse
+    , ReceiveTriggerWebhookResponse
+    , receiveTriggerWebhookResponse
+
+    -- * SecretManagerSecret
+    , SecretManagerSecret
+    , secretManagerSecret
+    , smsVersionName
+    , smsEnv
+
     -- * StatusDetailsItem
     , StatusDetailsItem
     , statusDetailsItem
@@ -175,6 +205,7 @@ module Network.Google.ContainerBuilder.Types
     -- * Build
     , Build
     , build
+    , bAvailableSecrets
     , bImages
     , bStatus
     , bSourceProvenance
@@ -186,9 +217,12 @@ module Network.Google.ContainerBuilder.Types
     , bArtifacts
     , bLogsBucket
     , bSteps
+    , bServiceAccount
+    , bName
     , bStatusDetail
     , bSource
     , bId
+    , bQueueTtl
     , bOptions
     , bProjectId
     , bTiming
@@ -198,10 +232,25 @@ module Network.Google.ContainerBuilder.Types
     , bCreateTime
     , bTags
 
+    -- * InlineSecretEnvMap
+    , InlineSecretEnvMap
+    , inlineSecretEnvMap
+    , isemAddtional
+
     -- * SourceProvenanceFileHashes
     , SourceProvenanceFileHashes
     , sourceProvenanceFileHashes
     , spfhAddtional
+
+    -- * SMTPDelivery
+    , SMTPDelivery
+    , sMTPDelivery
+    , smtpdSenderAddress
+    , smtpdFromAddress
+    , smtpdRecipientAddresses
+    , smtpdPassword
+    , smtpdServer
+    , smtpdPort
 
     -- * Secret
     , Secret
@@ -212,12 +261,16 @@ module Network.Google.ContainerBuilder.Types
     -- * PushFilter
     , PushFilter
     , pushFilter
+    , pfInvertRegex
     , pfTag
     , pfBranch
 
     -- * CancelBuildRequest
     , CancelBuildRequest
     , cancelBuildRequest
+    , cbrName
+    , cbrId
+    , cbrProjectId
 
     -- * TimeSpan
     , TimeSpan
@@ -232,11 +285,22 @@ module Network.Google.ContainerBuilder.Types
     , ssObject
     , ssGeneration
 
+    -- * HTTPDelivery
+    , HTTPDelivery
+    , hTTPDelivery
+    , httpdURI
+
     -- * ListBuildTriggersResponse
     , ListBuildTriggersResponse
     , listBuildTriggersResponse
     , lbtrNextPageToken
     , lbtrTriggers
+
+    -- * InlineSecret
+    , InlineSecret
+    , inlineSecret
+    , isEnvMap
+    , isKmsKeyName
 
     -- * ArtifactResult
     , ArtifactResult
@@ -257,6 +321,11 @@ module Network.Google.ContainerBuilder.Types
     , buildSubstitutions
     , bsAddtional
 
+    -- * SlackDelivery
+    , SlackDelivery
+    , slackDelivery
+    , sdWebhookURI
+
     -- * Xgafv
     , Xgafv (..)
 
@@ -269,8 +338,17 @@ module Network.Google.ContainerBuilder.Types
     -- * HashType
     , HashType (..)
 
+    -- * NotifierSecret
+    , NotifierSecret
+    , notifierSecret
+    , nsValue
+    , nsName
+
     -- * BuildOptionsLogStreamingOption
     , BuildOptionsLogStreamingOption (..)
+
+    -- * BuildOptionsSourceProvenanceHashItem
+    , BuildOptionsSourceProvenanceHashItem (..)
 
     -- * Source
     , Source
@@ -280,6 +358,13 @@ module Network.Google.ContainerBuilder.Types
 
     -- * BuildOptionsLogging
     , BuildOptionsLogging (..)
+
+    -- * HTTPBody
+    , HTTPBody
+    , hTTPBody
+    , httpbExtensions
+    , httpbData
+    , httpbContentType
 
     -- * OperationMetadata
     , OperationMetadata
@@ -293,6 +378,14 @@ module Network.Google.ContainerBuilder.Types
     , BuildTiming
     , buildTiming
     , btAddtional
+
+    -- * NotifierConfig
+    , NotifierConfig
+    , notifierConfig
+    , ncAPIVersion
+    , ncKind
+    , ncSpec
+    , ncMetadata
 
     -- * BuildOperationMetadata
     , BuildOperationMetadata
@@ -313,6 +406,12 @@ module Network.Google.ContainerBuilder.Types
     , boLogStreamingOption
     , boLogging
     , boSourceProvenanceHash
+    , boDynamicSubstitutions
+
+    -- * NotificationStructDelivery
+    , NotificationStructDelivery
+    , notificationStructDelivery
+    , nsdAddtional
 
     -- * OperationResponse
     , OperationResponse
@@ -328,11 +427,25 @@ module Network.Google.ContainerBuilder.Types
     , btTriggerTemplate
     , btBuild
     , btIgnoredFiles
+    , btName
     , btId
     , btGithub
     , btDescription
     , btFilename
     , btCreateTime
+    , btTags
+
+    -- * NotifierMetadata
+    , NotifierMetadata
+    , notifierMetadata
+    , nmNotifier
+    , nmName
+
+    -- * NotifierSpec
+    , NotifierSpec
+    , notifierSpec
+    , nsSecrets
+    , nsNotification
 
     -- * BuiltImage
     , BuiltImage
@@ -340,11 +453,16 @@ module Network.Google.ContainerBuilder.Types
     , biPushTiming
     , biName
     , biDigest
+
+    -- * RepoSourceSubstitutions
+    , RepoSourceSubstitutions
+    , repoSourceSubstitutions
+    , rssAddtional
     ) where
 
-import           Network.Google.ContainerBuilder.Types.Product
-import           Network.Google.ContainerBuilder.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.ContainerBuilder.Types.Product
+import Network.Google.ContainerBuilder.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v1' of the Cloud Build API. This contains the host and root path used as a starting point for constructing service requests.
 containerBuilderService :: ServiceConfig

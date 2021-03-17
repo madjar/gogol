@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -37,6 +37,13 @@ module Network.Google.Logging.Types
     , mrdLabels
     , mrdType
     , mrdDescription
+    , mrdLaunchStage
+
+    -- * ListBucketsResponse
+    , ListBucketsResponse
+    , listBucketsResponse
+    , lbrNextPageToken
+    , lbrBuckets
 
     -- * ListLogEntriesResponse
     , ListLogEntriesResponse
@@ -47,6 +54,7 @@ module Network.Google.Logging.Types
     -- * MetricDescriptor
     , MetricDescriptor
     , metricDescriptor
+    , mdMonitoredResourceTypes
     , mdMetricKind
     , mdName
     , mdMetadata
@@ -56,6 +64,20 @@ module Network.Google.Logging.Types
     , mdValueType
     , mdDescription
     , mdUnit
+    , mdLaunchStage
+
+    -- * ListLocationsResponse
+    , ListLocationsResponse
+    , listLocationsResponse
+    , llrNextPageToken
+    , llrLocations
+
+    -- * TailLogEntriesRequest
+    , TailLogEntriesRequest
+    , tailLogEntriesRequest
+    , tlerBufferWindow
+    , tlerFilter
+    , tlerResourceNames
 
     -- * MonitoredResourceLabels
     , MonitoredResourceLabels
@@ -87,10 +109,30 @@ module Network.Google.Logging.Types
     , wlerLogName
     , wlerDryRun
 
+    -- * UndeleteBucketRequest
+    , UndeleteBucketRequest
+    , undeleteBucketRequest
+
+    -- * CmekSettings
+    , CmekSettings
+    , cmekSettings
+    , csServiceAccountId
+    , csName
+    , csKmsKeyName
+
     -- * LogMetricLabelExtractors
     , LogMetricLabelExtractors
     , logMetricLabelExtractors
     , lmleAddtional
+
+    -- * Location
+    , Location
+    , location
+    , lName
+    , lMetadata
+    , lDisplayName
+    , lLabels
+    , lLocationId
 
     -- * LogSinkOutputVersionFormat
     , LogSinkOutputVersionFormat (..)
@@ -181,12 +223,22 @@ module Network.Google.Logging.Types
     , logSink
     , lsDestination
     , lsIncludeChildren
+    , lsDisabled
     , lsOutputVersionFormat
+    , lsBigQueryOptions
     , lsWriterIdentity
     , lsUpdateTime
     , lsName
+    , lsExclusions
     , lsFilter
+    , lsDescription
     , lsCreateTime
+
+    -- * LogBucketLifecycleState
+    , LogBucketLifecycleState (..)
+
+    -- * SuppressionInfoReason
+    , SuppressionInfoReason (..)
 
     -- * MonitoredResourceMetadataUserLabels
     , MonitoredResourceMetadataUserLabels
@@ -202,14 +254,20 @@ module Network.Google.Logging.Types
     -- * ListLogsResponse
     , ListLogsResponse
     , listLogsResponse
-    , llrNextPageToken
-    , llrLogNames
+    , lNextPageToken
+    , lLogNames
 
     -- * ListMonitoredResourceDescriptorsResponse
     , ListMonitoredResourceDescriptorsResponse
     , listMonitoredResourceDescriptorsResponse
     , lmrdrNextPageToken
     , lmrdrResourceDescriptors
+
+    -- * BigQueryOptions
+    , BigQueryOptions
+    , bigQueryOptions
+    , bqoUsePartitionedTables
+    , bqoUsesTimestampColumnPartitioning
 
     -- * LabelDescriptorValueType
     , LabelDescriptorValueType (..)
@@ -250,6 +308,18 @@ module Network.Google.Logging.Types
     , writeLogEntriesRequestLabels
     , wlerlAddtional
 
+    -- * SuppressionInfo
+    , SuppressionInfo
+    , suppressionInfo
+    , siReason
+    , siSuppressedCount
+
+    -- * ListViewsResponse
+    , ListViewsResponse
+    , listViewsResponse
+    , lvrNextPageToken
+    , lvrViews
+
     -- * MonitoredResource
     , MonitoredResource
     , monitoredResource
@@ -258,6 +328,17 @@ module Network.Google.Logging.Types
 
     -- * Xgafv
     , Xgafv (..)
+
+    -- * LogBucket
+    , LogBucket
+    , logBucket
+    , lbLocked
+    , lbRetentionDays
+    , lbUpdateTime
+    , lbName
+    , lbDescription
+    , lbLifecycleState
+    , lbCreateTime
 
     -- * LogLine
     , LogLine
@@ -303,6 +384,15 @@ module Network.Google.Logging.Types
     , llerPageSize
     , llerResourceNames
 
+    -- * MonitoredResourceDescriptorLaunchStage
+    , MonitoredResourceDescriptorLaunchStage (..)
+
+    -- * TailLogEntriesResponse
+    , TailLogEntriesResponse
+    , tailLogEntriesResponse
+    , tlerEntries
+    , tlerSuppressionInfo
+
     -- * LogEntryOperation
     , LogEntryOperation
     , logEntryOperation
@@ -346,12 +436,22 @@ module Network.Google.Logging.Types
     , leTrace
     , leSpanId
 
+    -- * LocationLabels
+    , LocationLabels
+    , locationLabels
+    , llAddtional
+
     -- * SourceLocation
     , SourceLocation
     , sourceLocation
     , slLine
     , slFunctionName
     , slFile
+
+    -- * LocationMetadata
+    , LocationMetadata
+    , locationMetadata
+    , lmAddtional
 
     -- * MetricDescriptorMetricKind
     , MetricDescriptorMetricKind (..)
@@ -377,15 +477,27 @@ module Network.Google.Logging.Types
     , logEntryJSONPayload
     , lejpAddtional
 
+    -- * MetricDescriptorLaunchStage
+    , MetricDescriptorLaunchStage (..)
+
+    -- * LogView
+    , LogView
+    , logView
+    , lvUpdateTime
+    , lvName
+    , lvFilter
+    , lvDescription
+    , lvCreateTime
+
     -- * LogLineSeverity
     , LogLineSeverity (..)
     ) where
 
-import           Network.Google.Logging.Types.Product
-import           Network.Google.Logging.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Logging.Types.Product
+import Network.Google.Logging.Types.Sum
+import Network.Google.Prelude
 
--- | Default request referring to version 'v2' of the Stackdriver Logging API. This contains the host and root path used as a starting point for constructing service requests.
+-- | Default request referring to version 'v2' of the Cloud Logging API. This contains the host and root path used as a starting point for constructing service requests.
 loggingService :: ServiceConfig
 loggingService
   = defaultService (ServiceId "logging:v2")

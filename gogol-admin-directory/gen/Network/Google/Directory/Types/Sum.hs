@@ -16,11 +16,13 @@
 --
 module Network.Google.Directory.Types.Sum where
 
-import           Network.Google.Prelude hiding (Bytes)
+import Network.Google.Prelude hiding (Bytes)
 
 -- | Event on which subscription is intended (if subscribing)
 data UsersListEvent
-    = Add
+    = EventUndefined
+      -- ^ @eventUndefined@
+    | Add
       -- ^ @add@
       -- User Created Event
     | Delete'
@@ -41,6 +43,7 @@ instance Hashable UsersListEvent
 
 instance FromHttpApiData UsersListEvent where
     parseQueryParam = \case
+        "eventUndefined" -> Right EventUndefined
         "add" -> Right Add
         "delete" -> Right Delete'
         "makeAdmin" -> Right MakeAdmin
@@ -50,6 +53,7 @@ instance FromHttpApiData UsersListEvent where
 
 instance ToHttpApiData UsersListEvent where
     toQueryParam = \case
+        EventUndefined -> "eventUndefined"
         Add -> "add"
         Delete' -> "delete"
         MakeAdmin -> "makeAdmin"
@@ -62,38 +66,11 @@ instance FromJSON UsersListEvent where
 instance ToJSON UsersListEvent where
     toJSON = toJSONText
 
--- | Event on which subscription is intended (if subscribing)
-data UsersAliasesListEvent
-    = UALEAdd
-      -- ^ @add@
-      -- Alias Created Event
-    | UALEDelete'
-      -- ^ @delete@
-      -- Alias Deleted Event
-      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
-
-instance Hashable UsersAliasesListEvent
-
-instance FromHttpApiData UsersAliasesListEvent where
-    parseQueryParam = \case
-        "add" -> Right UALEAdd
-        "delete" -> Right UALEDelete'
-        x -> Left ("Unable to parse UsersAliasesListEvent from: " <> x)
-
-instance ToHttpApiData UsersAliasesListEvent where
-    toQueryParam = \case
-        UALEAdd -> "add"
-        UALEDelete' -> "delete"
-
-instance FromJSON UsersAliasesListEvent where
-    parseJSON = parseJSONText "UsersAliasesListEvent"
-
-instance ToJSON UsersAliasesListEvent where
-    toJSON = toJSONText
-
--- | Event on which subscription is intended (if subscribing)
+-- | Events to watch for.
 data UsersAliasesWatchEvent
-    = UAWEAdd
+    = UAWEEventUndefined
+      -- ^ @eventUndefined@
+    | UAWEAdd
       -- ^ @add@
       -- Alias Created Event
     | UAWEDelete'
@@ -105,12 +82,14 @@ instance Hashable UsersAliasesWatchEvent
 
 instance FromHttpApiData UsersAliasesWatchEvent where
     parseQueryParam = \case
+        "eventUndefined" -> Right UAWEEventUndefined
         "add" -> Right UAWEAdd
         "delete" -> Right UAWEDelete'
         x -> Left ("Unable to parse UsersAliasesWatchEvent from: " <> x)
 
 instance ToHttpApiData UsersAliasesWatchEvent where
     toQueryParam = \case
+        UAWEEventUndefined -> "eventUndefined"
         UAWEAdd -> "add"
         UAWEDelete' -> "delete"
 
@@ -120,9 +99,11 @@ instance FromJSON UsersAliasesWatchEvent where
 instance ToJSON UsersAliasesWatchEvent where
     toJSON = toJSONText
 
--- | Event on which subscription is intended (if subscribing)
+-- | Events to watch for.
 data UsersWatchEvent
-    = UWEAdd
+    = UWEEventTypeUnspecified
+      -- ^ @eventTypeUnspecified@
+    | UWEAdd
       -- ^ @add@
       -- User Created Event
     | UWEDelete'
@@ -143,6 +124,7 @@ instance Hashable UsersWatchEvent
 
 instance FromHttpApiData UsersWatchEvent where
     parseQueryParam = \case
+        "eventTypeUnspecified" -> Right UWEEventTypeUnspecified
         "add" -> Right UWEAdd
         "delete" -> Right UWEDelete'
         "makeAdmin" -> Right UWEMakeAdmin
@@ -152,6 +134,7 @@ instance FromHttpApiData UsersWatchEvent where
 
 instance ToHttpApiData UsersWatchEvent where
     toQueryParam = \case
+        UWEEventTypeUnspecified -> "eventTypeUnspecified"
         UWEAdd -> "add"
         UWEDelete' -> "delete"
         UWEMakeAdmin -> "makeAdmin"
@@ -164,9 +147,69 @@ instance FromJSON UsersWatchEvent where
 instance ToJSON UsersWatchEvent where
     toJSON = toJSONText
 
+-- | The type of the command.
+data DirectoryChromeosDevicesCommandType
+    = CommandTypeUnspecified
+      -- ^ @COMMAND_TYPE_UNSPECIFIED@
+      -- The command type was unspecified.
+    | Reboot
+      -- ^ @REBOOT@
+      -- Reboot the device. Can only be issued to Kiosk and managed guest session
+      -- devices.
+    | TakeAScreenshot
+      -- ^ @TAKE_A_SCREENSHOT@
+      -- Take a screenshot of the device. Only available if the device is in
+      -- Kiosk Mode.
+    | SetVolume
+      -- ^ @SET_VOLUME@
+      -- Set the volume of the device. Can only be issued to Kiosk and managed
+      -- guest session devices.
+    | WipeUsers
+      -- ^ @WIPE_USERS@
+      -- Wipe all the users off of the device. Executing this command in the
+      -- device will remove all user profile data, but it will keep device policy
+      -- and enrollment.
+    | RemotePowerwash
+      -- ^ @REMOTE_POWERWASH@
+      -- Wipes the device by performing a power wash. Executing this command in
+      -- the device will remove all data including user policies, device policies
+      -- and enrollment policies. Warning: This will revert the device back to a
+      -- factory state with no enrollment unless the device is subject to forced
+      -- or auto enrollment. Use with caution, as this is an irreversible action!
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable DirectoryChromeosDevicesCommandType
+
+instance FromHttpApiData DirectoryChromeosDevicesCommandType where
+    parseQueryParam = \case
+        "COMMAND_TYPE_UNSPECIFIED" -> Right CommandTypeUnspecified
+        "REBOOT" -> Right Reboot
+        "TAKE_A_SCREENSHOT" -> Right TakeAScreenshot
+        "SET_VOLUME" -> Right SetVolume
+        "WIPE_USERS" -> Right WipeUsers
+        "REMOTE_POWERWASH" -> Right RemotePowerwash
+        x -> Left ("Unable to parse DirectoryChromeosDevicesCommandType from: " <> x)
+
+instance ToHttpApiData DirectoryChromeosDevicesCommandType where
+    toQueryParam = \case
+        CommandTypeUnspecified -> "COMMAND_TYPE_UNSPECIFIED"
+        Reboot -> "REBOOT"
+        TakeAScreenshot -> "TAKE_A_SCREENSHOT"
+        SetVolume -> "SET_VOLUME"
+        WipeUsers -> "WIPE_USERS"
+        RemotePowerwash -> "REMOTE_POWERWASH"
+
+instance FromJSON DirectoryChromeosDevicesCommandType where
+    parseJSON = parseJSONText "DirectoryChromeosDevicesCommandType"
+
+instance ToJSON DirectoryChromeosDevicesCommandType where
+    toJSON = toJSONText
+
 -- | Restrict information returned to a set of selected fields.
 data ChromeosDevicesPatchProjection
-    = Basic
+    = ProjectionUndefined
+      -- ^ @PROJECTION_UNDEFINED@
+    | Basic
       -- ^ @BASIC@
       -- Includes only the basic metadata fields (e.g., deviceId, serialNumber,
       -- status, and user)
@@ -179,12 +222,14 @@ instance Hashable ChromeosDevicesPatchProjection
 
 instance FromHttpApiData ChromeosDevicesPatchProjection where
     parseQueryParam = \case
+        "PROJECTION_UNDEFINED" -> Right ProjectionUndefined
         "BASIC" -> Right Basic
         "FULL" -> Right Full
         x -> Left ("Unable to parse ChromeosDevicesPatchProjection from: " <> x)
 
 instance ToHttpApiData ChromeosDevicesPatchProjection where
     toQueryParam = \case
+        ProjectionUndefined -> "PROJECTION_UNDEFINED"
         Basic -> "BASIC"
         Full -> "FULL"
 
@@ -194,9 +239,12 @@ instance FromJSON ChromeosDevicesPatchProjection where
 instance ToJSON ChromeosDevicesPatchProjection where
     toJSON = toJSONText
 
--- | Restrict information returned to a set of selected fields.
+-- | Determines whether the response contains the full list of properties or
+-- only a subset.
 data ChromeosDevicesGetProjection
-    = CDGPBasic
+    = CDGPProjectionUndefined
+      -- ^ @PROJECTION_UNDEFINED@
+    | CDGPBasic
       -- ^ @BASIC@
       -- Includes only the basic metadata fields (e.g., deviceId, serialNumber,
       -- status, and user)
@@ -209,12 +257,14 @@ instance Hashable ChromeosDevicesGetProjection
 
 instance FromHttpApiData ChromeosDevicesGetProjection where
     parseQueryParam = \case
+        "PROJECTION_UNDEFINED" -> Right CDGPProjectionUndefined
         "BASIC" -> Right CDGPBasic
         "FULL" -> Right CDGPFull
         x -> Left ("Unable to parse ChromeosDevicesGetProjection from: " <> x)
 
 instance ToHttpApiData ChromeosDevicesGetProjection where
     toQueryParam = \case
+        CDGPProjectionUndefined -> "PROJECTION_UNDEFINED"
         CDGPBasic -> "BASIC"
         CDGPFull -> "FULL"
 
@@ -224,26 +274,73 @@ instance FromJSON ChromeosDevicesGetProjection where
 instance ToJSON ChromeosDevicesGetProjection where
     toJSON = toJSONText
 
--- | Whether to fetch the ADMIN_VIEW or DOMAIN_PUBLIC view of the user.
+-- | Message severity
+data AuxiliaryMessageSeverity
+    = SeverityUnspecified
+      -- ^ @SEVERITY_UNSPECIFIED@
+      -- Message type unspecified.
+    | SeverityInfo
+      -- ^ @SEVERITY_INFO@
+      -- Message of severity: info.
+    | SeverityWarning
+      -- ^ @SEVERITY_WARNING@
+      -- Message of severity: warning.
+    | SeverityError
+      -- ^ @SEVERITY_ERROR@
+      -- Message of severity: error.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable AuxiliaryMessageSeverity
+
+instance FromHttpApiData AuxiliaryMessageSeverity where
+    parseQueryParam = \case
+        "SEVERITY_UNSPECIFIED" -> Right SeverityUnspecified
+        "SEVERITY_INFO" -> Right SeverityInfo
+        "SEVERITY_WARNING" -> Right SeverityWarning
+        "SEVERITY_ERROR" -> Right SeverityError
+        x -> Left ("Unable to parse AuxiliaryMessageSeverity from: " <> x)
+
+instance ToHttpApiData AuxiliaryMessageSeverity where
+    toQueryParam = \case
+        SeverityUnspecified -> "SEVERITY_UNSPECIFIED"
+        SeverityInfo -> "SEVERITY_INFO"
+        SeverityWarning -> "SEVERITY_WARNING"
+        SeverityError -> "SEVERITY_ERROR"
+
+instance FromJSON AuxiliaryMessageSeverity where
+    parseJSON = parseJSONText "AuxiliaryMessageSeverity"
+
+instance ToJSON AuxiliaryMessageSeverity where
+    toJSON = toJSONText
+
+-- | Whether to fetch the administrator-only or domain-wide public view of
+-- the user. For more information, see [Retrieve a user as a
+-- non-administrator](\/admin-sdk\/directory\/v1\/guides\/manage-users#retrieve_users_non_admin).
 data UsersListViewType
-    = AdminView
+    = ViewTypeUndefined
+      -- ^ @view_type_undefined@
+    | AdminView
       -- ^ @admin_view@
-      -- Fetches the ADMIN_VIEW of the user.
+      -- Results include both administrator-only and domain-public fields for the
+      -- user.
     | DomainPublic
       -- ^ @domain_public@
-      -- Fetches the DOMAIN_PUBLIC view of the user.
+      -- Results only include fields for the user that are publicly visible to
+      -- other users in the domain.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable UsersListViewType
 
 instance FromHttpApiData UsersListViewType where
     parseQueryParam = \case
+        "view_type_undefined" -> Right ViewTypeUndefined
         "admin_view" -> Right AdminView
         "domain_public" -> Right DomainPublic
         x -> Left ("Unable to parse UsersListViewType from: " <> x)
 
 instance ToHttpApiData UsersListViewType where
     toQueryParam = \case
+        ViewTypeUndefined -> "view_type_undefined"
         AdminView -> "admin_view"
         DomainPublic -> "domain_public"
 
@@ -253,9 +350,11 @@ instance FromJSON UsersListViewType where
 instance ToJSON UsersListViewType where
     toJSON = toJSONText
 
--- | Whether to return all sub-organizations or just immediate children
+-- | Whether to return all sub-organizations or just immediate children.
 data OrgUnitsListType
-    = All
+    = TypeUndefined
+      -- ^ @typeUndefined@
+    | All
       -- ^ @all@
       -- All sub-organizational units.
     | Children
@@ -267,12 +366,14 @@ instance Hashable OrgUnitsListType
 
 instance FromHttpApiData OrgUnitsListType where
     parseQueryParam = \case
+        "typeUndefined" -> Right TypeUndefined
         "all" -> Right All
         "children" -> Right Children
         x -> Left ("Unable to parse OrgUnitsListType from: " <> x)
 
 instance ToHttpApiData OrgUnitsListType where
     toQueryParam = \case
+        TypeUndefined -> "typeUndefined"
         All -> "all"
         Children -> "children"
 
@@ -282,10 +383,12 @@ instance FromJSON OrgUnitsListType where
 instance ToJSON OrgUnitsListType where
     toJSON = toJSONText
 
--- | Whether to return results in ascending or descending order. Only of use
--- when orderBy is also used
+-- | Whether to return results in ascending or descending order. Must be used
+-- with the \`orderBy\` parameter.
 data MobileDevicesListSortOrder
-    = Ascending
+    = SortOrderUndefined
+      -- ^ @SORT_ORDER_UNDEFINED@
+    | Ascending
       -- ^ @ASCENDING@
       -- Ascending order.
     | Descending
@@ -297,12 +400,14 @@ instance Hashable MobileDevicesListSortOrder
 
 instance FromHttpApiData MobileDevicesListSortOrder where
     parseQueryParam = \case
+        "SORT_ORDER_UNDEFINED" -> Right SortOrderUndefined
         "ASCENDING" -> Right Ascending
         "DESCENDING" -> Right Descending
         x -> Left ("Unable to parse MobileDevicesListSortOrder from: " <> x)
 
 instance ToHttpApiData MobileDevicesListSortOrder where
     toQueryParam = \case
+        SortOrderUndefined -> "SORT_ORDER_UNDEFINED"
         Ascending -> "ASCENDING"
         Descending -> "DESCENDING"
 
@@ -312,9 +417,11 @@ instance FromJSON MobileDevicesListSortOrder where
 instance ToJSON MobileDevicesListSortOrder where
     toJSON = toJSONText
 
--- | Column to use for sorting results
+-- | Property to use for sorting results.
 data UsersListOrderBy
-    = Email
+    = OrderByUndefined
+      -- ^ @orderByUndefined@
+    | Email
       -- ^ @email@
       -- Primary email of the user.
     | FamilyName
@@ -329,6 +436,7 @@ instance Hashable UsersListOrderBy
 
 instance FromHttpApiData UsersListOrderBy where
     parseQueryParam = \case
+        "orderByUndefined" -> Right OrderByUndefined
         "email" -> Right Email
         "familyName" -> Right FamilyName
         "givenName" -> Right GivenName
@@ -336,6 +444,7 @@ instance FromHttpApiData UsersListOrderBy where
 
 instance ToHttpApiData UsersListOrderBy where
     toQueryParam = \case
+        OrderByUndefined -> "orderByUndefined"
         Email -> "email"
         FamilyName -> "familyName"
         GivenName -> "givenName"
@@ -346,9 +455,123 @@ instance FromJSON UsersListOrderBy where
 instance ToJSON UsersListOrderBy where
     toJSON = toJSONText
 
+-- | The type of command.
+data DirectoryChromeosDevicesIssueCommandRequestCommandType
+    = DCDICRCTCommandTypeUnspecified
+      -- ^ @COMMAND_TYPE_UNSPECIFIED@
+      -- The command type was unspecified.
+    | DCDICRCTReboot
+      -- ^ @REBOOT@
+      -- Reboot the device. Can only be issued to Kiosk and managed guest session
+      -- devices.
+    | DCDICRCTTakeAScreenshot
+      -- ^ @TAKE_A_SCREENSHOT@
+      -- Take a screenshot of the device. Only available if the device is in
+      -- Kiosk Mode.
+    | DCDICRCTSetVolume
+      -- ^ @SET_VOLUME@
+      -- Set the volume of the device. Can only be issued to Kiosk and managed
+      -- guest session devices.
+    | DCDICRCTWipeUsers
+      -- ^ @WIPE_USERS@
+      -- Wipe all the users off of the device. Executing this command in the
+      -- device will remove all user profile data, but it will keep device policy
+      -- and enrollment.
+    | DCDICRCTRemotePowerwash
+      -- ^ @REMOTE_POWERWASH@
+      -- Wipes the device by performing a power wash. Executing this command in
+      -- the device will remove all data including user policies, device policies
+      -- and enrollment policies. Warning: This will revert the device back to a
+      -- factory state with no enrollment unless the device is subject to forced
+      -- or auto enrollment. Use with caution, as this is an irreversible action!
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable DirectoryChromeosDevicesIssueCommandRequestCommandType
+
+instance FromHttpApiData DirectoryChromeosDevicesIssueCommandRequestCommandType where
+    parseQueryParam = \case
+        "COMMAND_TYPE_UNSPECIFIED" -> Right DCDICRCTCommandTypeUnspecified
+        "REBOOT" -> Right DCDICRCTReboot
+        "TAKE_A_SCREENSHOT" -> Right DCDICRCTTakeAScreenshot
+        "SET_VOLUME" -> Right DCDICRCTSetVolume
+        "WIPE_USERS" -> Right DCDICRCTWipeUsers
+        "REMOTE_POWERWASH" -> Right DCDICRCTRemotePowerwash
+        x -> Left ("Unable to parse DirectoryChromeosDevicesIssueCommandRequestCommandType from: " <> x)
+
+instance ToHttpApiData DirectoryChromeosDevicesIssueCommandRequestCommandType where
+    toQueryParam = \case
+        DCDICRCTCommandTypeUnspecified -> "COMMAND_TYPE_UNSPECIFIED"
+        DCDICRCTReboot -> "REBOOT"
+        DCDICRCTTakeAScreenshot -> "TAKE_A_SCREENSHOT"
+        DCDICRCTSetVolume -> "SET_VOLUME"
+        DCDICRCTWipeUsers -> "WIPE_USERS"
+        DCDICRCTRemotePowerwash -> "REMOTE_POWERWASH"
+
+instance FromJSON DirectoryChromeosDevicesIssueCommandRequestCommandType where
+    parseJSON = parseJSONText "DirectoryChromeosDevicesIssueCommandRequestCommandType"
+
+instance ToJSON DirectoryChromeosDevicesIssueCommandRequestCommandType where
+    toJSON = toJSONText
+
+-- | Indicates the command state.
+data DirectoryChromeosDevicesCommandState
+    = StateUnspecified
+      -- ^ @STATE_UNSPECIFIED@
+      -- The command status was unspecified.
+    | Pending
+      -- ^ @PENDING@
+      -- An unexpired command not yet sent to the client.
+    | Expired
+      -- ^ @EXPIRED@
+      -- The command didn\'t get executed by the client within the expected time.
+    | Cancelled
+      -- ^ @CANCELLED@
+      -- The command is cancelled by admin while in PENDING.
+    | SentToClient
+      -- ^ @SENT_TO_CLIENT@
+      -- The command has been sent to the client.
+    | AckedByClient
+      -- ^ @ACKED_BY_CLIENT@
+      -- The client has responded that it received the command.
+    | ExecutedByClient
+      -- ^ @EXECUTED_BY_CLIENT@
+      -- The client has (un)successfully executed the command.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable DirectoryChromeosDevicesCommandState
+
+instance FromHttpApiData DirectoryChromeosDevicesCommandState where
+    parseQueryParam = \case
+        "STATE_UNSPECIFIED" -> Right StateUnspecified
+        "PENDING" -> Right Pending
+        "EXPIRED" -> Right Expired
+        "CANCELLED" -> Right Cancelled
+        "SENT_TO_CLIENT" -> Right SentToClient
+        "ACKED_BY_CLIENT" -> Right AckedByClient
+        "EXECUTED_BY_CLIENT" -> Right ExecutedByClient
+        x -> Left ("Unable to parse DirectoryChromeosDevicesCommandState from: " <> x)
+
+instance ToHttpApiData DirectoryChromeosDevicesCommandState where
+    toQueryParam = \case
+        StateUnspecified -> "STATE_UNSPECIFIED"
+        Pending -> "PENDING"
+        Expired -> "EXPIRED"
+        Cancelled -> "CANCELLED"
+        SentToClient -> "SENT_TO_CLIENT"
+        AckedByClient -> "ACKED_BY_CLIENT"
+        ExecutedByClient -> "EXECUTED_BY_CLIENT"
+
+instance FromJSON DirectoryChromeosDevicesCommandState where
+    parseJSON = parseJSONText "DirectoryChromeosDevicesCommandState"
+
+instance ToJSON DirectoryChromeosDevicesCommandState where
+    toJSON = toJSONText
+
 -- | Column to use for sorting results
 data GroupsListOrderBy
-    = GLOBEmail
+    = GLOBOrderByUndefined
+      -- ^ @orderByUndefined@
+    | GLOBEmail
       -- ^ @email@
       -- Email of the group.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
@@ -357,11 +580,13 @@ instance Hashable GroupsListOrderBy
 
 instance FromHttpApiData GroupsListOrderBy where
     parseQueryParam = \case
+        "orderByUndefined" -> Right GLOBOrderByUndefined
         "email" -> Right GLOBEmail
         x -> Left ("Unable to parse GroupsListOrderBy from: " <> x)
 
 instance ToHttpApiData GroupsListOrderBy where
     toQueryParam = \case
+        GLOBOrderByUndefined -> "orderByUndefined"
         GLOBEmail -> "email"
 
 instance FromJSON GroupsListOrderBy where
@@ -370,9 +595,177 @@ instance FromJSON GroupsListOrderBy where
 instance ToJSON GroupsListOrderBy where
     toJSON = toJSONText
 
+-- | Canonical code for why the update failed to apply.
+data FailureInfoErrorCode
+    = FIECOK
+      -- ^ @OK@
+      -- Not an error; returned on success HTTP Mapping: 200 OK
+    | FIECCancelled
+      -- ^ @CANCELLED@
+      -- The operation was cancelled, typically by the caller. HTTP Mapping: 499
+      -- Client Closed Request
+    | FIECUnknown
+      -- ^ @UNKNOWN@
+      -- Unknown error. For example, this error may be returned when a \`Status\`
+      -- value received from another address space belongs to an error space that
+      -- is not known in this address space. Also errors raised by APIs that do
+      -- not return enough error information may be converted to this error. HTTP
+      -- Mapping: 500 Internal Server Error
+    | FIECInvalidArgument
+      -- ^ @INVALID_ARGUMENT@
+      -- The client specified an invalid argument. Note that this differs from
+      -- \`FAILED_PRECONDITION\`. \`INVALID_ARGUMENT\` indicates arguments that
+      -- are problematic regardless of the state of the system (e.g., a malformed
+      -- file name). HTTP Mapping: 400 Bad Request
+    | FIECDeadlineExceeded
+      -- ^ @DEADLINE_EXCEEDED@
+      -- The deadline expired before the operation could complete. For operations
+      -- that change the state of the system, this error may be returned even if
+      -- the operation has completed successfully. For example, a successful
+      -- response from a server could have been delayed long enough for the
+      -- deadline to expire. HTTP Mapping: 504 Gateway Timeout
+    | FIECNotFound
+      -- ^ @NOT_FOUND@
+      -- Some requested entity (e.g., file or directory) was not found. Note to
+      -- server developers: if a request is denied for an entire class of users,
+      -- such as gradual feature rollout or undocumented allowlist, \`NOT_FOUND\`
+      -- may be used. If a request is denied for some users within a class of
+      -- users, such as user-based access control, \`PERMISSION_DENIED\` must be
+      -- used. HTTP Mapping: 404 Not Found
+    | FIECAlreadyExists
+      -- ^ @ALREADY_EXISTS@
+      -- The entity that a client attempted to create (e.g., file or directory)
+      -- already exists. HTTP Mapping: 409 Conflict
+    | FIECPermissionDenied
+      -- ^ @PERMISSION_DENIED@
+      -- The caller does not have permission to execute the specified operation.
+      -- \`PERMISSION_DENIED\` must not be used for rejections caused by
+      -- exhausting some resource (use \`RESOURCE_EXHAUSTED\` instead for those
+      -- errors). \`PERMISSION_DENIED\` must not be used if the caller can not be
+      -- identified (use \`UNAUTHENTICATED\` instead for those errors). This
+      -- error code does not imply the request is valid or the requested entity
+      -- exists or satisfies other pre-conditions. HTTP Mapping: 403 Forbidden
+    | FIECUnauthenticated
+      -- ^ @UNAUTHENTICATED@
+      -- The request does not have valid authentication credentials for the
+      -- operation. HTTP Mapping: 401 Unauthorized
+    | FIECResourceExhausted
+      -- ^ @RESOURCE_EXHAUSTED@
+      -- Some resource has been exhausted, perhaps a per-user quota, or perhaps
+      -- the entire file system is out of space. HTTP Mapping: 429 Too Many
+      -- Requests
+    | FIECFailedPrecondition
+      -- ^ @FAILED_PRECONDITION@
+      -- The operation was rejected because the system is not in a state required
+      -- for the operation\'s execution. For example, the directory to be deleted
+      -- is non-empty, an rmdir operation is applied to a non-directory, etc.
+      -- Service implementors can use the following guidelines to decide between
+      -- \`FAILED_PRECONDITION\`, \`ABORTED\`, and \`UNAVAILABLE\`: (a) Use
+      -- \`UNAVAILABLE\` if the client can retry just the failing call. (b) Use
+      -- \`ABORTED\` if the client should retry at a higher level (e.g., when a
+      -- client-specified test-and-set fails, indicating the client should
+      -- restart a read-modify-write sequence). (c) Use \`FAILED_PRECONDITION\`
+      -- if the client should not retry until the system state has been
+      -- explicitly fixed. E.g., if an \"rmdir\" fails because the directory is
+      -- non-empty, \`FAILED_PRECONDITION\` should be returned since the client
+      -- should not retry unless the files are deleted from the directory. HTTP
+      -- Mapping: 400 Bad Request
+    | FIECAborted
+      -- ^ @ABORTED@
+      -- The operation was aborted, typically due to a concurrency issue such as
+      -- a sequencer check failure or transaction abort. See the guidelines above
+      -- for deciding between \`FAILED_PRECONDITION\`, \`ABORTED\`, and
+      -- \`UNAVAILABLE\`. HTTP Mapping: 409 Conflict
+    | FIECOutOfRange
+      -- ^ @OUT_OF_RANGE@
+      -- The operation was attempted past the valid range. E.g., seeking or
+      -- reading past end-of-file. Unlike \`INVALID_ARGUMENT\`, this error
+      -- indicates a problem that may be fixed if the system state changes. For
+      -- example, a 32-bit file system will generate \`INVALID_ARGUMENT\` if
+      -- asked to read at an offset that is not in the range [0,2^32-1], but it
+      -- will generate \`OUT_OF_RANGE\` if asked to read from an offset past the
+      -- current file size. There is a fair bit of overlap between
+      -- \`FAILED_PRECONDITION\` and \`OUT_OF_RANGE\`. We recommend using
+      -- \`OUT_OF_RANGE\` (the more specific error) when it applies so that
+      -- callers who are iterating through a space can easily look for an
+      -- \`OUT_OF_RANGE\` error to detect when they are done. HTTP Mapping: 400
+      -- Bad Request
+    | FIECUnimplemented
+      -- ^ @UNIMPLEMENTED@
+      -- The operation is not implemented or is not supported\/enabled in this
+      -- service. HTTP Mapping: 501 Not Implemented
+    | FIECInternal
+      -- ^ @INTERNAL@
+      -- Internal errors. This means that some invariants expected by the
+      -- underlying system have been broken. This error code is reserved for
+      -- serious errors. HTTP Mapping: 500 Internal Server Error
+    | FIECUnavailable
+      -- ^ @UNAVAILABLE@
+      -- The service is currently unavailable. This is most likely a transient
+      -- condition, which can be corrected by retrying with a backoff. Note that
+      -- it is not always safe to retry non-idempotent operations. See the
+      -- guidelines above for deciding between \`FAILED_PRECONDITION\`,
+      -- \`ABORTED\`, and \`UNAVAILABLE\`. HTTP Mapping: 503 Service Unavailable
+    | FIECDataLoss
+      -- ^ @DATA_LOSS@
+      -- Unrecoverable data loss or corruption. HTTP Mapping: 500 Internal Server
+      -- Error
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable FailureInfoErrorCode
+
+instance FromHttpApiData FailureInfoErrorCode where
+    parseQueryParam = \case
+        "OK" -> Right FIECOK
+        "CANCELLED" -> Right FIECCancelled
+        "UNKNOWN" -> Right FIECUnknown
+        "INVALID_ARGUMENT" -> Right FIECInvalidArgument
+        "DEADLINE_EXCEEDED" -> Right FIECDeadlineExceeded
+        "NOT_FOUND" -> Right FIECNotFound
+        "ALREADY_EXISTS" -> Right FIECAlreadyExists
+        "PERMISSION_DENIED" -> Right FIECPermissionDenied
+        "UNAUTHENTICATED" -> Right FIECUnauthenticated
+        "RESOURCE_EXHAUSTED" -> Right FIECResourceExhausted
+        "FAILED_PRECONDITION" -> Right FIECFailedPrecondition
+        "ABORTED" -> Right FIECAborted
+        "OUT_OF_RANGE" -> Right FIECOutOfRange
+        "UNIMPLEMENTED" -> Right FIECUnimplemented
+        "INTERNAL" -> Right FIECInternal
+        "UNAVAILABLE" -> Right FIECUnavailable
+        "DATA_LOSS" -> Right FIECDataLoss
+        x -> Left ("Unable to parse FailureInfoErrorCode from: " <> x)
+
+instance ToHttpApiData FailureInfoErrorCode where
+    toQueryParam = \case
+        FIECOK -> "OK"
+        FIECCancelled -> "CANCELLED"
+        FIECUnknown -> "UNKNOWN"
+        FIECInvalidArgument -> "INVALID_ARGUMENT"
+        FIECDeadlineExceeded -> "DEADLINE_EXCEEDED"
+        FIECNotFound -> "NOT_FOUND"
+        FIECAlreadyExists -> "ALREADY_EXISTS"
+        FIECPermissionDenied -> "PERMISSION_DENIED"
+        FIECUnauthenticated -> "UNAUTHENTICATED"
+        FIECResourceExhausted -> "RESOURCE_EXHAUSTED"
+        FIECFailedPrecondition -> "FAILED_PRECONDITION"
+        FIECAborted -> "ABORTED"
+        FIECOutOfRange -> "OUT_OF_RANGE"
+        FIECUnimplemented -> "UNIMPLEMENTED"
+        FIECInternal -> "INTERNAL"
+        FIECUnavailable -> "UNAVAILABLE"
+        FIECDataLoss -> "DATA_LOSS"
+
+instance FromJSON FailureInfoErrorCode where
+    parseJSON = parseJSONText "FailureInfoErrorCode"
+
+instance ToJSON FailureInfoErrorCode where
+    toJSON = toJSONText
+
 -- | Source from which Building.coordinates are derived.
 data ResourcesBuildingsPatchCoordinatesSource
-    = ClientSpecified
+    = CoordinatesSourceUndefined
+      -- ^ @COORDINATES_SOURCE_UNDEFINED@
+    | ClientSpecified
       -- ^ @CLIENT_SPECIFIED@
       -- Building.coordinates are set to the coordinates included in the request.
     | ResolvedFromAddress
@@ -381,14 +774,15 @@ data ResourcesBuildingsPatchCoordinatesSource
       -- address.
     | SourceUnspecified
       -- ^ @SOURCE_UNSPECIFIED@
-      -- Defaults to RESOLVED_FROM_ADDRESS if postal address is provided.
-      -- Otherwise, defaults to CLIENT_SPECIFIED if coordinates are provided.
+      -- Defaults to \`RESOLVED_FROM_ADDRESS\` if postal address is provided.
+      -- Otherwise, defaults to \`CLIENT_SPECIFIED\` if coordinates are provided.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable ResourcesBuildingsPatchCoordinatesSource
 
 instance FromHttpApiData ResourcesBuildingsPatchCoordinatesSource where
     parseQueryParam = \case
+        "COORDINATES_SOURCE_UNDEFINED" -> Right CoordinatesSourceUndefined
         "CLIENT_SPECIFIED" -> Right ClientSpecified
         "RESOLVED_FROM_ADDRESS" -> Right ResolvedFromAddress
         "SOURCE_UNSPECIFIED" -> Right SourceUnspecified
@@ -396,6 +790,7 @@ instance FromHttpApiData ResourcesBuildingsPatchCoordinatesSource where
 
 instance ToHttpApiData ResourcesBuildingsPatchCoordinatesSource where
     toQueryParam = \case
+        CoordinatesSourceUndefined -> "COORDINATES_SOURCE_UNDEFINED"
         ClientSpecified -> "CLIENT_SPECIFIED"
         ResolvedFromAddress -> "RESOLVED_FROM_ADDRESS"
         SourceUnspecified -> "SOURCE_UNSPECIFIED"
@@ -406,14 +801,17 @@ instance FromJSON ResourcesBuildingsPatchCoordinatesSource where
 instance ToJSON ResourcesBuildingsPatchCoordinatesSource where
     toJSON = toJSONText
 
--- | Whether to fetch the ADMIN_VIEW or DOMAIN_PUBLIC view of the user.
+-- | Whether to fetch the administrator-only or domain-wide public view of
+-- the user. For more information, see [Retrieve a user as a
+-- non-administrator](\/admin-sdk\/directory\/v1\/guides\/manage-users#retrieve_users_non_admin).
 data UsersWatchViewType
     = UWVTAdminView
       -- ^ @admin_view@
-      -- Fetches the ADMIN_VIEW of the user.
+      -- Results include both administrator-only and domain-public fields.
     | UWVTDomainPublic
       -- ^ @domain_public@
-      -- Fetches the DOMAIN_PUBLIC view of the user.
+      -- Results only include fields for the user that are publicly visible to
+      -- other users in the domain.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable UsersWatchViewType
@@ -437,12 +835,14 @@ instance ToJSON UsersWatchViewType where
 
 -- | What subset of fields to fetch for this user.
 data UsersGetProjection
-    = UGPBasic
+    = UGPProjectionUndefined
+      -- ^ @projectionUndefined@
+    | UGPBasic
       -- ^ @basic@
       -- Do not include any custom fields for the user.
     | UGPCustom
       -- ^ @custom@
-      -- Include custom fields from schemas mentioned in customFieldMask.
+      -- Include custom fields from schemas requested in \`customFieldMask\`.
     | UGPFull
       -- ^ @full@
       -- Include all fields associated with this user.
@@ -452,6 +852,7 @@ instance Hashable UsersGetProjection
 
 instance FromHttpApiData UsersGetProjection where
     parseQueryParam = \case
+        "projectionUndefined" -> Right UGPProjectionUndefined
         "basic" -> Right UGPBasic
         "custom" -> Right UGPCustom
         "full" -> Right UGPFull
@@ -459,6 +860,7 @@ instance FromHttpApiData UsersGetProjection where
 
 instance ToHttpApiData UsersGetProjection where
     toQueryParam = \case
+        UGPProjectionUndefined -> "projectionUndefined"
         UGPBasic -> "basic"
         UGPCustom -> "custom"
         UGPFull -> "full"
@@ -471,7 +873,9 @@ instance ToJSON UsersGetProjection where
 
 -- | Source from which Building.coordinates are derived.
 data ResourcesBuildingsUpdateCoordinatesSource
-    = RBUCSClientSpecified
+    = RBUCSCoordinatesSourceUndefined
+      -- ^ @COORDINATES_SOURCE_UNDEFINED@
+    | RBUCSClientSpecified
       -- ^ @CLIENT_SPECIFIED@
       -- Building.coordinates are set to the coordinates included in the request.
     | RBUCSResolvedFromAddress
@@ -480,14 +884,15 @@ data ResourcesBuildingsUpdateCoordinatesSource
       -- address.
     | RBUCSSourceUnspecified
       -- ^ @SOURCE_UNSPECIFIED@
-      -- Defaults to RESOLVED_FROM_ADDRESS if postal address is provided.
-      -- Otherwise, defaults to CLIENT_SPECIFIED if coordinates are provided.
+      -- Defaults to \`RESOLVED_FROM_ADDRESS\` if postal address is provided.
+      -- Otherwise, defaults to \`CLIENT_SPECIFIED\` if coordinates are provided.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable ResourcesBuildingsUpdateCoordinatesSource
 
 instance FromHttpApiData ResourcesBuildingsUpdateCoordinatesSource where
     parseQueryParam = \case
+        "COORDINATES_SOURCE_UNDEFINED" -> Right RBUCSCoordinatesSourceUndefined
         "CLIENT_SPECIFIED" -> Right RBUCSClientSpecified
         "RESOLVED_FROM_ADDRESS" -> Right RBUCSResolvedFromAddress
         "SOURCE_UNSPECIFIED" -> Right RBUCSSourceUnspecified
@@ -495,6 +900,7 @@ instance FromHttpApiData ResourcesBuildingsUpdateCoordinatesSource where
 
 instance ToHttpApiData ResourcesBuildingsUpdateCoordinatesSource where
     toQueryParam = \case
+        RBUCSCoordinatesSourceUndefined -> "COORDINATES_SOURCE_UNDEFINED"
         RBUCSClientSpecified -> "CLIENT_SPECIFIED"
         RBUCSResolvedFromAddress -> "RESOLVED_FROM_ADDRESS"
         RBUCSSourceUnspecified -> "SOURCE_UNSPECIFIED"
@@ -507,7 +913,9 @@ instance ToJSON ResourcesBuildingsUpdateCoordinatesSource where
 
 -- | Restrict information returned to a set of selected fields.
 data MobileDevicesListProjection
-    = MDLPBasic
+    = MDLPProjectionUndefined
+      -- ^ @PROJECTION_UNDEFINED@
+    | MDLPBasic
       -- ^ @BASIC@
       -- Includes only the basic metadata fields (e.g., deviceId, model, status,
       -- type, and status)
@@ -520,12 +928,14 @@ instance Hashable MobileDevicesListProjection
 
 instance FromHttpApiData MobileDevicesListProjection where
     parseQueryParam = \case
+        "PROJECTION_UNDEFINED" -> Right MDLPProjectionUndefined
         "BASIC" -> Right MDLPBasic
         "FULL" -> Right MDLPFull
         x -> Left ("Unable to parse MobileDevicesListProjection from: " <> x)
 
 instance ToHttpApiData MobileDevicesListProjection where
     toQueryParam = \case
+        MDLPProjectionUndefined -> "PROJECTION_UNDEFINED"
         MDLPBasic -> "BASIC"
         MDLPFull -> "FULL"
 
@@ -535,29 +945,32 @@ instance FromJSON MobileDevicesListProjection where
 instance ToJSON MobileDevicesListProjection where
     toJSON = toJSONText
 
--- | Column to use for sorting results
+-- | Device property to use for sorting results.
 data MobileDevicesListOrderBy
-    = MDLOBDeviceId
+    = MDLOBOrderByUndefined
+      -- ^ @orderByUndefined@
+    | MDLOBDeviceId
       -- ^ @deviceId@
-      -- Mobile Device serial number.
+      -- The serial number for a Google Sync mobile device. For Android devices,
+      -- this is a software generated unique identifier.
     | MDLOBEmail
       -- ^ @email@
-      -- Owner user email.
+      -- The device owner\'s email address.
     | MDLOBLastSync
       -- ^ @lastSync@
       -- Last policy settings sync date time of the device.
     | MDLOBModel
       -- ^ @model@
-      -- Mobile Device model.
+      -- The mobile device\'s model.
     | MDLOBName
       -- ^ @name@
-      -- Owner user name.
+      -- The device owner\'s user name.
     | MDLOBOS
       -- ^ @os@
-      -- Mobile operating system.
+      -- The device\'s operating system.
     | MDLOBStatus
       -- ^ @status@
-      -- Status of the device.
+      -- The device status.
     | MDLOBType
       -- ^ @type@
       -- Type of the device.
@@ -567,6 +980,7 @@ instance Hashable MobileDevicesListOrderBy
 
 instance FromHttpApiData MobileDevicesListOrderBy where
     parseQueryParam = \case
+        "orderByUndefined" -> Right MDLOBOrderByUndefined
         "deviceId" -> Right MDLOBDeviceId
         "email" -> Right MDLOBEmail
         "lastSync" -> Right MDLOBLastSync
@@ -579,6 +993,7 @@ instance FromHttpApiData MobileDevicesListOrderBy where
 
 instance ToHttpApiData MobileDevicesListOrderBy where
     toQueryParam = \case
+        MDLOBOrderByUndefined -> "orderByUndefined"
         MDLOBDeviceId -> "deviceId"
         MDLOBEmail -> "email"
         MDLOBLastSync -> "lastSync"
@@ -596,7 +1011,9 @@ instance ToJSON MobileDevicesListOrderBy where
 
 -- | Whether to return results in ascending or descending order.
 data UsersListSortOrder
-    = ULSOAscending
+    = ULSOSortOrderUndefined
+      -- ^ @SORT_ORDER_UNDEFINED@
+    | ULSOAscending
       -- ^ @ASCENDING@
       -- Ascending order.
     | ULSODescending
@@ -608,12 +1025,14 @@ instance Hashable UsersListSortOrder
 
 instance FromHttpApiData UsersListSortOrder where
     parseQueryParam = \case
+        "SORT_ORDER_UNDEFINED" -> Right ULSOSortOrderUndefined
         "ASCENDING" -> Right ULSOAscending
         "DESCENDING" -> Right ULSODescending
         x -> Left ("Unable to parse UsersListSortOrder from: " <> x)
 
 instance ToHttpApiData UsersListSortOrder where
     toQueryParam = \case
+        ULSOSortOrderUndefined -> "SORT_ORDER_UNDEFINED"
         ULSOAscending -> "ASCENDING"
         ULSODescending -> "DESCENDING"
 
@@ -625,7 +1044,9 @@ instance ToJSON UsersListSortOrder where
 
 -- | Source from which Building.coordinates are derived.
 data ResourcesBuildingsInsertCoordinatesSource
-    = RBICSClientSpecified
+    = RBICSCoordinatesSourceUndefined
+      -- ^ @COORDINATES_SOURCE_UNDEFINED@
+    | RBICSClientSpecified
       -- ^ @CLIENT_SPECIFIED@
       -- Building.coordinates are set to the coordinates included in the request.
     | RBICSResolvedFromAddress
@@ -634,14 +1055,15 @@ data ResourcesBuildingsInsertCoordinatesSource
       -- address.
     | RBICSSourceUnspecified
       -- ^ @SOURCE_UNSPECIFIED@
-      -- Defaults to RESOLVED_FROM_ADDRESS if postal address is provided.
-      -- Otherwise, defaults to CLIENT_SPECIFIED if coordinates are provided.
+      -- Defaults to \`RESOLVED_FROM_ADDRESS\` if postal address is provided.
+      -- Otherwise, defaults to \`CLIENT_SPECIFIED\` if coordinates are provided.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable ResourcesBuildingsInsertCoordinatesSource
 
 instance FromHttpApiData ResourcesBuildingsInsertCoordinatesSource where
     parseQueryParam = \case
+        "COORDINATES_SOURCE_UNDEFINED" -> Right RBICSCoordinatesSourceUndefined
         "CLIENT_SPECIFIED" -> Right RBICSClientSpecified
         "RESOLVED_FROM_ADDRESS" -> Right RBICSResolvedFromAddress
         "SOURCE_UNSPECIFIED" -> Right RBICSSourceUnspecified
@@ -649,6 +1071,7 @@ instance FromHttpApiData ResourcesBuildingsInsertCoordinatesSource where
 
 instance ToHttpApiData ResourcesBuildingsInsertCoordinatesSource where
     toQueryParam = \case
+        RBICSCoordinatesSourceUndefined -> "COORDINATES_SOURCE_UNDEFINED"
         RBICSClientSpecified -> "CLIENT_SPECIFIED"
         RBICSResolvedFromAddress -> "RESOLVED_FROM_ADDRESS"
         RBICSSourceUnspecified -> "SOURCE_UNSPECIFIED"
@@ -659,10 +1082,12 @@ instance FromJSON ResourcesBuildingsInsertCoordinatesSource where
 instance ToJSON ResourcesBuildingsInsertCoordinatesSource where
     toJSON = toJSONText
 
--- | Whether to return results in ascending or descending order. Only of use
--- when orderBy is also used
+-- | Whether to return results in ascending or descending order. Must be used
+-- with the \`orderBy\` parameter.
 data ChromeosDevicesListSortOrder
-    = CDLSOAscending
+    = CDLSOSortOrderUndefined
+      -- ^ @SORT_ORDER_UNDEFINED@
+    | CDLSOAscending
       -- ^ @ASCENDING@
       -- Ascending order.
     | CDLSODescending
@@ -674,12 +1099,14 @@ instance Hashable ChromeosDevicesListSortOrder
 
 instance FromHttpApiData ChromeosDevicesListSortOrder where
     parseQueryParam = \case
+        "SORT_ORDER_UNDEFINED" -> Right CDLSOSortOrderUndefined
         "ASCENDING" -> Right CDLSOAscending
         "DESCENDING" -> Right CDLSODescending
         x -> Left ("Unable to parse ChromeosDevicesListSortOrder from: " <> x)
 
 instance ToHttpApiData ChromeosDevicesListSortOrder where
     toQueryParam = \case
+        CDLSOSortOrderUndefined -> "SORT_ORDER_UNDEFINED"
         CDLSOAscending -> "ASCENDING"
         CDLSODescending -> "DESCENDING"
 
@@ -689,9 +1116,50 @@ instance FromJSON ChromeosDevicesListSortOrder where
 instance ToJSON ChromeosDevicesListSortOrder where
     toJSON = toJSONText
 
+-- | The result of the command.
+data DirectoryChromeosDevicesCommandResultResult
+    = CommandResultTypeUnspecified
+      -- ^ @COMMAND_RESULT_TYPE_UNSPECIFIED@
+      -- The command result was unspecified.
+    | Ignored
+      -- ^ @IGNORED@
+      -- The command was ignored as obsolete.
+    | Failure
+      -- ^ @FAILURE@
+      -- The command could not be executed successfully.
+    | Success
+      -- ^ @SUCCESS@
+      -- The command was successfully executed.
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable DirectoryChromeosDevicesCommandResultResult
+
+instance FromHttpApiData DirectoryChromeosDevicesCommandResultResult where
+    parseQueryParam = \case
+        "COMMAND_RESULT_TYPE_UNSPECIFIED" -> Right CommandResultTypeUnspecified
+        "IGNORED" -> Right Ignored
+        "FAILURE" -> Right Failure
+        "SUCCESS" -> Right Success
+        x -> Left ("Unable to parse DirectoryChromeosDevicesCommandResultResult from: " <> x)
+
+instance ToHttpApiData DirectoryChromeosDevicesCommandResultResult where
+    toQueryParam = \case
+        CommandResultTypeUnspecified -> "COMMAND_RESULT_TYPE_UNSPECIFIED"
+        Ignored -> "IGNORED"
+        Failure -> "FAILURE"
+        Success -> "SUCCESS"
+
+instance FromJSON DirectoryChromeosDevicesCommandResultResult where
+    parseJSON = parseJSONText "DirectoryChromeosDevicesCommandResultResult"
+
+instance ToJSON DirectoryChromeosDevicesCommandResultResult where
+    toJSON = toJSONText
+
 -- | Whether to return results in ascending or descending order.
 data UsersWatchSortOrder
-    = UWSOAscending
+    = UWSOSortOrderUnspecified
+      -- ^ @sortOrderUnspecified@
+    | UWSOAscending
       -- ^ @ASCENDING@
       -- Ascending order.
     | UWSODescending
@@ -703,12 +1171,14 @@ instance Hashable UsersWatchSortOrder
 
 instance FromHttpApiData UsersWatchSortOrder where
     parseQueryParam = \case
+        "sortOrderUnspecified" -> Right UWSOSortOrderUnspecified
         "ASCENDING" -> Right UWSOAscending
         "DESCENDING" -> Right UWSODescending
         x -> Left ("Unable to parse UsersWatchSortOrder from: " <> x)
 
 instance ToHttpApiData UsersWatchSortOrder where
     toQueryParam = \case
+        UWSOSortOrderUnspecified -> "sortOrderUnspecified"
         UWSOAscending -> "ASCENDING"
         UWSODescending -> "DESCENDING"
 
@@ -721,7 +1191,9 @@ instance ToJSON UsersWatchSortOrder where
 -- | Whether to return results in ascending or descending order. Only of use
 -- when orderBy is also used
 data GroupsListSortOrder
-    = GLSOAscending
+    = GLSOSortOrderUndefined
+      -- ^ @SORT_ORDER_UNDEFINED@
+    | GLSOAscending
       -- ^ @ASCENDING@
       -- Ascending order.
     | GLSODescending
@@ -733,12 +1205,14 @@ instance Hashable GroupsListSortOrder
 
 instance FromHttpApiData GroupsListSortOrder where
     parseQueryParam = \case
+        "SORT_ORDER_UNDEFINED" -> Right GLSOSortOrderUndefined
         "ASCENDING" -> Right GLSOAscending
         "DESCENDING" -> Right GLSODescending
         x -> Left ("Unable to parse GroupsListSortOrder from: " <> x)
 
 instance ToHttpApiData GroupsListSortOrder where
     toQueryParam = \case
+        GLSOSortOrderUndefined -> "SORT_ORDER_UNDEFINED"
         GLSOAscending -> "ASCENDING"
         GLSODescending -> "DESCENDING"
 
@@ -748,14 +1222,45 @@ instance FromJSON GroupsListSortOrder where
 instance ToJSON GroupsListSortOrder where
     toJSON = toJSONText
 
+-- | V1 error format.
+data Xgafv
+    = X1
+      -- ^ @1@
+      -- v1 error format
+    | X2
+      -- ^ @2@
+      -- v2 error format
+      deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
+
+instance Hashable Xgafv
+
+instance FromHttpApiData Xgafv where
+    parseQueryParam = \case
+        "1" -> Right X1
+        "2" -> Right X2
+        x -> Left ("Unable to parse Xgafv from: " <> x)
+
+instance ToHttpApiData Xgafv where
+    toQueryParam = \case
+        X1 -> "1"
+        X2 -> "2"
+
+instance FromJSON Xgafv where
+    parseJSON = parseJSONText "Xgafv"
+
+instance ToJSON Xgafv where
+    toJSON = toJSONText
+
 -- | What subset of fields to fetch for this user.
 data UsersListProjection
-    = ULPBasic
+    = ULPProjectionUndefined
+      -- ^ @projectionUndefined@
+    | ULPBasic
       -- ^ @basic@
       -- Do not include any custom fields for the user.
     | ULPCustom
       -- ^ @custom@
-      -- Include custom fields from schemas mentioned in customFieldMask.
+      -- Include custom fields from schemas requested in \`customFieldMask\`.
     | ULPFull
       -- ^ @full@
       -- Include all fields associated with this user.
@@ -765,6 +1270,7 @@ instance Hashable UsersListProjection
 
 instance FromHttpApiData UsersListProjection where
     parseQueryParam = \case
+        "projectionUndefined" -> Right ULPProjectionUndefined
         "basic" -> Right ULPBasic
         "custom" -> Right ULPCustom
         "full" -> Right ULPFull
@@ -772,6 +1278,7 @@ instance FromHttpApiData UsersListProjection where
 
 instance ToHttpApiData UsersListProjection where
     toQueryParam = \case
+        ULPProjectionUndefined -> "projectionUndefined"
         ULPBasic -> "basic"
         ULPCustom -> "custom"
         ULPFull -> "full"
@@ -784,7 +1291,9 @@ instance ToJSON UsersListProjection where
 
 -- | Restrict information returned to a set of selected fields.
 data ChromeosDevicesUpdateProjection
-    = CDUPBasic
+    = CDUPProjectionUndefined
+      -- ^ @PROJECTION_UNDEFINED@
+    | CDUPBasic
       -- ^ @BASIC@
       -- Includes only the basic metadata fields (e.g., deviceId, serialNumber,
       -- status, and user)
@@ -797,12 +1306,14 @@ instance Hashable ChromeosDevicesUpdateProjection
 
 instance FromHttpApiData ChromeosDevicesUpdateProjection where
     parseQueryParam = \case
+        "PROJECTION_UNDEFINED" -> Right CDUPProjectionUndefined
         "BASIC" -> Right CDUPBasic
         "FULL" -> Right CDUPFull
         x -> Left ("Unable to parse ChromeosDevicesUpdateProjection from: " <> x)
 
 instance ToHttpApiData ChromeosDevicesUpdateProjection where
     toQueryParam = \case
+        CDUPProjectionUndefined -> "PROJECTION_UNDEFINED"
         CDUPBasic -> "BASIC"
         CDUPFull -> "FULL"
 
@@ -814,7 +1325,9 @@ instance ToJSON ChromeosDevicesUpdateProjection where
 
 -- | Restrict information returned to a set of selected fields.
 data MobileDevicesGetProjection
-    = MDGPBasic
+    = MDGPProjectionUndefined
+      -- ^ @PROJECTION_UNDEFINED@
+    | MDGPBasic
       -- ^ @BASIC@
       -- Includes only the basic metadata fields (e.g., deviceId, model, status,
       -- type, and status)
@@ -827,12 +1340,14 @@ instance Hashable MobileDevicesGetProjection
 
 instance FromHttpApiData MobileDevicesGetProjection where
     parseQueryParam = \case
+        "PROJECTION_UNDEFINED" -> Right MDGPProjectionUndefined
         "BASIC" -> Right MDGPBasic
         "FULL" -> Right MDGPFull
         x -> Left ("Unable to parse MobileDevicesGetProjection from: " <> x)
 
 instance ToHttpApiData MobileDevicesGetProjection where
     toQueryParam = \case
+        MDGPProjectionUndefined -> "PROJECTION_UNDEFINED"
         MDGPBasic -> "BASIC"
         MDGPFull -> "FULL"
 
@@ -842,53 +1357,59 @@ instance FromJSON MobileDevicesGetProjection where
 instance ToJSON MobileDevicesGetProjection where
     toJSON = toJSONText
 
--- | Column to use for sorting results
+-- | Device property to use for sorting results.
 data ChromeosDevicesListOrderBy
-    = AnnotatedLocation
+    = CDLOBOrderByUndefined
+      -- ^ @orderByUndefined@
+    | CDLOBAnnotatedLocation
       -- ^ @annotatedLocation@
-      -- Chromebook location as annotated by the administrator.
-    | AnnotatedUser
+      -- Chrome device location as annotated by the administrator.
+    | CDLOBAnnotatedUser
       -- ^ @annotatedUser@
       -- Chromebook user as annotated by administrator.
-    | LastSync
+    | CDLOBLastSync
       -- ^ @lastSync@
-      -- Chromebook last sync.
-    | Notes
+      -- The date and time the Chrome device was last synchronized with the
+      -- policy settings in the Admin console.
+    | CDLOBNotes
       -- ^ @notes@
-      -- Chromebook notes as annotated by the administrator.
-    | SerialNumber
+      -- Chrome device notes as annotated by the administrator.
+    | CDLOBSerialNumber
       -- ^ @serialNumber@
-      -- Chromebook Serial Number.
-    | Status
+      -- The Chrome device serial number entered when the device was enabled.
+    | CDLOBStatus
       -- ^ @status@
-      -- Chromebook status.
-    | SupportEndDate
+      -- Chrome device status. For more information, see the
+    | CDLOBSupportEndDate
       -- ^ @supportEndDate@
-      -- Chromebook support end date.
+      -- Chrome device support end date. This is applicable only for devices
+      -- purchased directly from Google.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable ChromeosDevicesListOrderBy
 
 instance FromHttpApiData ChromeosDevicesListOrderBy where
     parseQueryParam = \case
-        "annotatedLocation" -> Right AnnotatedLocation
-        "annotatedUser" -> Right AnnotatedUser
-        "lastSync" -> Right LastSync
-        "notes" -> Right Notes
-        "serialNumber" -> Right SerialNumber
-        "status" -> Right Status
-        "supportEndDate" -> Right SupportEndDate
+        "orderByUndefined" -> Right CDLOBOrderByUndefined
+        "annotatedLocation" -> Right CDLOBAnnotatedLocation
+        "annotatedUser" -> Right CDLOBAnnotatedUser
+        "lastSync" -> Right CDLOBLastSync
+        "notes" -> Right CDLOBNotes
+        "serialNumber" -> Right CDLOBSerialNumber
+        "status" -> Right CDLOBStatus
+        "supportEndDate" -> Right CDLOBSupportEndDate
         x -> Left ("Unable to parse ChromeosDevicesListOrderBy from: " <> x)
 
 instance ToHttpApiData ChromeosDevicesListOrderBy where
     toQueryParam = \case
-        AnnotatedLocation -> "annotatedLocation"
-        AnnotatedUser -> "annotatedUser"
-        LastSync -> "lastSync"
-        Notes -> "notes"
-        SerialNumber -> "serialNumber"
-        Status -> "status"
-        SupportEndDate -> "supportEndDate"
+        CDLOBOrderByUndefined -> "orderByUndefined"
+        CDLOBAnnotatedLocation -> "annotatedLocation"
+        CDLOBAnnotatedUser -> "annotatedUser"
+        CDLOBLastSync -> "lastSync"
+        CDLOBNotes -> "notes"
+        CDLOBSerialNumber -> "serialNumber"
+        CDLOBStatus -> "status"
+        CDLOBSupportEndDate -> "supportEndDate"
 
 instance FromJSON ChromeosDevicesListOrderBy where
     parseJSON = parseJSONText "ChromeosDevicesListOrderBy"
@@ -898,7 +1419,9 @@ instance ToJSON ChromeosDevicesListOrderBy where
 
 -- | What subset of fields to fetch for this user.
 data UsersWatchProjection
-    = UWPBasic
+    = UWPProjectionUnspecified
+      -- ^ @projectionUnspecified@
+    | UWPBasic
       -- ^ @basic@
       -- Do not include any custom fields for the user.
     | UWPCustom
@@ -913,6 +1436,7 @@ instance Hashable UsersWatchProjection
 
 instance FromHttpApiData UsersWatchProjection where
     parseQueryParam = \case
+        "projectionUnspecified" -> Right UWPProjectionUnspecified
         "basic" -> Right UWPBasic
         "custom" -> Right UWPCustom
         "full" -> Right UWPFull
@@ -920,6 +1444,7 @@ instance FromHttpApiData UsersWatchProjection where
 
 instance ToHttpApiData UsersWatchProjection where
     toQueryParam = \case
+        UWPProjectionUnspecified -> "projectionUnspecified"
         UWPBasic -> "basic"
         UWPCustom -> "custom"
         UWPFull -> "full"
@@ -932,7 +1457,9 @@ instance ToJSON UsersWatchProjection where
 
 -- | Column to use for sorting results
 data UsersWatchOrderBy
-    = UWOBEmail
+    = UWOBOrderByUnspecified
+      -- ^ @orderByUnspecified@
+    | UWOBEmail
       -- ^ @email@
       -- Primary email of the user.
     | UWOBFamilyName
@@ -947,6 +1474,7 @@ instance Hashable UsersWatchOrderBy
 
 instance FromHttpApiData UsersWatchOrderBy where
     parseQueryParam = \case
+        "orderByUnspecified" -> Right UWOBOrderByUnspecified
         "email" -> Right UWOBEmail
         "familyName" -> Right UWOBFamilyName
         "givenName" -> Right UWOBGivenName
@@ -954,6 +1482,7 @@ instance FromHttpApiData UsersWatchOrderBy where
 
 instance ToHttpApiData UsersWatchOrderBy where
     toQueryParam = \case
+        UWOBOrderByUnspecified -> "orderByUnspecified"
         UWOBEmail -> "email"
         UWOBFamilyName -> "familyName"
         UWOBGivenName -> "givenName"
@@ -966,7 +1495,9 @@ instance ToJSON UsersWatchOrderBy where
 
 -- | Restrict information returned to a set of selected fields.
 data ChromeosDevicesListProjection
-    = CDLPBasic
+    = CDLPProjectionUndefined
+      -- ^ @PROJECTION_UNDEFINED@
+    | CDLPBasic
       -- ^ @BASIC@
       -- Includes only the basic metadata fields (e.g., deviceId, serialNumber,
       -- status, and user)
@@ -979,12 +1510,14 @@ instance Hashable ChromeosDevicesListProjection
 
 instance FromHttpApiData ChromeosDevicesListProjection where
     parseQueryParam = \case
+        "PROJECTION_UNDEFINED" -> Right CDLPProjectionUndefined
         "BASIC" -> Right CDLPBasic
         "FULL" -> Right CDLPFull
         x -> Left ("Unable to parse ChromeosDevicesListProjection from: " <> x)
 
 instance ToHttpApiData ChromeosDevicesListProjection where
     toQueryParam = \case
+        CDLPProjectionUndefined -> "PROJECTION_UNDEFINED"
         CDLPBasic -> "BASIC"
         CDLPFull -> "FULL"
 
@@ -994,26 +1527,34 @@ instance FromJSON ChromeosDevicesListProjection where
 instance ToJSON ChromeosDevicesListProjection where
     toJSON = toJSONText
 
--- | Whether to fetch the ADMIN_VIEW or DOMAIN_PUBLIC view of the user.
+-- | Whether to fetch the administrator-only or domain-wide public view of
+-- the user. For more information, see [Retrieve a user as a
+-- non-administrator](\/admin-sdk\/directory\/v1\/guides\/manage-users#retrieve_users_non_admin).
 data UsersGetViewType
-    = UGVTAdminView
+    = UGVTViewTypeUndefined
+      -- ^ @view_type_undefined@
+    | UGVTAdminView
       -- ^ @admin_view@
-      -- Fetches the ADMIN_VIEW of the user.
+      -- Results include both administrator-only and domain-public fields for the
+      -- user.
     | UGVTDomainPublic
       -- ^ @domain_public@
-      -- Fetches the DOMAIN_PUBLIC view of the user.
+      -- Results only include fields for the user that are publicly visible to
+      -- other users in the domain.
       deriving (Eq, Ord, Enum, Read, Show, Data, Typeable, Generic)
 
 instance Hashable UsersGetViewType
 
 instance FromHttpApiData UsersGetViewType where
     parseQueryParam = \case
+        "view_type_undefined" -> Right UGVTViewTypeUndefined
         "admin_view" -> Right UGVTAdminView
         "domain_public" -> Right UGVTDomainPublic
         x -> Left ("Unable to parse UsersGetViewType from: " <> x)
 
 instance ToHttpApiData UsersGetViewType where
     toQueryParam = \case
+        UGVTViewTypeUndefined -> "view_type_undefined"
         UGVTAdminView -> "admin_view"
         UGVTDomainPublic -> "domain_public"
 

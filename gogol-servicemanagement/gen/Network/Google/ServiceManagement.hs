@@ -67,9 +67,6 @@ module Network.Google.ServiceManagement
     -- ** servicemanagement.services.delete
     , module Network.Google.Resource.ServiceManagement.Services.Delete
 
-    -- ** servicemanagement.services.disable
-    , module Network.Google.Resource.ServiceManagement.Services.Disable
-
     -- ** servicemanagement.services.enable
     , module Network.Google.Resource.ServiceManagement.Services.Enable
 
@@ -108,6 +105,13 @@ module Network.Google.ServiceManagement
 
     -- * Types
 
+    -- ** JwtLocation
+    , JwtLocation
+    , jwtLocation
+    , jlValuePrefix
+    , jlHeader
+    , jlQuery
+
     -- ** MetricDescriptorValueType
     , MetricDescriptorValueType (..)
 
@@ -143,9 +147,13 @@ module Network.Google.ServiceManagement
     , mrdLabels
     , mrdType
     , mrdDescription
+    , mrdLaunchStage
 
     -- ** BackendRulePathTranslation
     , BackendRulePathTranslation (..)
+
+    -- ** ServicesConfigsGetView
+    , ServicesConfigsGetView (..)
 
     -- ** DocumentationRule
     , DocumentationRule
@@ -229,6 +237,7 @@ module Network.Google.ServiceManagement
     -- ** MetricDescriptor
     , MetricDescriptor
     , metricDescriptor
+    , mdMonitoredResourceTypes
     , mdMetricKind
     , mdName
     , mdMetadata
@@ -238,6 +247,7 @@ module Network.Google.ServiceManagement
     , mdValueType
     , mdDescription
     , mdUnit
+    , mdLaunchStage
 
     -- ** ListOperationsResponse
     , ListOperationsResponse
@@ -245,9 +255,13 @@ module Network.Google.ServiceManagement
     , lorNextPageToken
     , lorOperations
 
+    -- ** ServicesGetConfigView
+    , ServicesGetConfigView (..)
+
     -- ** GetIAMPolicyRequest
     , GetIAMPolicyRequest
     , getIAMPolicyRequest
+    , giprOptions
 
     -- ** BackendRule
     , BackendRule
@@ -256,6 +270,8 @@ module Network.Google.ServiceManagement
     , brSelector
     , brMinDeadline
     , brAddress
+    , brProtocol
+    , brDisableAuth
     , brOperationDeadline
     , brDeadline
     , brPathTranslation
@@ -312,7 +328,6 @@ module Network.Google.ServiceManagement
     , sAPIs
     , sTypes
     , sSystemTypes
-    , sExperimental
     , sMonitoredResources
     , sBackend
     , sMonitoring
@@ -435,6 +450,11 @@ module Network.Google.ServiceManagement
     , arAllowWithoutCredential
     , arOAuth
 
+    -- ** GetPolicyOptions
+    , GetPolicyOptions
+    , getPolicyOptions
+    , gpoRequestedPolicyVersion
+
     -- ** StepStatus
     , StepStatus (..)
 
@@ -457,21 +477,11 @@ module Network.Google.ServiceManagement
     , trafficPercentStrategyPercentages
     , tpspAddtional
 
-    -- ** AuthorizationConfig
-    , AuthorizationConfig
-    , authorizationConfig
-    , acProvider
-
     -- ** APISyntax
     , APISyntax (..)
 
     -- ** TypeSyntax
     , TypeSyntax (..)
-
-    -- ** Experimental
-    , Experimental
-    , experimental
-    , eAuthorization
 
     -- ** ListServiceRolloutsResponse
     , ListServiceRolloutsResponse
@@ -542,6 +552,10 @@ module Network.Google.ServiceManagement
     , csFiles
     , csId
 
+    -- ** EnableServiceResponse
+    , EnableServiceResponse
+    , enableServiceResponse
+
     -- ** AuditLogConfigLogType
     , AuditLogConfigLogType (..)
 
@@ -552,6 +566,7 @@ module Network.Google.ServiceManagement
     , dDocumentationRootURL
     , dRules
     , dPages
+    , dServiceRootURL
     , dOverview
 
     -- ** Step
@@ -565,6 +580,10 @@ module Network.Google.ServiceManagement
 
     -- ** ConfigFileFileType
     , ConfigFileFileType (..)
+
+    -- ** DisableServiceResponse
+    , DisableServiceResponse
+    , disableServiceResponse
 
     -- ** MetricDescriptorMetadata
     , MetricDescriptorMetadata
@@ -594,6 +613,9 @@ module Network.Google.ServiceManagement
     , lValueType
     , lDescription
 
+    -- ** MonitoredResourceDescriptorLaunchStage
+    , MonitoredResourceDescriptorLaunchStage (..)
+
     -- ** Usage
     , Usage
     , usage
@@ -609,6 +631,12 @@ module Network.Google.ServiceManagement
     , testIAMPermissionsResponse
     , tiamprPermissions
 
+    -- ** FlowErrorDetails
+    , FlowErrorDetails
+    , flowErrorDetails
+    , fedFlowStepId
+    , fedExceptionType
+
     -- ** GenerateConfigReportRequestNewConfig
     , GenerateConfigReportRequestNewConfig
     , generateConfigReportRequestNewConfig
@@ -619,11 +647,6 @@ module Network.Google.ServiceManagement
     , hTTP
     , hRules
     , hFullyDecodeReservedExpansion
-
-    -- ** DisableServiceRequest
-    , DisableServiceRequest
-    , disableServiceRequest
-    , dsrConsumerId
 
     -- ** Policy
     , Policy
@@ -680,7 +703,6 @@ module Network.Google.ServiceManagement
     , eAliases
     , eAllowCORS
     , eName
-    , eFeatures
     , eTarget
 
     -- ** OAuthRequirements
@@ -808,11 +830,21 @@ module Network.Google.ServiceManagement
     , operationResponse
     , orAddtional
 
+    -- ** MetricDescriptorLaunchStage
+    , MetricDescriptorLaunchStage (..)
+
+    -- ** ResourceReference
+    , ResourceReference
+    , resourceReference
+    , rrChildType
+    , rrType
+
     -- ** AuthProvider
     , AuthProvider
     , authProvider
     , apJWKsURI
     , apAudiences
+    , apJwtLocations
     , apId
     , apAuthorizationURL
     , apIssuer
@@ -834,32 +866,31 @@ module Network.Google.ServiceManagement
     , crAllowedResponseExtensions
     ) where
 
-import           Network.Google.Prelude
-import           Network.Google.Resource.ServiceManagement.Operations.Get
-import           Network.Google.Resource.ServiceManagement.Operations.List
-import           Network.Google.Resource.ServiceManagement.Services.Configs.Create
-import           Network.Google.Resource.ServiceManagement.Services.Configs.Get
-import           Network.Google.Resource.ServiceManagement.Services.Configs.List
-import           Network.Google.Resource.ServiceManagement.Services.Configs.Submit
-import           Network.Google.Resource.ServiceManagement.Services.Consumers.GetIAMPolicy
-import           Network.Google.Resource.ServiceManagement.Services.Consumers.SetIAMPolicy
-import           Network.Google.Resource.ServiceManagement.Services.Consumers.TestIAMPermissions
-import           Network.Google.Resource.ServiceManagement.Services.Create
-import           Network.Google.Resource.ServiceManagement.Services.Delete
-import           Network.Google.Resource.ServiceManagement.Services.Disable
-import           Network.Google.Resource.ServiceManagement.Services.Enable
-import           Network.Google.Resource.ServiceManagement.Services.GenerateConfigReport
-import           Network.Google.Resource.ServiceManagement.Services.Get
-import           Network.Google.Resource.ServiceManagement.Services.GetConfig
-import           Network.Google.Resource.ServiceManagement.Services.GetIAMPolicy
-import           Network.Google.Resource.ServiceManagement.Services.List
-import           Network.Google.Resource.ServiceManagement.Services.Rollouts.Create
-import           Network.Google.Resource.ServiceManagement.Services.Rollouts.Get
-import           Network.Google.Resource.ServiceManagement.Services.Rollouts.List
-import           Network.Google.Resource.ServiceManagement.Services.SetIAMPolicy
-import           Network.Google.Resource.ServiceManagement.Services.TestIAMPermissions
-import           Network.Google.Resource.ServiceManagement.Services.Undelete
-import           Network.Google.ServiceManagement.Types
+import Network.Google.Prelude
+import Network.Google.Resource.ServiceManagement.Operations.Get
+import Network.Google.Resource.ServiceManagement.Operations.List
+import Network.Google.Resource.ServiceManagement.Services.Configs.Create
+import Network.Google.Resource.ServiceManagement.Services.Configs.Get
+import Network.Google.Resource.ServiceManagement.Services.Configs.List
+import Network.Google.Resource.ServiceManagement.Services.Configs.Submit
+import Network.Google.Resource.ServiceManagement.Services.Consumers.GetIAMPolicy
+import Network.Google.Resource.ServiceManagement.Services.Consumers.SetIAMPolicy
+import Network.Google.Resource.ServiceManagement.Services.Consumers.TestIAMPermissions
+import Network.Google.Resource.ServiceManagement.Services.Create
+import Network.Google.Resource.ServiceManagement.Services.Delete
+import Network.Google.Resource.ServiceManagement.Services.Enable
+import Network.Google.Resource.ServiceManagement.Services.GenerateConfigReport
+import Network.Google.Resource.ServiceManagement.Services.Get
+import Network.Google.Resource.ServiceManagement.Services.GetConfig
+import Network.Google.Resource.ServiceManagement.Services.GetIAMPolicy
+import Network.Google.Resource.ServiceManagement.Services.List
+import Network.Google.Resource.ServiceManagement.Services.Rollouts.Create
+import Network.Google.Resource.ServiceManagement.Services.Rollouts.Get
+import Network.Google.Resource.ServiceManagement.Services.Rollouts.List
+import Network.Google.Resource.ServiceManagement.Services.SetIAMPolicy
+import Network.Google.Resource.ServiceManagement.Services.TestIAMPermissions
+import Network.Google.Resource.ServiceManagement.Services.Undelete
+import Network.Google.ServiceManagement.Types
 
 {- $resources
 TODO
@@ -885,7 +916,6 @@ type ServiceManagementAPI =
        :<|> ServicesGetResource
        :<|> ServicesEnableResource
        :<|> ServicesCreateResource
-       :<|> ServicesDisableResource
        :<|> ServicesGetConfigResource
        :<|> ServicesSetIAMPolicyResource
        :<|> ServicesTestIAMPermissionsResource

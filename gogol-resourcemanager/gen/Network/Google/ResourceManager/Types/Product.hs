@@ -17,104 +17,22 @@
 --
 module Network.Google.ResourceManager.Types.Product where
 
-import           Network.Google.Prelude
-import           Network.Google.ResourceManager.Types.Sum
-
--- | The ListFolders response message.
---
--- /See:/ 'listFoldersResponse' smart constructor.
-data ListFoldersResponse =
-  ListFoldersResponse'
-    { _lfrNextPageToken :: !(Maybe Text)
-    , _lfrFolders       :: !(Maybe [Folder])
-    }
-  deriving (Eq, Show, Data, Typeable, Generic)
-
-
--- | Creates a value of 'ListFoldersResponse' with the minimum fields required to make a request.
---
--- Use one of the following lenses to modify other fields as desired:
---
--- * 'lfrNextPageToken'
---
--- * 'lfrFolders'
-listFoldersResponse
-    :: ListFoldersResponse
-listFoldersResponse =
-  ListFoldersResponse' {_lfrNextPageToken = Nothing, _lfrFolders = Nothing}
-
-
--- | A pagination token returned from a previous call to \`ListFolders\` that
--- indicates from where listing should continue. This field is optional.
-lfrNextPageToken :: Lens' ListFoldersResponse (Maybe Text)
-lfrNextPageToken
-  = lens _lfrNextPageToken
-      (\ s a -> s{_lfrNextPageToken = a})
-
--- | A possibly paginated list of Folders that are direct descendants of the
--- specified parent resource.
-lfrFolders :: Lens' ListFoldersResponse [Folder]
-lfrFolders
-  = lens _lfrFolders (\ s a -> s{_lfrFolders = a}) .
-      _Default
-      . _Coerce
-
-instance FromJSON ListFoldersResponse where
-        parseJSON
-          = withObject "ListFoldersResponse"
-              (\ o ->
-                 ListFoldersResponse' <$>
-                   (o .:? "nextPageToken") <*>
-                     (o .:? "folders" .!= mempty))
-
-instance ToJSON ListFoldersResponse where
-        toJSON ListFoldersResponse'{..}
-          = object
-              (catMaybes
-                 [("nextPageToken" .=) <$> _lfrNextPageToken,
-                  ("folders" .=) <$> _lfrFolders])
+import Network.Google.Prelude
+import Network.Google.ResourceManager.Types.Sum
 
 -- | The \`Status\` type defines a logical error model that is suitable for
 -- different programming environments, including REST APIs and RPC APIs. It
--- is used by [gRPC](https:\/\/github.com\/grpc). The error model is
--- designed to be: - Simple to use and understand for most users - Flexible
--- enough to meet unexpected needs # Overview The \`Status\` message
+-- is used by [gRPC](https:\/\/github.com\/grpc). Each \`Status\` message
 -- contains three pieces of data: error code, error message, and error
--- details. The error code should be an enum value of google.rpc.Code, but
--- it may accept additional error codes if needed. The error message should
--- be a developer-facing English message that helps developers *understand*
--- and *resolve* the error. If a localized user-facing error message is
--- needed, put the localized message in the error details or localize it in
--- the client. The optional error details may contain arbitrary information
--- about the error. There is a predefined set of error detail types in the
--- package \`google.rpc\` that can be used for common error conditions. #
--- Language mapping The \`Status\` message is the logical representation of
--- the error model, but it is not necessarily the actual wire format. When
--- the \`Status\` message is exposed in different client libraries and
--- different wire protocols, it can be mapped differently. For example, it
--- will likely be mapped to some exceptions in Java, but more likely mapped
--- to some error codes in C. # Other uses The error model and the
--- \`Status\` message can be used in a variety of environments, either with
--- or without APIs, to provide a consistent developer experience across
--- different environments. Example uses of this error model include: -
--- Partial errors. If a service needs to return partial errors to the
--- client, it may embed the \`Status\` in the normal response to indicate
--- the partial errors. - Workflow errors. A typical workflow has multiple
--- steps. Each step may have a \`Status\` message for error reporting. -
--- Batch operations. If a client uses batch request and batch response, the
--- \`Status\` message should be used directly inside batch response, one
--- for each error sub-response. - Asynchronous operations. If an API call
--- embeds asynchronous operation results in its response, the status of
--- those operations should be represented directly using the \`Status\`
--- message. - Logging. If some API errors are stored in logs, the message
--- \`Status\` could be used directly after any stripping needed for
--- security\/privacy reasons.
+-- details. You can find out more about this error model and how to work
+-- with it in the [API Design
+-- Guide](https:\/\/cloud.google.com\/apis\/design\/errors).
 --
 -- /See:/ 'status' smart constructor.
 data Status =
   Status'
     { _sDetails :: !(Maybe [StatusDetailsItem])
-    , _sCode    :: !(Maybe (Textual Int32))
+    , _sCode :: !(Maybe (Textual Int32))
     , _sMessage :: !(Maybe Text)
     }
   deriving (Eq, Show, Data, Typeable, Generic)
@@ -178,20 +96,20 @@ instance ToJSON Status where
 -- service: the log_types specified in each AuditConfig are enabled, and
 -- the exempted_members in each AuditLogConfig are exempted. Example Policy
 -- with multiple AuditConfigs: { \"audit_configs\": [ { \"service\":
--- \"allServices\" \"audit_log_configs\": [ { \"log_type\": \"DATA_READ\",
--- \"exempted_members\": [ \"user:foo\'gmail.com\" ] }, { \"log_type\":
--- \"DATA_WRITE\", }, { \"log_type\": \"ADMIN_READ\", } ] }, { \"service\":
--- \"fooservice.googleapis.com\" \"audit_log_configs\": [ { \"log_type\":
--- \"DATA_READ\", }, { \"log_type\": \"DATA_WRITE\", \"exempted_members\":
--- [ \"user:bar\'gmail.com\" ] } ] } ] } For fooservice, this policy
--- enables DATA_READ, DATA_WRITE and ADMIN_READ logging. It also exempts
--- foo\'gmail.com from DATA_READ logging, and bar\'gmail.com from
--- DATA_WRITE logging.
+-- \"allServices\", \"audit_log_configs\": [ { \"log_type\": \"DATA_READ\",
+-- \"exempted_members\": [ \"user:jose\'example.com\" ] }, { \"log_type\":
+-- \"DATA_WRITE\" }, { \"log_type\": \"ADMIN_READ\" } ] }, { \"service\":
+-- \"sampleservice.googleapis.com\", \"audit_log_configs\": [ {
+-- \"log_type\": \"DATA_READ\" }, { \"log_type\": \"DATA_WRITE\",
+-- \"exempted_members\": [ \"user:aliya\'example.com\" ] } ] } ] } For
+-- sampleservice, this policy enables DATA_READ, DATA_WRITE and ADMIN_READ
+-- logging. It also exempts jose\'example.com from DATA_READ logging, and
+-- aliya\'example.com from DATA_WRITE logging.
 --
 -- /See:/ 'auditConfig' smart constructor.
 data AuditConfig =
   AuditConfig'
-    { _acService         :: !(Maybe Text)
+    { _acService :: !(Maybe Text)
     , _acAuditLogConfigs :: !(Maybe [AuditLogConfig])
     }
   deriving (Eq, Show, Data, Typeable, Generic)
@@ -239,16 +157,30 @@ instance ToJSON AuditConfig where
                  [("service" .=) <$> _acService,
                   ("auditLogConfigs" .=) <$> _acAuditLogConfigs])
 
--- | Represents an expression text. Example: title: \"User account presence\"
--- description: \"Determines whether the request has a user account\"
--- expression: \"size(request.user) > 0\"
+-- | Represents a textual expression in the Common Expression Language (CEL)
+-- syntax. CEL is a C-like expression language. The syntax and semantics of
+-- CEL are documented at https:\/\/github.com\/google\/cel-spec. Example
+-- (Comparison): title: \"Summary size limit\" description: \"Determines if
+-- a summary is less than 100 chars\" expression: \"document.summary.size()
+-- \< 100\" Example (Equality): title: \"Requestor is owner\" description:
+-- \"Determines if requestor is the document owner\" expression:
+-- \"document.owner == request.auth.claims.email\" Example (Logic): title:
+-- \"Public documents\" description: \"Determine whether the document
+-- should be publicly visible\" expression: \"document.type != \'private\'
+-- && document.type != \'internal\'\" Example (Data Manipulation): title:
+-- \"Notification string\" description: \"Create a notification string with
+-- a timestamp.\" expression: \"\'New message received at \' +
+-- string(document.create_time)\" The exact variables and functions that
+-- may be referenced within an expression are determined by the service
+-- that evaluates it. See the service documentation for additional
+-- information.
 --
 -- /See:/ 'expr' smart constructor.
 data Expr =
   Expr'
-    { _eLocation    :: !(Maybe Text)
-    , _eExpression  :: !(Maybe Text)
-    , _eTitle       :: !(Maybe Text)
+    { _eLocation :: !(Maybe Text)
+    , _eExpression :: !(Maybe Text)
+    , _eTitle :: !(Maybe Text)
     , _eDescription :: !(Maybe Text)
     }
   deriving (Eq, Show, Data, Typeable, Generic)
@@ -276,26 +208,25 @@ expr =
     }
 
 
--- | An optional string indicating the location of the expression for error
+-- | Optional. String indicating the location of the expression for error
 -- reporting, e.g. a file name and a position in the file.
 eLocation :: Lens' Expr (Maybe Text)
 eLocation
   = lens _eLocation (\ s a -> s{_eLocation = a})
 
 -- | Textual representation of an expression in Common Expression Language
--- syntax. The application context of the containing message determines
--- which well-known feature set of CEL is supported.
+-- syntax.
 eExpression :: Lens' Expr (Maybe Text)
 eExpression
   = lens _eExpression (\ s a -> s{_eExpression = a})
 
--- | An optional title for the expression, i.e. a short string describing its
+-- | Optional. Title for the expression, i.e. a short string describing its
 -- purpose. This can be used e.g. in UIs which allow to enter the
 -- expression.
 eTitle :: Lens' Expr (Maybe Text)
 eTitle = lens _eTitle (\ s a -> s{_eTitle = a})
 
--- | An optional description of the expression. This is a longer text which
+-- | Optional. Description of the expression. This is a longer text which
 -- describes the expression, e.g. when hovered over it in a UI.
 eDescription :: Lens' Expr (Maybe Text)
 eDescription
@@ -322,123 +253,83 @@ instance ToJSON Expr where
 -- | Request message for \`GetIamPolicy\` method.
 --
 -- /See:/ 'getIAMPolicyRequest' smart constructor.
-data GetIAMPolicyRequest =
+newtype GetIAMPolicyRequest =
   GetIAMPolicyRequest'
+    { _giprOptions :: Maybe GetPolicyOptions
+    }
   deriving (Eq, Show, Data, Typeable, Generic)
 
 
 -- | Creates a value of 'GetIAMPolicyRequest' with the minimum fields required to make a request.
 --
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'giprOptions'
 getIAMPolicyRequest
     :: GetIAMPolicyRequest
-getIAMPolicyRequest = GetIAMPolicyRequest'
+getIAMPolicyRequest = GetIAMPolicyRequest' {_giprOptions = Nothing}
 
+
+-- | OPTIONAL: A \`GetPolicyOptions\` object for specifying options to
+-- \`GetIamPolicy\`.
+giprOptions :: Lens' GetIAMPolicyRequest (Maybe GetPolicyOptions)
+giprOptions
+  = lens _giprOptions (\ s a -> s{_giprOptions = a})
 
 instance FromJSON GetIAMPolicyRequest where
         parseJSON
           = withObject "GetIAMPolicyRequest"
-              (\ o -> pure GetIAMPolicyRequest')
+              (\ o -> GetIAMPolicyRequest' <$> (o .:? "options"))
 
 instance ToJSON GetIAMPolicyRequest where
+        toJSON GetIAMPolicyRequest'{..}
+          = object
+              (catMaybes [("options" .=) <$> _giprOptions])
+
+-- | Runtime operation information for deleting a TagValue.
+--
+-- /See:/ 'deleteTagValueMetadata' smart constructor.
+data DeleteTagValueMetadata =
+  DeleteTagValueMetadata'
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'DeleteTagValueMetadata' with the minimum fields required to make a request.
+--
+deleteTagValueMetadata
+    :: DeleteTagValueMetadata
+deleteTagValueMetadata = DeleteTagValueMetadata'
+
+
+instance FromJSON DeleteTagValueMetadata where
+        parseJSON
+          = withObject "DeleteTagValueMetadata"
+              (\ o -> pure DeleteTagValueMetadata')
+
+instance ToJSON DeleteTagValueMetadata where
         toJSON = const emptyObject
 
--- | The request message for searching folders.
+-- | Runtime operation information for updating a TagValue.
 --
--- /See:/ 'searchFoldersRequest' smart constructor.
-data SearchFoldersRequest =
-  SearchFoldersRequest'
-    { _sfrQuery     :: !(Maybe Text)
-    , _sfrPageToken :: !(Maybe Text)
-    , _sfrPageSize  :: !(Maybe (Textual Int32))
-    }
+-- /See:/ 'updateTagValueMetadata' smart constructor.
+data UpdateTagValueMetadata =
+  UpdateTagValueMetadata'
   deriving (Eq, Show, Data, Typeable, Generic)
 
 
--- | Creates a value of 'SearchFoldersRequest' with the minimum fields required to make a request.
+-- | Creates a value of 'UpdateTagValueMetadata' with the minimum fields required to make a request.
 --
--- Use one of the following lenses to modify other fields as desired:
---
--- * 'sfrQuery'
---
--- * 'sfrPageToken'
---
--- * 'sfrPageSize'
-searchFoldersRequest
-    :: SearchFoldersRequest
-searchFoldersRequest =
-  SearchFoldersRequest'
-    {_sfrQuery = Nothing, _sfrPageToken = Nothing, _sfrPageSize = Nothing}
+updateTagValueMetadata
+    :: UpdateTagValueMetadata
+updateTagValueMetadata = UpdateTagValueMetadata'
 
 
--- | Search criteria used to select the Folders to return. If no search
--- criteria is specified then all accessible folders will be returned.
--- Query expressions can be used to restrict results based upon
--- displayName, lifecycleState and parent, where the operators \`=\`,
--- \`NOT\`, \`AND\` and \`OR\` can be used along with the suffix wildcard
--- symbol \`*\`. The displayName field in a query expression should use
--- escaped quotes for values that include whitespace to prevent unexpected
--- behavior. Some example queries are: |Query | Description| |----- |
--- -----------| |displayName=Test* | Folders whose display name starts with
--- \"Test\".| |lifecycleState=ACTIVE | Folders whose lifecycleState is
--- ACTIVE.| |parent=folders\/123 | Folders whose parent is
--- \"folders\/123\".| |parent=folders\/123 AND lifecycleState=ACTIVE |
--- Active folders whose parent is \"folders\/123\".|
--- |displayName=\\\\\"Test String\\\\\"|Folders whose display name includes
--- both \"Test\" and \"String\".|
-sfrQuery :: Lens' SearchFoldersRequest (Maybe Text)
-sfrQuery = lens _sfrQuery (\ s a -> s{_sfrQuery = a})
-
--- | A pagination token returned from a previous call to \`SearchFolders\`
--- that indicates from where search should continue. This field is
--- optional.
-sfrPageToken :: Lens' SearchFoldersRequest (Maybe Text)
-sfrPageToken
-  = lens _sfrPageToken (\ s a -> s{_sfrPageToken = a})
-
--- | The maximum number of folders to return in the response. This field is
--- optional.
-sfrPageSize :: Lens' SearchFoldersRequest (Maybe Int32)
-sfrPageSize
-  = lens _sfrPageSize (\ s a -> s{_sfrPageSize = a}) .
-      mapping _Coerce
-
-instance FromJSON SearchFoldersRequest where
+instance FromJSON UpdateTagValueMetadata where
         parseJSON
-          = withObject "SearchFoldersRequest"
-              (\ o ->
-                 SearchFoldersRequest' <$>
-                   (o .:? "query") <*> (o .:? "pageToken") <*>
-                     (o .:? "pageSize"))
+          = withObject "UpdateTagValueMetadata"
+              (\ o -> pure UpdateTagValueMetadata')
 
-instance ToJSON SearchFoldersRequest where
-        toJSON SearchFoldersRequest'{..}
-          = object
-              (catMaybes
-                 [("query" .=) <$> _sfrQuery,
-                  ("pageToken" .=) <$> _sfrPageToken,
-                  ("pageSize" .=) <$> _sfrPageSize])
-
--- | The UndeleteFolder request message.
---
--- /See:/ 'undeleteFolderRequest' smart constructor.
-data UndeleteFolderRequest =
-  UndeleteFolderRequest'
-  deriving (Eq, Show, Data, Typeable, Generic)
-
-
--- | Creates a value of 'UndeleteFolderRequest' with the minimum fields required to make a request.
---
-undeleteFolderRequest
-    :: UndeleteFolderRequest
-undeleteFolderRequest = UndeleteFolderRequest'
-
-
-instance FromJSON UndeleteFolderRequest where
-        parseJSON
-          = withObject "UndeleteFolderRequest"
-              (\ o -> pure UndeleteFolderRequest')
-
-instance ToJSON UndeleteFolderRequest where
+instance ToJSON UpdateTagValueMetadata where
         toJSON = const emptyObject
 
 -- | This resource represents a long-running operation that is the result of
@@ -447,10 +338,10 @@ instance ToJSON UndeleteFolderRequest where
 -- /See:/ 'operation' smart constructor.
 data Operation =
   Operation'
-    { _oDone     :: !(Maybe Bool)
-    , _oError    :: !(Maybe Status)
+    { _oDone :: !(Maybe Bool)
+    , _oError :: !(Maybe Status)
     , _oResponse :: !(Maybe OperationResponse)
-    , _oName     :: !(Maybe Text)
+    , _oName :: !(Maybe Text)
     , _oMetadata :: !(Maybe OperationMetadata)
     }
   deriving (Eq, Show, Data, Typeable, Generic)
@@ -505,7 +396,8 @@ oResponse
 
 -- | The server-assigned name, which is only unique within the same service
 -- that originally returns it. If you use the default HTTP mapping, the
--- \`name\` should have the format of \`operations\/some\/unique\/name\`.
+-- \`name\` should be a resource name ending with
+-- \`operations\/{unique_id}\`.
 oName :: Lens' Operation (Maybe Text)
 oName = lens _oName (\ s a -> s{_oName = a})
 
@@ -536,60 +428,30 @@ instance ToJSON Operation where
                   ("name" .=) <$> _oName,
                   ("metadata" .=) <$> _oMetadata])
 
--- | The response message for searching folders.
+-- | A generic empty message that you can re-use to avoid defining duplicated
+-- empty messages in your APIs. A typical example is to use it as the
+-- request or the response type of an API method. For instance: service Foo
+-- { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The
+-- JSON representation for \`Empty\` is empty JSON object \`{}\`.
 --
--- /See:/ 'searchFoldersResponse' smart constructor.
-data SearchFoldersResponse =
-  SearchFoldersResponse'
-    { _sfrNextPageToken :: !(Maybe Text)
-    , _sfrFolders       :: !(Maybe [Folder])
-    }
+-- /See:/ 'empty' smart constructor.
+data Empty =
+  Empty'
   deriving (Eq, Show, Data, Typeable, Generic)
 
 
--- | Creates a value of 'SearchFoldersResponse' with the minimum fields required to make a request.
+-- | Creates a value of 'Empty' with the minimum fields required to make a request.
 --
--- Use one of the following lenses to modify other fields as desired:
---
--- * 'sfrNextPageToken'
---
--- * 'sfrFolders'
-searchFoldersResponse
-    :: SearchFoldersResponse
-searchFoldersResponse =
-  SearchFoldersResponse' {_sfrNextPageToken = Nothing, _sfrFolders = Nothing}
+empty
+    :: Empty
+empty = Empty'
 
 
--- | A pagination token returned from a previous call to \`SearchFolders\`
--- that indicates from where searching should continue. This field is
--- optional.
-sfrNextPageToken :: Lens' SearchFoldersResponse (Maybe Text)
-sfrNextPageToken
-  = lens _sfrNextPageToken
-      (\ s a -> s{_sfrNextPageToken = a})
+instance FromJSON Empty where
+        parseJSON = withObject "Empty" (\ o -> pure Empty')
 
--- | A possibly paginated folder search results. the specified parent
--- resource.
-sfrFolders :: Lens' SearchFoldersResponse [Folder]
-sfrFolders
-  = lens _sfrFolders (\ s a -> s{_sfrFolders = a}) .
-      _Default
-      . _Coerce
-
-instance FromJSON SearchFoldersResponse where
-        parseJSON
-          = withObject "SearchFoldersResponse"
-              (\ o ->
-                 SearchFoldersResponse' <$>
-                   (o .:? "nextPageToken") <*>
-                     (o .:? "folders" .!= mempty))
-
-instance ToJSON SearchFoldersResponse where
-        toJSON SearchFoldersResponse'{..}
-          = object
-              (catMaybes
-                 [("nextPageToken" .=) <$> _sfrNextPageToken,
-                  ("folders" .=) <$> _sfrFolders])
+instance ToJSON Empty where
+        toJSON = const emptyObject
 
 -- | A status object which is used as the \`metadata\` field for the
 -- Operation returned by CreateProject. It provides insight for when
@@ -598,8 +460,8 @@ instance ToJSON SearchFoldersResponse where
 -- /See:/ 'projectCreationStatus' smart constructor.
 data ProjectCreationStatus =
   ProjectCreationStatus'
-    { _pcsGettable   :: !(Maybe Bool)
-    , _pcsReady      :: !(Maybe Bool)
+    { _pcsGettable :: !(Maybe Bool)
+    , _pcsReady :: !(Maybe Bool)
     , _pcsCreateTime :: !(Maybe DateTime')
     }
   deriving (Eq, Show, Data, Typeable, Generic)
@@ -654,6 +516,173 @@ instance ToJSON ProjectCreationStatus where
                  [("gettable" .=) <$> _pcsGettable,
                   ("ready" .=) <$> _pcsReady,
                   ("createTime" .=) <$> _pcsCreateTime])
+
+-- | Runtime operation information for creating a TagValue.
+--
+-- /See:/ 'createTagValueMetadata' smart constructor.
+data CreateTagValueMetadata =
+  CreateTagValueMetadata'
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'CreateTagValueMetadata' with the minimum fields required to make a request.
+--
+createTagValueMetadata
+    :: CreateTagValueMetadata
+createTagValueMetadata = CreateTagValueMetadata'
+
+
+instance FromJSON CreateTagValueMetadata where
+        parseJSON
+          = withObject "CreateTagValueMetadata"
+              (\ o -> pure CreateTagValueMetadata')
+
+instance ToJSON CreateTagValueMetadata where
+        toJSON = const emptyObject
+
+-- | The ListTagValues response.
+--
+-- /See:/ 'listTagValuesResponse' smart constructor.
+data ListTagValuesResponse =
+  ListTagValuesResponse'
+    { _ltvrNextPageToken :: !(Maybe Text)
+    , _ltvrTagValues :: !(Maybe [TagValue])
+    }
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'ListTagValuesResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ltvrNextPageToken'
+--
+-- * 'ltvrTagValues'
+listTagValuesResponse
+    :: ListTagValuesResponse
+listTagValuesResponse =
+  ListTagValuesResponse'
+    {_ltvrNextPageToken = Nothing, _ltvrTagValues = Nothing}
+
+
+-- | A pagination token returned from a previous call to \`ListTagValues\`
+-- that indicates from where listing should continue. This is currently not
+-- used, but the server may at any point start supplying a valid token.
+ltvrNextPageToken :: Lens' ListTagValuesResponse (Maybe Text)
+ltvrNextPageToken
+  = lens _ltvrNextPageToken
+      (\ s a -> s{_ltvrNextPageToken = a})
+
+-- | A possibly paginated list of TagValues that are direct descendants of
+-- the specified parent TagKey.
+ltvrTagValues :: Lens' ListTagValuesResponse [TagValue]
+ltvrTagValues
+  = lens _ltvrTagValues
+      (\ s a -> s{_ltvrTagValues = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON ListTagValuesResponse where
+        parseJSON
+          = withObject "ListTagValuesResponse"
+              (\ o ->
+                 ListTagValuesResponse' <$>
+                   (o .:? "nextPageToken") <*>
+                     (o .:? "tagValues" .!= mempty))
+
+instance ToJSON ListTagValuesResponse where
+        toJSON ListTagValuesResponse'{..}
+          = object
+              (catMaybes
+                 [("nextPageToken" .=) <$> _ltvrNextPageToken,
+                  ("tagValues" .=) <$> _ltvrTagValues])
+
+-- | Metadata describing a long running folder operation
+--
+-- /See:/ 'cloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation' smart constructor.
+data CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation =
+  CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation'
+    { _crmgcrmvfoDestinationParent :: !(Maybe Text)
+    , _crmgcrmvfoDisplayName :: !(Maybe Text)
+    , _crmgcrmvfoOperationType :: !(Maybe CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperationOperationType)
+    , _crmgcrmvfoSourceParent :: !(Maybe Text)
+    }
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'crmgcrmvfoDestinationParent'
+--
+-- * 'crmgcrmvfoDisplayName'
+--
+-- * 'crmgcrmvfoOperationType'
+--
+-- * 'crmgcrmvfoSourceParent'
+cloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation
+    :: CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation
+cloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation =
+  CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation'
+    { _crmgcrmvfoDestinationParent = Nothing
+    , _crmgcrmvfoDisplayName = Nothing
+    , _crmgcrmvfoOperationType = Nothing
+    , _crmgcrmvfoSourceParent = Nothing
+    }
+
+
+-- | The resource name of the folder or organization we are either creating
+-- the folder under or moving the folder to.
+crmgcrmvfoDestinationParent :: Lens' CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation (Maybe Text)
+crmgcrmvfoDestinationParent
+  = lens _crmgcrmvfoDestinationParent
+      (\ s a -> s{_crmgcrmvfoDestinationParent = a})
+
+-- | The display name of the folder.
+crmgcrmvfoDisplayName :: Lens' CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation (Maybe Text)
+crmgcrmvfoDisplayName
+  = lens _crmgcrmvfoDisplayName
+      (\ s a -> s{_crmgcrmvfoDisplayName = a})
+
+-- | The type of this operation.
+crmgcrmvfoOperationType :: Lens' CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation (Maybe CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperationOperationType)
+crmgcrmvfoOperationType
+  = lens _crmgcrmvfoOperationType
+      (\ s a -> s{_crmgcrmvfoOperationType = a})
+
+-- | The resource name of the folder\'s parent. Only applicable when the
+-- operation_type is MOVE.
+crmgcrmvfoSourceParent :: Lens' CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation (Maybe Text)
+crmgcrmvfoSourceParent
+  = lens _crmgcrmvfoSourceParent
+      (\ s a -> s{_crmgcrmvfoSourceParent = a})
+
+instance FromJSON
+           CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation
+         where
+        parseJSON
+          = withObject
+              "CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation"
+              (\ o ->
+                 CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation'
+                   <$>
+                   (o .:? "destinationParent") <*> (o .:? "displayName")
+                     <*> (o .:? "operationType")
+                     <*> (o .:? "sourceParent"))
+
+instance ToJSON
+           CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation
+         where
+        toJSON
+          CloudResourceManagerGoogleCloudResourceManagerV2alpha1FolderOperation'{..}
+          = object
+              (catMaybes
+                 [("destinationParent" .=) <$>
+                    _crmgcrmvfoDestinationParent,
+                  ("displayName" .=) <$> _crmgcrmvfoDisplayName,
+                  ("operationType" .=) <$> _crmgcrmvfoOperationType,
+                  ("sourceParent" .=) <$> _crmgcrmvfoSourceParent])
 
 --
 -- /See:/ 'statusDetailsItem' smart constructor.
@@ -728,98 +757,52 @@ instance ToJSON FolderOperationError where
               (catMaybes
                  [("errorMessageId" .=) <$> _foeErrorMessageId])
 
--- | A Folder in an Organization\'s resource hierarchy, used to organize that
--- Organization\'s resources.
+-- | Encapsulates settings provided to GetIamPolicy.
 --
--- /See:/ 'folder' smart constructor.
-data Folder =
-  Folder'
-    { _fParent         :: !(Maybe Text)
-    , _fName           :: !(Maybe Text)
-    , _fDisplayName    :: !(Maybe Text)
-    , _fLifecycleState :: !(Maybe FolderLifecycleState)
-    , _fCreateTime     :: !(Maybe DateTime')
+-- /See:/ 'getPolicyOptions' smart constructor.
+newtype GetPolicyOptions =
+  GetPolicyOptions'
+    { _gpoRequestedPolicyVersion :: Maybe (Textual Int32)
     }
   deriving (Eq, Show, Data, Typeable, Generic)
 
 
--- | Creates a value of 'Folder' with the minimum fields required to make a request.
+-- | Creates a value of 'GetPolicyOptions' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'fParent'
---
--- * 'fName'
---
--- * 'fDisplayName'
---
--- * 'fLifecycleState'
---
--- * 'fCreateTime'
-folder
-    :: Folder
-folder =
-  Folder'
-    { _fParent = Nothing
-    , _fName = Nothing
-    , _fDisplayName = Nothing
-    , _fLifecycleState = Nothing
-    , _fCreateTime = Nothing
-    }
+-- * 'gpoRequestedPolicyVersion'
+getPolicyOptions
+    :: GetPolicyOptions
+getPolicyOptions = GetPolicyOptions' {_gpoRequestedPolicyVersion = Nothing}
 
 
--- | The Folder’s parent\'s resource name. Updates to the folder\'s parent
--- must be performed via MoveFolder.
-fParent :: Lens' Folder (Maybe Text)
-fParent = lens _fParent (\ s a -> s{_fParent = a})
+-- | Optional. The policy format version to be returned. Valid values are 0,
+-- 1, and 3. Requests specifying an invalid value will be rejected.
+-- Requests for policies with any conditional bindings must specify version
+-- 3. Policies without any conditional bindings may specify any valid value
+-- or leave the field unset. To learn which resources support conditions in
+-- their IAM policies, see the [IAM
+-- documentation](https:\/\/cloud.google.com\/iam\/help\/conditions\/resource-policies).
+gpoRequestedPolicyVersion :: Lens' GetPolicyOptions (Maybe Int32)
+gpoRequestedPolicyVersion
+  = lens _gpoRequestedPolicyVersion
+      (\ s a -> s{_gpoRequestedPolicyVersion = a})
+      . mapping _Coerce
 
--- | Output only. The resource name of the Folder. Its format is
--- \`folders\/{folder_id}\`, for example: \"folders\/1234\".
-fName :: Lens' Folder (Maybe Text)
-fName = lens _fName (\ s a -> s{_fName = a})
-
--- | The folder’s display name. A folder’s display name must be unique
--- amongst its siblings, e.g. no two folders with the same parent can share
--- the same display name. The display name must start and end with a letter
--- or digit, may contain letters, digits, spaces, hyphens and underscores
--- and can be no longer than 30 characters. This is captured by the regular
--- expression: [\\p{L}\\p{N}]([\\p{L}\\p{N}_- ]{0,28}[\\p{L}\\p{N}])?.
-fDisplayName :: Lens' Folder (Maybe Text)
-fDisplayName
-  = lens _fDisplayName (\ s a -> s{_fDisplayName = a})
-
--- | Output only. The lifecycle state of the folder. Updates to the
--- lifecycle_state must be performed via DeleteFolder and UndeleteFolder.
-fLifecycleState :: Lens' Folder (Maybe FolderLifecycleState)
-fLifecycleState
-  = lens _fLifecycleState
-      (\ s a -> s{_fLifecycleState = a})
-
--- | Output only. Timestamp when the Folder was created. Assigned by the
--- server.
-fCreateTime :: Lens' Folder (Maybe UTCTime)
-fCreateTime
-  = lens _fCreateTime (\ s a -> s{_fCreateTime = a}) .
-      mapping _DateTime
-
-instance FromJSON Folder where
+instance FromJSON GetPolicyOptions where
         parseJSON
-          = withObject "Folder"
+          = withObject "GetPolicyOptions"
               (\ o ->
-                 Folder' <$>
-                   (o .:? "parent") <*> (o .:? "name") <*>
-                     (o .:? "displayName")
-                     <*> (o .:? "lifecycleState")
-                     <*> (o .:? "createTime"))
+                 GetPolicyOptions' <$>
+                   (o .:? "requestedPolicyVersion"))
 
-instance ToJSON Folder where
-        toJSON Folder'{..}
+instance ToJSON GetPolicyOptions where
+        toJSON GetPolicyOptions'{..}
           = object
               (catMaybes
-                 [("parent" .=) <$> _fParent, ("name" .=) <$> _fName,
-                  ("displayName" .=) <$> _fDisplayName,
-                  ("lifecycleState" .=) <$> _fLifecycleState,
-                  ("createTime" .=) <$> _fCreateTime])
+                 [("requestedPolicyVersion" .=) <$>
+                    _gpoRequestedPolicyVersion])
 
 -- | Request message for \`SetIamPolicy\` method.
 --
@@ -827,7 +810,7 @@ instance ToJSON Folder where
 data SetIAMPolicyRequest =
   SetIAMPolicyRequest'
     { _siprUpdateMask :: !(Maybe GFieldMask)
-    , _siprPolicy     :: !(Maybe Policy)
+    , _siprPolicy :: !(Maybe Policy)
     }
   deriving (Eq, Show, Data, Typeable, Generic)
 
@@ -847,8 +830,7 @@ setIAMPolicyRequest =
 
 -- | OPTIONAL: A FieldMask specifying which fields of the policy to modify.
 -- Only the fields in the mask will be modified. If no mask is provided,
--- the following default mask is used: paths: \"bindings, etag\" This field
--- is only used by Cloud IAM.
+-- the following default mask is used: \`paths: \"bindings, etag\"\`
 siprUpdateMask :: Lens' SetIAMPolicyRequest (Maybe GFieldMask)
 siprUpdateMask
   = lens _siprUpdateMask
@@ -875,6 +857,263 @@ instance ToJSON SetIAMPolicyRequest where
               (catMaybes
                  [("updateMask" .=) <$> _siprUpdateMask,
                   ("policy" .=) <$> _siprPolicy])
+
+-- | A TagValue is a child of a particular TagKey. This is used to group
+-- cloud resources for the purpose of controlling them using policies.
+--
+-- /See:/ 'tagValue' smart constructor.
+data TagValue =
+  TagValue'
+    { _tvParent :: !(Maybe Text)
+    , _tvEtag :: !(Maybe Text)
+    , _tvShortName :: !(Maybe Text)
+    , _tvUpdateTime :: !(Maybe DateTime')
+    , _tvName :: !(Maybe Text)
+    , _tvNamespacedName :: !(Maybe Text)
+    , _tvDescription :: !(Maybe Text)
+    , _tvCreateTime :: !(Maybe DateTime')
+    }
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'TagValue' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tvParent'
+--
+-- * 'tvEtag'
+--
+-- * 'tvShortName'
+--
+-- * 'tvUpdateTime'
+--
+-- * 'tvName'
+--
+-- * 'tvNamespacedName'
+--
+-- * 'tvDescription'
+--
+-- * 'tvCreateTime'
+tagValue
+    :: TagValue
+tagValue =
+  TagValue'
+    { _tvParent = Nothing
+    , _tvEtag = Nothing
+    , _tvShortName = Nothing
+    , _tvUpdateTime = Nothing
+    , _tvName = Nothing
+    , _tvNamespacedName = Nothing
+    , _tvDescription = Nothing
+    , _tvCreateTime = Nothing
+    }
+
+
+-- | Immutable. The resource name of the new TagValue\'s parent TagKey. Must
+-- be of the form \`tagKeys\/{tag_key_id}\`.
+tvParent :: Lens' TagValue (Maybe Text)
+tvParent = lens _tvParent (\ s a -> s{_tvParent = a})
+
+-- | Optional. Entity tag which users can pass to prevent race conditions.
+-- This field is always set in server responses. See UpdateTagValueRequest
+-- for details.
+tvEtag :: Lens' TagValue (Maybe Text)
+tvEtag = lens _tvEtag (\ s a -> s{_tvEtag = a})
+
+-- | Required. Immutable. User-assigned short name for TagValue. The short
+-- name should be unique for TagValues within the same parent TagKey. The
+-- short name must be 63 characters or less, beginning and ending with an
+-- alphanumeric character ([a-z0-9A-Z]) with dashes (-), underscores (_),
+-- dots (.), and alphanumerics between.
+tvShortName :: Lens' TagValue (Maybe Text)
+tvShortName
+  = lens _tvShortName (\ s a -> s{_tvShortName = a})
+
+-- | Output only. Update time.
+tvUpdateTime :: Lens' TagValue (Maybe UTCTime)
+tvUpdateTime
+  = lens _tvUpdateTime (\ s a -> s{_tvUpdateTime = a})
+      . mapping _DateTime
+
+-- | Immutable. Resource name for TagValue in the format \`tagValues\/456\`.
+tvName :: Lens' TagValue (Maybe Text)
+tvName = lens _tvName (\ s a -> s{_tvName = a})
+
+-- | Output only. Namespaced name of the TagValue. Must be in the format
+-- \`{organization_id}\/{tag_key_short_name}\/{short_name}\`.
+tvNamespacedName :: Lens' TagValue (Maybe Text)
+tvNamespacedName
+  = lens _tvNamespacedName
+      (\ s a -> s{_tvNamespacedName = a})
+
+-- | Optional. User-assigned description of the TagValue. Must not exceed 256
+-- characters. Read-write.
+tvDescription :: Lens' TagValue (Maybe Text)
+tvDescription
+  = lens _tvDescription
+      (\ s a -> s{_tvDescription = a})
+
+-- | Output only. Creation time.
+tvCreateTime :: Lens' TagValue (Maybe UTCTime)
+tvCreateTime
+  = lens _tvCreateTime (\ s a -> s{_tvCreateTime = a})
+      . mapping _DateTime
+
+instance FromJSON TagValue where
+        parseJSON
+          = withObject "TagValue"
+              (\ o ->
+                 TagValue' <$>
+                   (o .:? "parent") <*> (o .:? "etag") <*>
+                     (o .:? "shortName")
+                     <*> (o .:? "updateTime")
+                     <*> (o .:? "name")
+                     <*> (o .:? "namespacedName")
+                     <*> (o .:? "description")
+                     <*> (o .:? "createTime"))
+
+instance ToJSON TagValue where
+        toJSON TagValue'{..}
+          = object
+              (catMaybes
+                 [("parent" .=) <$> _tvParent,
+                  ("etag" .=) <$> _tvEtag,
+                  ("shortName" .=) <$> _tvShortName,
+                  ("updateTime" .=) <$> _tvUpdateTime,
+                  ("name" .=) <$> _tvName,
+                  ("namespacedName" .=) <$> _tvNamespacedName,
+                  ("description" .=) <$> _tvDescription,
+                  ("createTime" .=) <$> _tvCreateTime])
+
+-- | The response message for Liens.ListLiens.
+--
+-- /See:/ 'listLiensResponse' smart constructor.
+data ListLiensResponse =
+  ListLiensResponse'
+    { _llrNextPageToken :: !(Maybe Text)
+    , _llrLiens :: !(Maybe [Lien])
+    }
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'ListLiensResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'llrNextPageToken'
+--
+-- * 'llrLiens'
+listLiensResponse
+    :: ListLiensResponse
+listLiensResponse =
+  ListLiensResponse' {_llrNextPageToken = Nothing, _llrLiens = Nothing}
+
+
+-- | Token to retrieve the next page of results, or empty if there are no
+-- more results in the list.
+llrNextPageToken :: Lens' ListLiensResponse (Maybe Text)
+llrNextPageToken
+  = lens _llrNextPageToken
+      (\ s a -> s{_llrNextPageToken = a})
+
+-- | A list of Liens.
+llrLiens :: Lens' ListLiensResponse [Lien]
+llrLiens
+  = lens _llrLiens (\ s a -> s{_llrLiens = a}) .
+      _Default
+      . _Coerce
+
+instance FromJSON ListLiensResponse where
+        parseJSON
+          = withObject "ListLiensResponse"
+              (\ o ->
+                 ListLiensResponse' <$>
+                   (o .:? "nextPageToken") <*>
+                     (o .:? "liens" .!= mempty))
+
+instance ToJSON ListLiensResponse where
+        toJSON ListLiensResponse'{..}
+          = object
+              (catMaybes
+                 [("nextPageToken" .=) <$> _llrNextPageToken,
+                  ("liens" .=) <$> _llrLiens])
+
+-- | Runtime operation information for creating a TagKey.
+--
+-- /See:/ 'createTagKeyMetadata' smart constructor.
+data CreateTagKeyMetadata =
+  CreateTagKeyMetadata'
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'CreateTagKeyMetadata' with the minimum fields required to make a request.
+--
+createTagKeyMetadata
+    :: CreateTagKeyMetadata
+createTagKeyMetadata = CreateTagKeyMetadata'
+
+
+instance FromJSON CreateTagKeyMetadata where
+        parseJSON
+          = withObject "CreateTagKeyMetadata"
+              (\ o -> pure CreateTagKeyMetadata')
+
+instance ToJSON CreateTagKeyMetadata where
+        toJSON = const emptyObject
+
+-- | The ListTagKeys response message.
+--
+-- /See:/ 'listTagKeysResponse' smart constructor.
+data ListTagKeysResponse =
+  ListTagKeysResponse'
+    { _ltkrNextPageToken :: !(Maybe Text)
+    , _ltkrTagKeys :: !(Maybe [TagKey])
+    }
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'ListTagKeysResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ltkrNextPageToken'
+--
+-- * 'ltkrTagKeys'
+listTagKeysResponse
+    :: ListTagKeysResponse
+listTagKeysResponse =
+  ListTagKeysResponse' {_ltkrNextPageToken = Nothing, _ltkrTagKeys = Nothing}
+
+
+-- | A pagination token returned from a previous call to \`ListTagKeys\` that
+-- indicates from where listing should continue.
+ltkrNextPageToken :: Lens' ListTagKeysResponse (Maybe Text)
+ltkrNextPageToken
+  = lens _ltkrNextPageToken
+      (\ s a -> s{_ltkrNextPageToken = a})
+
+-- | List of TagKeys that live under the specified parent in the request.
+ltkrTagKeys :: Lens' ListTagKeysResponse [TagKey]
+ltkrTagKeys
+  = lens _ltkrTagKeys (\ s a -> s{_ltkrTagKeys = a}) .
+      _Default
+      . _Coerce
+
+instance FromJSON ListTagKeysResponse where
+        parseJSON
+          = withObject "ListTagKeysResponse"
+              (\ o ->
+                 ListTagKeysResponse' <$>
+                   (o .:? "nextPageToken") <*>
+                     (o .:? "tagKeys" .!= mempty))
+
+instance ToJSON ListTagKeysResponse where
+        toJSON ListTagKeysResponse'{..}
+          = object
+              (catMaybes
+                 [("nextPageToken" .=) <$> _ltkrNextPageToken,
+                  ("tagKeys" .=) <$> _ltkrTagKeys])
 
 -- | Request message for \`TestIamPermissions\` method.
 --
@@ -920,6 +1159,219 @@ instance ToJSON TestIAMPermissionsRequest where
           = object
               (catMaybes [("permissions" .=) <$> _tiprPermissions])
 
+-- | A TagKey, used to group a set of TagValues.
+--
+-- /See:/ 'tagKey' smart constructor.
+data TagKey =
+  TagKey'
+    { _tkParent :: !(Maybe Text)
+    , _tkEtag :: !(Maybe Text)
+    , _tkShortName :: !(Maybe Text)
+    , _tkUpdateTime :: !(Maybe DateTime')
+    , _tkName :: !(Maybe Text)
+    , _tkNamespacedName :: !(Maybe Text)
+    , _tkDescription :: !(Maybe Text)
+    , _tkCreateTime :: !(Maybe DateTime')
+    }
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'TagKey' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tkParent'
+--
+-- * 'tkEtag'
+--
+-- * 'tkShortName'
+--
+-- * 'tkUpdateTime'
+--
+-- * 'tkName'
+--
+-- * 'tkNamespacedName'
+--
+-- * 'tkDescription'
+--
+-- * 'tkCreateTime'
+tagKey
+    :: TagKey
+tagKey =
+  TagKey'
+    { _tkParent = Nothing
+    , _tkEtag = Nothing
+    , _tkShortName = Nothing
+    , _tkUpdateTime = Nothing
+    , _tkName = Nothing
+    , _tkNamespacedName = Nothing
+    , _tkDescription = Nothing
+    , _tkCreateTime = Nothing
+    }
+
+
+-- | Immutable. The resource name of the new TagKey\'s parent. Must be of the
+-- form \`organizations\/{org_id}\`.
+tkParent :: Lens' TagKey (Maybe Text)
+tkParent = lens _tkParent (\ s a -> s{_tkParent = a})
+
+-- | Optional. Entity tag which users can pass to prevent race conditions.
+-- This field is always set in server responses. See UpdateTagKeyRequest
+-- for details.
+tkEtag :: Lens' TagKey (Maybe Text)
+tkEtag = lens _tkEtag (\ s a -> s{_tkEtag = a})
+
+-- | Required. Immutable. The user friendly name for a TagKey. The short name
+-- should be unique for TagKeys within the same tag namespace. The short
+-- name must be 1-63 characters, beginning and ending with an alphanumeric
+-- character ([a-z0-9A-Z]) with dashes (-), underscores (_), dots (.), and
+-- alphanumerics between.
+tkShortName :: Lens' TagKey (Maybe Text)
+tkShortName
+  = lens _tkShortName (\ s a -> s{_tkShortName = a})
+
+-- | Output only. Update time.
+tkUpdateTime :: Lens' TagKey (Maybe UTCTime)
+tkUpdateTime
+  = lens _tkUpdateTime (\ s a -> s{_tkUpdateTime = a})
+      . mapping _DateTime
+
+-- | Immutable. The resource name for a TagKey. Must be in the format
+-- \`tagKeys\/{tag_key_id}\`, where \`tag_key_id\` is the generated numeric
+-- id for the TagKey.
+tkName :: Lens' TagKey (Maybe Text)
+tkName = lens _tkName (\ s a -> s{_tkName = a})
+
+-- | Output only. Immutable. Namespaced name of the TagKey.
+tkNamespacedName :: Lens' TagKey (Maybe Text)
+tkNamespacedName
+  = lens _tkNamespacedName
+      (\ s a -> s{_tkNamespacedName = a})
+
+-- | Optional. User-assigned description of the TagKey. Must not exceed 256
+-- characters. Read-write.
+tkDescription :: Lens' TagKey (Maybe Text)
+tkDescription
+  = lens _tkDescription
+      (\ s a -> s{_tkDescription = a})
+
+-- | Output only. Creation time.
+tkCreateTime :: Lens' TagKey (Maybe UTCTime)
+tkCreateTime
+  = lens _tkCreateTime (\ s a -> s{_tkCreateTime = a})
+      . mapping _DateTime
+
+instance FromJSON TagKey where
+        parseJSON
+          = withObject "TagKey"
+              (\ o ->
+                 TagKey' <$>
+                   (o .:? "parent") <*> (o .:? "etag") <*>
+                     (o .:? "shortName")
+                     <*> (o .:? "updateTime")
+                     <*> (o .:? "name")
+                     <*> (o .:? "namespacedName")
+                     <*> (o .:? "description")
+                     <*> (o .:? "createTime"))
+
+instance ToJSON TagKey where
+        toJSON TagKey'{..}
+          = object
+              (catMaybes
+                 [("parent" .=) <$> _tkParent,
+                  ("etag" .=) <$> _tkEtag,
+                  ("shortName" .=) <$> _tkShortName,
+                  ("updateTime" .=) <$> _tkUpdateTime,
+                  ("name" .=) <$> _tkName,
+                  ("namespacedName" .=) <$> _tkNamespacedName,
+                  ("description" .=) <$> _tkDescription,
+                  ("createTime" .=) <$> _tkCreateTime])
+
+-- | Metadata describing a long running folder operation
+--
+-- /See:/ 'cloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation' smart constructor.
+data CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation =
+  CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation'
+    { _cDestinationParent :: !(Maybe Text)
+    , _cDisplayName :: !(Maybe Text)
+    , _cOperationType :: !(Maybe CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperationOperationType)
+    , _cSourceParent :: !(Maybe Text)
+    }
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'cDestinationParent'
+--
+-- * 'cDisplayName'
+--
+-- * 'cOperationType'
+--
+-- * 'cSourceParent'
+cloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation
+    :: CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation
+cloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation =
+  CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation'
+    { _cDestinationParent = Nothing
+    , _cDisplayName = Nothing
+    , _cOperationType = Nothing
+    , _cSourceParent = Nothing
+    }
+
+
+-- | The resource name of the folder or organization we are either creating
+-- the folder under or moving the folder to.
+cDestinationParent :: Lens' CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation (Maybe Text)
+cDestinationParent
+  = lens _cDestinationParent
+      (\ s a -> s{_cDestinationParent = a})
+
+-- | The display name of the folder.
+cDisplayName :: Lens' CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation (Maybe Text)
+cDisplayName
+  = lens _cDisplayName (\ s a -> s{_cDisplayName = a})
+
+-- | The type of this operation.
+cOperationType :: Lens' CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation (Maybe CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperationOperationType)
+cOperationType
+  = lens _cOperationType
+      (\ s a -> s{_cOperationType = a})
+
+-- | The resource name of the folder\'s parent. Only applicable when the
+-- operation_type is MOVE.
+cSourceParent :: Lens' CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation (Maybe Text)
+cSourceParent
+  = lens _cSourceParent
+      (\ s a -> s{_cSourceParent = a})
+
+instance FromJSON
+           CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation
+         where
+        parseJSON
+          = withObject
+              "CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation"
+              (\ o ->
+                 CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation'
+                   <$>
+                   (o .:? "destinationParent") <*> (o .:? "displayName")
+                     <*> (o .:? "operationType")
+                     <*> (o .:? "sourceParent"))
+
+instance ToJSON
+           CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation
+         where
+        toJSON
+          CloudResourceManagerGoogleCloudResourceManagerV2beta1FolderOperation'{..}
+          = object
+              (catMaybes
+                 [("destinationParent" .=) <$> _cDestinationParent,
+                  ("displayName" .=) <$> _cDisplayName,
+                  ("operationType" .=) <$> _cOperationType,
+                  ("sourceParent" .=) <$> _cSourceParent])
+
 -- | Response message for \`TestIamPermissions\` method.
 --
 -- /See:/ 'testIAMPermissionsResponse' smart constructor.
@@ -963,31 +1415,48 @@ instance ToJSON TestIAMPermissionsResponse where
               (catMaybes
                  [("permissions" .=) <$> _tiamprPermissions])
 
--- | Defines an Identity and Access Management (IAM) policy. It is used to
--- specify access control policies for Cloud Platform resources. A
--- \`Policy\` consists of a list of \`bindings\`. A \`binding\` binds a
--- list of \`members\` to a \`role\`, where the members can be user
--- accounts, Google groups, Google domains, and service accounts. A
--- \`role\` is a named list of permissions defined by IAM. **JSON Example**
--- { \"bindings\": [ { \"role\": \"roles\/owner\", \"members\": [
+-- | An Identity and Access Management (IAM) policy, which specifies access
+-- controls for Google Cloud resources. A \`Policy\` is a collection of
+-- \`bindings\`. A \`binding\` binds one or more \`members\` to a single
+-- \`role\`. Members can be user accounts, service accounts, Google groups,
+-- and domains (such as G Suite). A \`role\` is a named list of
+-- permissions; each \`role\` can be an IAM predefined role or a
+-- user-created custom role. For some types of Google Cloud resources, a
+-- \`binding\` can also specify a \`condition\`, which is a logical
+-- expression that allows access to a resource only if the expression
+-- evaluates to \`true\`. A condition can add constraints based on
+-- attributes of the request, the resource, or both. To learn which
+-- resources support conditions in their IAM policies, see the [IAM
+-- documentation](https:\/\/cloud.google.com\/iam\/help\/conditions\/resource-policies).
+-- **JSON example:** { \"bindings\": [ { \"role\":
+-- \"roles\/resourcemanager.organizationAdmin\", \"members\": [
 -- \"user:mike\'example.com\", \"group:admins\'example.com\",
 -- \"domain:google.com\",
--- \"serviceAccount:my-other-app\'appspot.gserviceaccount.com\" ] }, {
--- \"role\": \"roles\/viewer\", \"members\": [\"user:sean\'example.com\"] }
--- ] } **YAML Example** bindings: - members: - user:mike\'example.com -
--- group:admins\'example.com - domain:google.com -
--- serviceAccount:my-other-app\'appspot.gserviceaccount.com role:
--- roles\/owner - members: - user:sean\'example.com role: roles\/viewer For
--- a description of IAM and its features, see the [IAM developer\'s
--- guide](https:\/\/cloud.google.com\/iam\/docs).
+-- \"serviceAccount:my-project-id\'appspot.gserviceaccount.com\" ] }, {
+-- \"role\": \"roles\/resourcemanager.organizationViewer\", \"members\": [
+-- \"user:eve\'example.com\" ], \"condition\": { \"title\": \"expirable
+-- access\", \"description\": \"Does not grant access after Sep 2020\",
+-- \"expression\": \"request.time \<
+-- timestamp(\'2020-10-01T00:00:00.000Z\')\", } } ], \"etag\":
+-- \"BwWWja0YfJA=\", \"version\": 3 } **YAML example:** bindings: -
+-- members: - user:mike\'example.com - group:admins\'example.com -
+-- domain:google.com -
+-- serviceAccount:my-project-id\'appspot.gserviceaccount.com role:
+-- roles\/resourcemanager.organizationAdmin - members: -
+-- user:eve\'example.com role: roles\/resourcemanager.organizationViewer
+-- condition: title: expirable access description: Does not grant access
+-- after Sep 2020 expression: request.time \<
+-- timestamp(\'2020-10-01T00:00:00.000Z\') - etag: BwWWja0YfJA= - version:
+-- 3 For a description of IAM and its features, see the [IAM
+-- documentation](https:\/\/cloud.google.com\/iam\/docs\/).
 --
 -- /See:/ 'policy' smart constructor.
 data Policy =
   Policy'
     { _pAuditConfigs :: !(Maybe [AuditConfig])
-    , _pEtag         :: !(Maybe Bytes)
-    , _pVersion      :: !(Maybe (Textual Int32))
-    , _pBindings     :: !(Maybe [Binding])
+    , _pEtag :: !(Maybe Bytes)
+    , _pVersion :: !(Maybe (Textual Int32))
+    , _pBindings :: !(Maybe [Binding])
     }
   deriving (Eq, Show, Data, Typeable, Generic)
 
@@ -1029,21 +1498,40 @@ pAuditConfigs
 -- conditions: An \`etag\` is returned in the response to \`getIamPolicy\`,
 -- and systems are expected to put that etag in the request to
 -- \`setIamPolicy\` to ensure that their change will be applied to the same
--- version of the policy. If no \`etag\` is provided in the call to
--- \`setIamPolicy\`, then the existing policy is overwritten blindly.
+-- version of the policy. **Important:** If you use IAM Conditions, you
+-- must include the \`etag\` field whenever you call \`setIamPolicy\`. If
+-- you omit this field, then IAM allows you to overwrite a version \`3\`
+-- policy with a version \`1\` policy, and all of the conditions in the
+-- version \`3\` policy are lost.
 pEtag :: Lens' Policy (Maybe ByteString)
 pEtag
   = lens _pEtag (\ s a -> s{_pEtag = a}) .
       mapping _Bytes
 
--- | Deprecated.
+-- | Specifies the format of the policy. Valid values are \`0\`, \`1\`, and
+-- \`3\`. Requests that specify an invalid value are rejected. Any
+-- operation that affects conditional role bindings must specify version
+-- \`3\`. This requirement applies to the following operations: * Getting a
+-- policy that includes a conditional role binding * Adding a conditional
+-- role binding to a policy * Changing a conditional role binding in a
+-- policy * Removing any role binding, with or without a condition, from a
+-- policy that includes conditions **Important:** If you use IAM
+-- Conditions, you must include the \`etag\` field whenever you call
+-- \`setIamPolicy\`. If you omit this field, then IAM allows you to
+-- overwrite a version \`3\` policy with a version \`1\` policy, and all of
+-- the conditions in the version \`3\` policy are lost. If a policy does
+-- not include any conditions, operations on that policy may specify any
+-- valid version or leave the field unset. To learn which resources support
+-- conditions in their IAM policies, see the [IAM
+-- documentation](https:\/\/cloud.google.com\/iam\/help\/conditions\/resource-policies).
 pVersion :: Lens' Policy (Maybe Int32)
 pVersion
   = lens _pVersion (\ s a -> s{_pVersion = a}) .
       mapping _Coerce
 
--- | Associates a list of \`members\` to a \`role\`. \`bindings\` with no
--- members will result in an error.
+-- | Associates a list of \`members\` to a \`role\`. Optionally, may specify
+-- a \`condition\` that determines how and when the \`bindings\` are
+-- applied. Each of the \`bindings\` must contain at least one member.
 pBindings :: Lens' Policy [Binding]
 pBindings
   = lens _pBindings (\ s a -> s{_pBindings = a}) .
@@ -1112,9 +1600,9 @@ instance ToJSON OperationMetadata where
 data FolderOperation =
   FolderOperation'
     { _foDestinationParent :: !(Maybe Text)
-    , _foDisplayName       :: !(Maybe Text)
-    , _foOperationType     :: !(Maybe FolderOperationOperationType)
-    , _foSourceParent      :: !(Maybe Text)
+    , _foDisplayName :: !(Maybe Text)
+    , _foOperationType :: !(Maybe FolderOperationOperationType)
+    , _foSourceParent :: !(Maybe Text)
     }
   deriving (Eq, Show, Data, Typeable, Generic)
 
@@ -1187,14 +1675,14 @@ instance ToJSON FolderOperation where
 
 -- | Provides the configuration for logging a type of permissions. Example: {
 -- \"audit_log_configs\": [ { \"log_type\": \"DATA_READ\",
--- \"exempted_members\": [ \"user:foo\'gmail.com\" ] }, { \"log_type\":
--- \"DATA_WRITE\", } ] } This enables \'DATA_READ\' and \'DATA_WRITE\'
--- logging, while exempting foo\'gmail.com from DATA_READ logging.
+-- \"exempted_members\": [ \"user:jose\'example.com\" ] }, { \"log_type\":
+-- \"DATA_WRITE\" } ] } This enables \'DATA_READ\' and \'DATA_WRITE\'
+-- logging, while exempting jose\'example.com from DATA_READ logging.
 --
 -- /See:/ 'auditLogConfig' smart constructor.
 data AuditLogConfig =
   AuditLogConfig'
-    { _alcLogType         :: !(Maybe AuditLogConfigLogType)
+    { _alcLogType :: !(Maybe AuditLogConfigLogType)
     , _alcExemptedMembers :: !(Maybe [Text])
     }
   deriving (Eq, Show, Data, Typeable, Generic)
@@ -1242,6 +1730,68 @@ instance ToJSON AuditLogConfig where
                  [("logType" .=) <$> _alcLogType,
                   ("exemptedMembers" .=) <$> _alcExemptedMembers])
 
+-- | A TagBinding represents a connection between a TagValue and a cloud
+-- resource (currently project, folder, or organization). Once a TagBinding
+-- is created, the TagValue is applied to all the descendants of the cloud
+-- resource.
+--
+-- /See:/ 'tagBinding' smart constructor.
+data TagBinding =
+  TagBinding'
+    { _tbParent :: !(Maybe Text)
+    , _tbTagValue :: !(Maybe Text)
+    , _tbName :: !(Maybe Text)
+    }
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'TagBinding' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'tbParent'
+--
+-- * 'tbTagValue'
+--
+-- * 'tbName'
+tagBinding
+    :: TagBinding
+tagBinding =
+  TagBinding' {_tbParent = Nothing, _tbTagValue = Nothing, _tbName = Nothing}
+
+
+-- | The full resource name of the resource the TagValue is bound to. E.g.
+-- \`\/\/cloudresourcemanager.googleapis.com\/projects\/123\`
+tbParent :: Lens' TagBinding (Maybe Text)
+tbParent = lens _tbParent (\ s a -> s{_tbParent = a})
+
+-- | The TagValue of the TagBinding. Must be of the form \`tagValues\/456\`.
+tbTagValue :: Lens' TagBinding (Maybe Text)
+tbTagValue
+  = lens _tbTagValue (\ s a -> s{_tbTagValue = a})
+
+-- | Output only. The name of the TagBinding. This is a String of the form:
+-- \`tagBindings\/{full-resource-name}\/{tag-value-name}\` (e.g.
+-- \`tagBindings\/%2F%2Fcloudresourcemanager.googleapis.com%2Fprojects%2F123\/tagValues\/456\`).
+tbName :: Lens' TagBinding (Maybe Text)
+tbName = lens _tbName (\ s a -> s{_tbName = a})
+
+instance FromJSON TagBinding where
+        parseJSON
+          = withObject "TagBinding"
+              (\ o ->
+                 TagBinding' <$>
+                   (o .:? "parent") <*> (o .:? "tagValue") <*>
+                     (o .:? "name"))
+
+instance ToJSON TagBinding where
+        toJSON TagBinding'{..}
+          = object
+              (catMaybes
+                 [("parent" .=) <$> _tbParent,
+                  ("tagValue" .=) <$> _tbTagValue,
+                  ("name" .=) <$> _tbName])
+
 -- | The normal response of the operation in case of success. If the original
 -- method returns no data on success, such as \`Delete\`, the response is
 -- \`google.protobuf.Empty\`. If the original method is standard
@@ -1285,53 +1835,165 @@ instance FromJSON OperationResponse where
 instance ToJSON OperationResponse where
         toJSON = toJSON . _orAddtional
 
--- | The MoveFolder request message.
+-- | A Lien represents an encumbrance on the actions that can be performed on
+-- a resource.
 --
--- /See:/ 'moveFolderRequest' smart constructor.
-newtype MoveFolderRequest =
-  MoveFolderRequest'
-    { _mfrDestinationParent :: Maybe Text
+-- /See:/ 'lien' smart constructor.
+data Lien =
+  Lien'
+    { _lParent :: !(Maybe Text)
+    , _lOrigin :: !(Maybe Text)
+    , _lReason :: !(Maybe Text)
+    , _lName :: !(Maybe Text)
+    , _lRestrictions :: !(Maybe [Text])
+    , _lCreateTime :: !(Maybe DateTime')
     }
   deriving (Eq, Show, Data, Typeable, Generic)
 
 
--- | Creates a value of 'MoveFolderRequest' with the minimum fields required to make a request.
+-- | Creates a value of 'Lien' with the minimum fields required to make a request.
 --
 -- Use one of the following lenses to modify other fields as desired:
 --
--- * 'mfrDestinationParent'
-moveFolderRequest
-    :: MoveFolderRequest
-moveFolderRequest = MoveFolderRequest' {_mfrDestinationParent = Nothing}
+-- * 'lParent'
+--
+-- * 'lOrigin'
+--
+-- * 'lReason'
+--
+-- * 'lName'
+--
+-- * 'lRestrictions'
+--
+-- * 'lCreateTime'
+lien
+    :: Lien
+lien =
+  Lien'
+    { _lParent = Nothing
+    , _lOrigin = Nothing
+    , _lReason = Nothing
+    , _lName = Nothing
+    , _lRestrictions = Nothing
+    , _lCreateTime = Nothing
+    }
 
 
--- | The resource name of the Folder or Organization to reparent the folder
--- under. Must be of the form \`folders\/{folder_id}\` or
--- \`organizations\/{org_id}\`.
-mfrDestinationParent :: Lens' MoveFolderRequest (Maybe Text)
-mfrDestinationParent
-  = lens _mfrDestinationParent
-      (\ s a -> s{_mfrDestinationParent = a})
+-- | A reference to the resource this Lien is attached to. The server will
+-- validate the parent against those for which Liens are supported.
+-- Example: \`projects\/1234\`
+lParent :: Lens' Lien (Maybe Text)
+lParent = lens _lParent (\ s a -> s{_lParent = a})
 
-instance FromJSON MoveFolderRequest where
+-- | A stable, user-visible\/meaningful string identifying the origin of the
+-- Lien, intended to be inspected programmatically. Maximum length of 200
+-- characters. Example: \'compute.googleapis.com\'
+lOrigin :: Lens' Lien (Maybe Text)
+lOrigin = lens _lOrigin (\ s a -> s{_lOrigin = a})
+
+-- | Concise user-visible strings indicating why an action cannot be
+-- performed on a resource. Maximum length of 200 characters. Example:
+-- \'Holds production API key\'
+lReason :: Lens' Lien (Maybe Text)
+lReason = lens _lReason (\ s a -> s{_lReason = a})
+
+-- | A system-generated unique identifier for this Lien. Example:
+-- \`liens\/1234abcd\`
+lName :: Lens' Lien (Maybe Text)
+lName = lens _lName (\ s a -> s{_lName = a})
+
+-- | The types of operations which should be blocked as a result of this
+-- Lien. Each value should correspond to an IAM permission. The server will
+-- validate the permissions against those for which Liens are supported. An
+-- empty list is meaningless and will be rejected. Example:
+-- [\'resourcemanager.projects.delete\']
+lRestrictions :: Lens' Lien [Text]
+lRestrictions
+  = lens _lRestrictions
+      (\ s a -> s{_lRestrictions = a})
+      . _Default
+      . _Coerce
+
+-- | The creation time of this Lien.
+lCreateTime :: Lens' Lien (Maybe UTCTime)
+lCreateTime
+  = lens _lCreateTime (\ s a -> s{_lCreateTime = a}) .
+      mapping _DateTime
+
+instance FromJSON Lien where
         parseJSON
-          = withObject "MoveFolderRequest"
+          = withObject "Lien"
               (\ o ->
-                 MoveFolderRequest' <$> (o .:? "destinationParent"))
+                 Lien' <$>
+                   (o .:? "parent") <*> (o .:? "origin") <*>
+                     (o .:? "reason")
+                     <*> (o .:? "name")
+                     <*> (o .:? "restrictions" .!= mempty)
+                     <*> (o .:? "createTime"))
 
-instance ToJSON MoveFolderRequest where
-        toJSON MoveFolderRequest'{..}
+instance ToJSON Lien where
+        toJSON Lien'{..}
           = object
               (catMaybes
-                 [("destinationParent" .=) <$> _mfrDestinationParent])
+                 [("parent" .=) <$> _lParent,
+                  ("origin" .=) <$> _lOrigin,
+                  ("reason" .=) <$> _lReason, ("name" .=) <$> _lName,
+                  ("restrictions" .=) <$> _lRestrictions,
+                  ("createTime" .=) <$> _lCreateTime])
+
+-- | Runtime operation information for updating a TagKey.
+--
+-- /See:/ 'updateTagKeyMetadata' smart constructor.
+data UpdateTagKeyMetadata =
+  UpdateTagKeyMetadata'
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'UpdateTagKeyMetadata' with the minimum fields required to make a request.
+--
+updateTagKeyMetadata
+    :: UpdateTagKeyMetadata
+updateTagKeyMetadata = UpdateTagKeyMetadata'
+
+
+instance FromJSON UpdateTagKeyMetadata where
+        parseJSON
+          = withObject "UpdateTagKeyMetadata"
+              (\ o -> pure UpdateTagKeyMetadata')
+
+instance ToJSON UpdateTagKeyMetadata where
+        toJSON = const emptyObject
+
+-- | Runtime operation information for deleting a TagKey.
+--
+-- /See:/ 'deleteTagKeyMetadata' smart constructor.
+data DeleteTagKeyMetadata =
+  DeleteTagKeyMetadata'
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'DeleteTagKeyMetadata' with the minimum fields required to make a request.
+--
+deleteTagKeyMetadata
+    :: DeleteTagKeyMetadata
+deleteTagKeyMetadata = DeleteTagKeyMetadata'
+
+
+instance FromJSON DeleteTagKeyMetadata where
+        parseJSON
+          = withObject "DeleteTagKeyMetadata"
+              (\ o -> pure DeleteTagKeyMetadata')
+
+instance ToJSON DeleteTagKeyMetadata where
+        toJSON = const emptyObject
 
 -- | Associates \`members\` with a \`role\`.
 --
 -- /See:/ 'binding' smart constructor.
 data Binding =
   Binding'
-    { _bMembers   :: !(Maybe [Text])
-    , _bRole      :: !(Maybe Text)
+    { _bMembers :: !(Maybe [Text])
+    , _bRole :: !(Maybe Text)
     , _bCondition :: !(Maybe Expr)
     }
   deriving (Eq, Show, Data, Typeable, Generic)
@@ -1359,13 +2021,30 @@ binding =
 -- identifier that represents anyone who is authenticated with a Google
 -- account or a service account. * \`user:{emailid}\`: An email address
 -- that represents a specific Google account. For example,
--- \`alice\'gmail.com\` . * \`serviceAccount:{emailid}\`: An email address
--- that represents a service account. For example,
+-- \`alice\'example.com\` . * \`serviceAccount:{emailid}\`: An email
+-- address that represents a service account. For example,
 -- \`my-other-app\'appspot.gserviceaccount.com\`. * \`group:{emailid}\`: An
 -- email address that represents a Google group. For example,
--- \`admins\'example.com\`. * \`domain:{domain}\`: The G Suite domain
--- (primary) that represents all the users of that domain. For example,
--- \`google.com\` or \`example.com\`.
+-- \`admins\'example.com\`. * \`deleted:user:{emailid}?uid={uniqueid}\`: An
+-- email address (plus unique identifier) representing a user that has been
+-- recently deleted. For example,
+-- \`alice\'example.com?uid=123456789012345678901\`. If the user is
+-- recovered, this value reverts to \`user:{emailid}\` and the recovered
+-- user retains the role in the binding. *
+-- \`deleted:serviceAccount:{emailid}?uid={uniqueid}\`: An email address
+-- (plus unique identifier) representing a service account that has been
+-- recently deleted. For example,
+-- \`my-other-app\'appspot.gserviceaccount.com?uid=123456789012345678901\`.
+-- If the service account is undeleted, this value reverts to
+-- \`serviceAccount:{emailid}\` and the undeleted service account retains
+-- the role in the binding. * \`deleted:group:{emailid}?uid={uniqueid}\`:
+-- An email address (plus unique identifier) representing a Google group
+-- that has been recently deleted. For example,
+-- \`admins\'example.com?uid=123456789012345678901\`. If the group is
+-- recovered, this value reverts to \`group:{emailid}\` and the recovered
+-- group retains the role in the binding. * \`domain:{domain}\`: The G
+-- Suite domain (primary) that represents all the users of that domain. For
+-- example, \`google.com\` or \`example.com\`.
 bMembers :: Lens' Binding [Text]
 bMembers
   = lens _bMembers (\ s a -> s{_bMembers = a}) .
@@ -1377,9 +2056,14 @@ bMembers
 bRole :: Lens' Binding (Maybe Text)
 bRole = lens _bRole (\ s a -> s{_bRole = a})
 
--- | The condition that is associated with this binding. NOTE: An unsatisfied
--- condition will not allow user access via current binding. Different
--- bindings, including their conditions, are examined independently.
+-- | The condition that is associated with this binding. If the condition
+-- evaluates to \`true\`, then this binding applies to the current request.
+-- If the condition evaluates to \`false\`, then this binding does not
+-- apply to the current request. However, a different role binding might
+-- grant the same role to one or more of the members in this binding. To
+-- learn which resources support conditions in their IAM policies, see the
+-- [IAM
+-- documentation](https:\/\/cloud.google.com\/iam\/help\/conditions\/resource-policies).
 bCondition :: Lens' Binding (Maybe Expr)
 bCondition
   = lens _bCondition (\ s a -> s{_bCondition = a})
@@ -1399,3 +2083,59 @@ instance ToJSON Binding where
                  [("members" .=) <$> _bMembers,
                   ("role" .=) <$> _bRole,
                   ("condition" .=) <$> _bCondition])
+
+-- | The ListTagBindings response.
+--
+-- /See:/ 'listTagBindingsResponse' smart constructor.
+data ListTagBindingsResponse =
+  ListTagBindingsResponse'
+    { _ltbrNextPageToken :: !(Maybe Text)
+    , _ltbrTagBindings :: !(Maybe [TagBinding])
+    }
+  deriving (Eq, Show, Data, Typeable, Generic)
+
+
+-- | Creates a value of 'ListTagBindingsResponse' with the minimum fields required to make a request.
+--
+-- Use one of the following lenses to modify other fields as desired:
+--
+-- * 'ltbrNextPageToken'
+--
+-- * 'ltbrTagBindings'
+listTagBindingsResponse
+    :: ListTagBindingsResponse
+listTagBindingsResponse =
+  ListTagBindingsResponse'
+    {_ltbrNextPageToken = Nothing, _ltbrTagBindings = Nothing}
+
+
+-- | A pagination token returned from a previous call to \`ListTagBindings\`
+-- that indicates from where listing should continue.
+ltbrNextPageToken :: Lens' ListTagBindingsResponse (Maybe Text)
+ltbrNextPageToken
+  = lens _ltbrNextPageToken
+      (\ s a -> s{_ltbrNextPageToken = a})
+
+-- | A possibly paginated list of TagBindings for the specified TagValue or
+-- resource.
+ltbrTagBindings :: Lens' ListTagBindingsResponse [TagBinding]
+ltbrTagBindings
+  = lens _ltbrTagBindings
+      (\ s a -> s{_ltbrTagBindings = a})
+      . _Default
+      . _Coerce
+
+instance FromJSON ListTagBindingsResponse where
+        parseJSON
+          = withObject "ListTagBindingsResponse"
+              (\ o ->
+                 ListTagBindingsResponse' <$>
+                   (o .:? "nextPageToken") <*>
+                     (o .:? "tagBindings" .!= mempty))
+
+instance ToJSON ListTagBindingsResponse where
+        toJSON ListTagBindingsResponse'{..}
+          = object
+              (catMaybes
+                 [("nextPageToken" .=) <$> _ltbrNextPageToken,
+                  ("tagBindings" .=) <$> _ltbrTagBindings])

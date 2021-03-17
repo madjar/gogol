@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -41,6 +41,12 @@ module Network.Google.BigtableAdmin.Types
     , instanceLabels
     , ilAddtional
 
+    -- * ListBackupsResponse
+    , ListBackupsResponse
+    , listBackupsResponse
+    , lbrNextPageToken
+    , lbrBackups
+
     -- * Status
     , Status
     , status
@@ -79,6 +85,12 @@ module Network.Google.BigtableAdmin.Types
     , eTitle
     , eDescription
 
+    -- * ListLocationsResponse
+    , ListLocationsResponse
+    , listLocationsResponse
+    , llrNextPageToken
+    , llrLocations
+
     -- * ListOperationsResponse
     , ListOperationsResponse
     , listOperationsResponse
@@ -95,6 +107,7 @@ module Network.Google.BigtableAdmin.Types
     -- * GetIAMPolicyRequest
     , GetIAMPolicyRequest
     , getIAMPolicyRequest
+    , giprOptions
 
     -- * Cluster
     , Cluster
@@ -119,6 +132,15 @@ module Network.Google.BigtableAdmin.Types
     , clusterState
     , csReplicationState
 
+    -- * Location
+    , Location
+    , location
+    , lName
+    , lMetadata
+    , lDisplayName
+    , lLabels
+    , lLocationId
+
     -- * Operation
     , Operation
     , operation
@@ -142,6 +164,13 @@ module Network.Google.BigtableAdmin.Types
     , lapfrFailedLocations
     , lapfrAppProFiles
 
+    -- * OperationProgress
+    , OperationProgress
+    , operationProgress
+    , opStartTime
+    , opProgressPercent
+    , opEndTime
+
     -- * TableClusterStates
     , TableClusterStates
     , tableClusterStates
@@ -158,6 +187,9 @@ module Network.Google.BigtableAdmin.Types
     , ctrInitialSplits
     , ctrTableId
     , ctrTable
+
+    -- * RestoreInfoSourceType
+    , RestoreInfoSourceType (..)
 
     -- * CreateClusterMetadata
     , CreateClusterMetadata
@@ -189,9 +221,31 @@ module Network.Google.BigtableAdmin.Types
     , createClusterMetadataTables
     , ccmtAddtional
 
+    -- * ProjectsInstancesTablesListView
+    , ProjectsInstancesTablesListView (..)
+
     -- * UpdateAppProFileMetadata
     , UpdateAppProFileMetadata
     , updateAppProFileMetadata
+
+    -- * RestoreTableMetadataSourceType
+    , RestoreTableMetadataSourceType (..)
+
+    -- * GetPolicyOptions
+    , GetPolicyOptions
+    , getPolicyOptions
+    , gpoRequestedPolicyVersion
+
+    -- * Backup
+    , Backup
+    , backup
+    , bSizeBytes
+    , bState
+    , bStartTime
+    , bSourceTable
+    , bName
+    , bEndTime
+    , bExpireTime
 
     -- * UpdateClusterMetadata
     , UpdateClusterMetadata
@@ -212,6 +266,11 @@ module Network.Google.BigtableAdmin.Types
     -- * InstanceType
     , InstanceType (..)
 
+    -- * FailureTrace
+    , FailureTrace
+    , failureTrace
+    , ftFrames
+
     -- * CheckConsistencyRequest
     , CheckConsistencyRequest
     , checkConsistencyRequest
@@ -225,6 +284,20 @@ module Network.Google.BigtableAdmin.Types
 
     -- * TableProgressState
     , TableProgressState (..)
+
+    -- * RestoreTableRequest
+    , RestoreTableRequest
+    , restoreTableRequest
+    , rtrBackup
+    , rtrTableId
+
+    -- * CreateBackupMetadata
+    , CreateBackupMetadata
+    , createBackupMetadata
+    , cbmStartTime
+    , cbmSourceTable
+    , cbmName
+    , cbmEndTime
 
     -- * AuditLogConfigLogType
     , AuditLogConfigLogType (..)
@@ -257,6 +330,9 @@ module Network.Google.BigtableAdmin.Types
     -- * ClusterType
     , ClusterType (..)
 
+    -- * ProjectsInstancesTablesGetView
+    , ProjectsInstancesTablesGetView (..)
+
     -- * AppProFile
     , AppProFile
     , appProFile
@@ -265,6 +341,13 @@ module Network.Google.BigtableAdmin.Types
     , apfMultiClusterRoutingUseAny
     , apfName
     , apfDescription
+
+    -- * Frame
+    , Frame
+    , frame
+    , fWorkflowGuid
+    , fZoneId
+    , fTargetName
 
     -- * CreateInstanceRequestClusters
     , CreateInstanceRequestClusters
@@ -311,6 +394,14 @@ module Network.Google.BigtableAdmin.Types
     , lcrFailedLocations
     , lcrClusters
 
+    -- * BackupInfo
+    , BackupInfo
+    , backupInfo
+    , biStartTime
+    , biSourceTable
+    , biBackup
+    , biEndTime
+
     -- * Policy
     , Policy
     , policy
@@ -319,12 +410,22 @@ module Network.Google.BigtableAdmin.Types
     , pVersion
     , pBindings
 
+    -- * LocationLabels
+    , LocationLabels
+    , locationLabels
+    , llAddtional
+
     -- * CreateInstanceMetadata
     , CreateInstanceMetadata
     , createInstanceMetadata
     , cimRequestTime
     , cimOriginalRequest
     , cimFinishTime
+
+    -- * LocationMetadata
+    , LocationMetadata
+    , locationMetadata
+    , lmAddtional
 
     -- * OperationMetadata
     , OperationMetadata
@@ -343,6 +444,15 @@ module Network.Google.BigtableAdmin.Types
     , lirNextPageToken
     , lirFailedLocations
     , lirInstances
+
+    -- * RestoreTableMetadata
+    , RestoreTableMetadata
+    , restoreTableMetadata
+    , rtmOptimizeTableOperationName
+    , rtmSourceType
+    , rtmProgress
+    , rtmName
+    , rtmBackupInfo
 
     -- * CheckConsistencyResponse
     , CheckConsistencyResponse
@@ -365,13 +475,29 @@ module Network.Google.BigtableAdmin.Types
     , table
     , tGranularity
     , tName
+    , tRestoreInfo
     , tClusterStates
     , tColumnFamilies
+
+    -- * OptimizeRestoredTableMetadata
+    , OptimizeRestoredTableMetadata
+    , optimizeRestoredTableMetadata
+    , ortmProgress
+    , ortmName
+
+    -- * RestoreInfo
+    , RestoreInfo
+    , restoreInfo
+    , riSourceType
+    , riBackupInfo
 
     -- * OperationResponse
     , OperationResponse
     , operationResponse
     , orAddtional
+
+    -- * BackupState
+    , BackupState (..)
 
     -- * Binding
     , Binding
@@ -390,9 +516,9 @@ module Network.Google.BigtableAdmin.Types
     , iType
     ) where
 
-import           Network.Google.BigtableAdmin.Types.Product
-import           Network.Google.BigtableAdmin.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.BigtableAdmin.Types.Product
+import Network.Google.BigtableAdmin.Types.Sum
+import Network.Google.Prelude
 
 -- | Default request referring to version 'v2' of the Cloud Bigtable Admin API. This contains the host and root path used as a starting point for constructing service requests.
 bigtableAdminService :: ServiceConfig

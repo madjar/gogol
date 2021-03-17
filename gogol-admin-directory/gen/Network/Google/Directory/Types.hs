@@ -1,5 +1,5 @@
-{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE NoImplicitPrelude  #-}
 {-# LANGUAGE OverloadedStrings  #-}
@@ -34,6 +34,7 @@ module Network.Google.Directory.Types
     , adminDirectoryUserschemaScope
     , adminDirectoryUserschemaReadOnlyScope
     , adminDirectoryDomainScope
+    , cloudPlatformScope
     , adminDirectoryRoleManagementScope
     , adminDirectoryGroupScope
     , adminDirectoryOrgUnitReadOnlyScope
@@ -44,7 +45,6 @@ module Network.Google.Directory.Types
     , adminDirectoryUserAliasReadOnlyScope
     , adminDirectoryUserSecurityScope
     , adminDirectoryGroupMemberScope
-    , adminDirectoryNotificationsScope
     , adminDirectoryDeviceMobileScope
     , adminDirectoryDeviceMobileReadOnlyScope
 
@@ -101,6 +101,12 @@ module Network.Google.Directory.Types
     -- * UsersListEvent
     , UsersListEvent (..)
 
+    -- * ListPrintersResponse
+    , ListPrintersResponse
+    , listPrintersResponse
+    , lprNextPageToken
+    , lprPrinters
+
     -- * Privileges
     , Privileges
     , privileges
@@ -115,9 +121,6 @@ module Network.Google.Directory.Types
     , gEtag
     , gNextPageToken
     , gKind
-
-    -- * UsersAliasesListEvent
-    , UsersAliasesListEvent (..)
 
     -- * RoleAssignments
     , RoleAssignments
@@ -174,6 +177,12 @@ module Network.Google.Directory.Types
     , uaCustomType
     , uaSourceIsStructured
 
+    -- * DirectoryChromeosDevicesIssueCommandRequest
+    , DirectoryChromeosDevicesIssueCommandRequest
+    , directoryChromeosDevicesIssueCommandRequest
+    , dcdicrPayload
+    , dcdicrCommandType
+
     -- * CustomerPostalAddress
     , CustomerPostalAddress
     , customerPostalAddress
@@ -212,6 +221,9 @@ module Network.Google.Directory.Types
     , groId
     , groDescription
 
+    -- * DirectoryChromeosDevicesCommandType
+    , DirectoryChromeosDevicesCommandType (..)
+
     -- * ChromeOSDevice
     , ChromeOSDevice
     , chromeOSDevice
@@ -220,9 +232,11 @@ module Network.Google.Directory.Types
     , codCPUStatusReports
     , codAnnotatedUser
     , codSystemRamFreeReports
+    , codDockMACAddress
     , codPlatformVersion
     , codLastSync
     , codActiveTimeRanges
+    , codEthernetMACAddress0
     , codKind
     , codEthernetMACAddress
     , codLastEnrollmentTime
@@ -232,12 +246,14 @@ module Network.Google.Directory.Types
     , codRecentUsers
     , codSupportEndDate
     , codModel
+    , codLastKnownNetwork
     , codWillAutoRenew
     , codMeid
     , codDeviceFiles
     , codDeviceId
     , codBootMode
     , codTpmVersionInfo
+    , codAutoUpdateExpiration
     , codOrderNumber
     , codDiskVolumeReports
     , codAnnotatedAssetId
@@ -245,6 +261,8 @@ module Network.Google.Directory.Types
     , codSerialNumber
     , codFirmwareVersion
     , codOSVersion
+    , codManufactureDate
+    , codScreenshotFiles
     , codSystemRamTotal
 
     -- * ChromeosDevicesPatchProjection
@@ -272,6 +290,9 @@ module Network.Google.Directory.Types
     , aName
     , aLastTimeUsed
     , aUserKey
+
+    -- * AuxiliaryMessageSeverity
+    , AuxiliaryMessageSeverity (..)
 
     -- * Schemas
     , Schemas
@@ -302,17 +323,9 @@ module Network.Google.Directory.Types
     -- * OrgUnitsListType
     , OrgUnitsListType (..)
 
-    -- * Notification
-    , Notification
-    , notification
-    , nSubject
-    , nEtag
-    , nKind
-    , nBody
-    , nFromAddress
-    , nIsUnread
-    , nNotificationId
-    , nSendTime
+    -- * Empty
+    , Empty
+    , empty
 
     -- * MobileDevicesListSortOrder
     , MobileDevicesListSortOrder (..)
@@ -329,6 +342,9 @@ module Network.Google.Directory.Types
 
     -- * UsersListOrderBy
     , UsersListOrderBy (..)
+
+    -- * DirectoryChromeosDevicesIssueCommandRequestCommandType
+    , DirectoryChromeosDevicesIssueCommandRequestCommandType (..)
 
     -- * BuildingAddress
     , BuildingAddress
@@ -367,12 +383,21 @@ module Network.Google.Directory.Types
     , daKind
     , daDomainAliases
 
+    -- * ChromeOSDeviceLastKnownNetworkItem
+    , ChromeOSDeviceLastKnownNetworkItem
+    , chromeOSDeviceLastKnownNetworkItem
+    , codlkniWanIPAddress
+    , codlkniIPAddress
+
     -- * Aliases
     , Aliases
     , aliases
     , aliEtag
     , aliKind
     , aliAliases
+
+    -- * DirectoryChromeosDevicesCommandState
+    , DirectoryChromeosDevicesCommandState (..)
 
     -- * CalendarResource
     , CalendarResource
@@ -401,6 +426,9 @@ module Network.Google.Directory.Types
     , userUndelete
     , uuOrgUnitPath
 
+    -- * FailureInfoErrorCode
+    , FailureInfoErrorCode (..)
+
     -- * Members
     , Members
     , members
@@ -422,6 +450,12 @@ module Network.Google.Directory.Types
     , cParams
     , cId
     , cType
+
+    -- * ListPrinterModelsResponse
+    , ListPrinterModelsResponse
+    , listPrinterModelsResponse
+    , lpmrNextPageToken
+    , lpmrPrinterModels
 
     -- * MobileDevices
     , MobileDevices
@@ -468,11 +502,13 @@ module Network.Google.Directory.Types
     , buiFloorNames
     , buiDescription
 
-    -- * ChromeOSDeviceRecentUsersItem
-    , ChromeOSDeviceRecentUsersItem
-    , chromeOSDeviceRecentUsersItem
-    , codruiEmail
-    , codruiType
+    -- * FailureInfo
+    , FailureInfo
+    , failureInfo
+    , fiPrinterIds
+    , fiPrinter
+    , fiErrorCode
+    , fiErrorMessage
 
     -- * DomainAlias
     , DomainAlias
@@ -483,6 +519,19 @@ module Network.Google.Directory.Types
     , dVerified
     , dDomainAliasName
     , dParentDomainName
+
+    -- * DirectoryChromeosDevicesCommandResult
+    , DirectoryChromeosDevicesCommandResult
+    , directoryChromeosDevicesCommandResult
+    , dcdcrExecuteTime
+    , dcdcrResult
+    , dcdcrErrorMessage
+
+    -- * BatchCreatePrintersResponse
+    , BatchCreatePrintersResponse
+    , batchCreatePrintersResponse
+    , bcprPrinters
+    , bcprFailures
 
     -- * UserGender
     , UserGender
@@ -500,8 +549,28 @@ module Network.Google.Directory.Types
     , aaId
     , aaPrimaryEmail
 
+    -- * Printer
+    , Printer
+    , printer
+    , pAuxiliaryMessages
+    , pUseDriverlessConfig
+    , pURI
+    , pMakeAndModel
+    , pName
+    , pDisplayName
+    , pId
+    , pDescription
+    , pCreateTime
+    , pOrgUnitId
+
     -- * UsersGetProjection
     , UsersGetProjection (..)
+
+    -- * RecentUsers
+    , RecentUsers
+    , recentUsers
+    , ruEmail
+    , ruType
 
     -- * Schema
     , Schema
@@ -513,6 +582,18 @@ module Network.Google.Directory.Types
     , schDisplayName
     , schFields
 
+    -- * PrinterModel
+    , PrinterModel
+    , printerModel
+    , pmManufacturer
+    , pmMakeAndModel
+    , pmDisplayName
+
+    -- * BatchDeletePrintersRequest
+    , BatchDeletePrintersRequest
+    , batchDeletePrintersRequest
+    , bdprPrinterIds
+
     -- * ChromeOSMoveDevicesToOu
     , ChromeOSMoveDevicesToOu
     , chromeOSMoveDevicesToOu
@@ -520,6 +601,13 @@ module Network.Google.Directory.Types
 
     -- * ResourcesBuildingsUpdateCoordinatesSource
     , ResourcesBuildingsUpdateCoordinatesSource (..)
+
+    -- * AuxiliaryMessage
+    , AuxiliaryMessage
+    , auxiliaryMessage
+    , amSeverity
+    , amFieldMask
+    , amAuxiliaryMessage
 
     -- * User
     , User
@@ -550,9 +638,11 @@ module Network.Google.Directory.Types
     , useIncludeInGlobalAddressList
     , useGender
     , usePhones
+    , useRecoveryEmail
     , useName
     , usePassword
     , useEmails
+    , useRecoveryPhone
     , useIms
     , useKeywords
     , useIsAdmin
@@ -617,6 +707,11 @@ module Network.Google.Directory.Types
     , mdaiDisplayName
     , mdaiPermission
 
+    -- * BatchCreatePrintersRequest
+    , BatchCreatePrintersRequest
+    , batchCreatePrintersRequest
+    , bcprRequests
+
     -- * ChromeOSDeviceDiskVolumeReportsItemVolumeInfoItem
     , ChromeOSDeviceDiskVolumeReportsItemVolumeInfoItem
     , chromeOSDeviceDiskVolumeReportsItemVolumeInfoItem
@@ -647,6 +742,17 @@ module Network.Google.Directory.Types
     , uspkKey
     , uspkExpirationTimeUsec
 
+    -- * DirectoryChromeosDevicesCommand
+    , DirectoryChromeosDevicesCommand
+    , directoryChromeosDevicesCommand
+    , dcdcState
+    , dcdcPayload
+    , dcdcCommandExpireTime
+    , dcdcIssueTime
+    , dcdcCommandId
+    , dcdcType
+    , dcdcCommandResult
+
     -- * VerificationCodes
     , VerificationCodes
     , verificationCodes
@@ -670,13 +776,8 @@ module Network.Google.Directory.Types
     , urType
     , urCustomType
 
-    -- * TrustedApps
-    , TrustedApps
-    , trustedApps
-    , taEtag
-    , taNextPageToken
-    , taKind
-    , taTrustedApps
+    -- * DirectoryChromeosDevicesCommandResultResult
+    , DirectoryChromeosDevicesCommandResultResult (..)
 
     -- * UsersWatchSortOrder
     , UsersWatchSortOrder (..)
@@ -731,11 +832,19 @@ module Network.Google.Directory.Types
     -- * GroupsListSortOrder
     , GroupsListSortOrder (..)
 
+    -- * Xgafv
+    , Xgafv (..)
+
     -- * ChromeOSDeviceActiveTimeRangesItem
     , ChromeOSDeviceActiveTimeRangesItem
     , chromeOSDeviceActiveTimeRangesItem
     , codatriDate
     , codatriActiveTime
+
+    -- * DirectoryChromeosDevicesIssueCommandResponse
+    , DirectoryChromeosDevicesIssueCommandResponse
+    , directoryChromeosDevicesIssueCommandResponse
+    , dcdicrCommandId
 
     -- * UserEmail
     , UserEmail
@@ -862,18 +971,6 @@ module Network.Google.Directory.Types
     , memId
     , memType
 
-    -- * AppAccessCollections
-    , AppAccessCollections
-    , appAccessCollections
-    , aacEtag
-    , aacResourceId
-    , aacEnforceSettingsForAndroidDrive
-    , aacResourceName
-    , aacKind
-    , aacTrustDomainOwnedApps
-    , aacBlockedAPIAccessBuckets
-    , aacErrorMessage
-
     -- * UserCustomProperties
     , UserCustomProperties
     , userCustomProperties
@@ -896,6 +993,18 @@ module Network.Google.Directory.Types
     , domDomainName
     , domIsPrimary
 
+    -- * BatchDeletePrintersResponse
+    , BatchDeletePrintersResponse
+    , batchDeletePrintersResponse
+    , bPrinterIds
+    , bFailedPrinters
+
+    -- * CreatePrinterRequest
+    , CreatePrinterRequest
+    , createPrinterRequest
+    , cprParent
+    , cprPrinter
+
     -- * CalendarResources
     , CalendarResources
     , calendarResources
@@ -912,15 +1021,6 @@ module Network.Google.Directory.Types
 
     -- * UsersWatchOrderBy
     , UsersWatchOrderBy (..)
-
-    -- * Notifications
-    , Notifications
-    , notifications
-    , notEtag
-    , notNextPageToken
-    , notKind
-    , notItems
-    , notUnreadNotificationsCount
 
     -- * ChromeosDevicesListProjection
     , ChromeosDevicesListProjection (..)
@@ -950,6 +1050,14 @@ module Network.Google.Directory.Types
     , sfsDisplayName
     , sfsMultiValued
 
+    -- * ChromeOSDeviceScreenshotFilesItem
+    , ChromeOSDeviceScreenshotFilesItem
+    , chromeOSDeviceScreenshotFilesItem
+    , codsfiName
+    , codsfiDownloadURL
+    , codsfiType
+    , codsfiCreateTime
+
     -- * ChromeOSDevices
     , ChromeOSDevices
     , chromeOSDevices
@@ -962,15 +1070,6 @@ module Network.Google.Directory.Types
     , MembersHasMember
     , membersHasMember
     , mhmIsMember
-
-    -- * TrustedAppId
-    , TrustedAppId
-    , trustedAppId
-    , taiCertificateHashSHA256
-    , taiEtag
-    , taiKind
-    , taiCertificateHashSHA1
-    , taiAndroidPackageName
 
     -- * UserExternalId
     , UserExternalId
@@ -1009,15 +1108,15 @@ module Network.Google.Directory.Types
     , ddDomains
     ) where
 
-import           Network.Google.Directory.Types.Product
-import           Network.Google.Directory.Types.Sum
-import           Network.Google.Prelude
+import Network.Google.Directory.Types.Product
+import Network.Google.Directory.Types.Sum
+import Network.Google.Prelude
 
--- | Default request referring to version 'directory_v1' of the Admin Directory API. This contains the host and root path used as a starting point for constructing service requests.
+-- | Default request referring to version 'directory_v1' of the Admin SDK API. This contains the host and root path used as a starting point for constructing service requests.
 directoryService :: ServiceConfig
 directoryService
   = defaultService (ServiceId "admin:directory_v1")
-      "www.googleapis.com"
+      "admin.googleapis.com"
 
 -- | View delegated admin roles for your domain
 adminDirectoryRoleManagementReadOnlyScope :: Proxy '["https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly"]
@@ -1075,6 +1174,10 @@ adminDirectoryUserschemaReadOnlyScope = Proxy
 adminDirectoryDomainScope :: Proxy '["https://www.googleapis.com/auth/admin.directory.domain"]
 adminDirectoryDomainScope = Proxy
 
+-- | See, edit, configure, and delete your Google Cloud Platform data
+cloudPlatformScope :: Proxy '["https://www.googleapis.com/auth/cloud-platform"]
+cloudPlatformScope = Proxy
+
 -- | Manage delegated admin roles for your domain
 adminDirectoryRoleManagementScope :: Proxy '["https://www.googleapis.com/auth/admin.directory.rolemanagement"]
 adminDirectoryRoleManagementScope = Proxy
@@ -1099,7 +1202,7 @@ adminDirectoryCustomerReadOnlyScope = Proxy
 adminDirectoryOrgUnitScope :: Proxy '["https://www.googleapis.com/auth/admin.directory.orgunit"]
 adminDirectoryOrgUnitScope = Proxy
 
--- | View users on your domain
+-- | See info about users on your domain
 adminDirectoryUserReadOnlyScope :: Proxy '["https://www.googleapis.com/auth/admin.directory.user.readonly"]
 adminDirectoryUserReadOnlyScope = Proxy
 
@@ -1114,10 +1217,6 @@ adminDirectoryUserSecurityScope = Proxy
 -- | View and manage group subscriptions on your domain
 adminDirectoryGroupMemberScope :: Proxy '["https://www.googleapis.com/auth/admin.directory.group.member"]
 adminDirectoryGroupMemberScope = Proxy
-
--- | View and manage notifications received on your domain
-adminDirectoryNotificationsScope :: Proxy '["https://www.googleapis.com/auth/admin.directory.notifications"]
-adminDirectoryNotificationsScope = Proxy
 
 -- | View and manage your mobile devices\' metadata
 adminDirectoryDeviceMobileScope :: Proxy '["https://www.googleapis.com/auth/admin.directory.device.mobile"]
